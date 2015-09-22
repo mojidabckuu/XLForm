@@ -7,7 +7,7 @@
 //
 
 
-#import <XLForm/XLForm.h>
+#import "XLFormDescriptor.h"
 
 @interface XLFormDescriptor (Validation)
 
