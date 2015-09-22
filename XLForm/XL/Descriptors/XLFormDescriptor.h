@@ -92,3 +92,5 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 -(void)forceEvaluate;
 
 @end
+
+#import "XLForm+Validation.h"
