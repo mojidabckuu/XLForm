@@ -8,6 +8,8 @@
 
 #import "XLTextFieldTableViewCell.h"
 
+#import "XLForm.h"
+
 @interface XLTextFieldTableViewCell () <UITextFieldDelegate>
 
 @end

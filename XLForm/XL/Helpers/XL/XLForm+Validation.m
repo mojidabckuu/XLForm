@@ -29,7 +29,7 @@
     }
     
     NSArray *errors = [self localValidationErrors:nil];
-    if (errors.isFilled) {
+    if (errors.count) {
         for (NSError *error in errors) {
             XLFormValidationStatus *validationStatus = error.userInfo[XLValidationStatusErrorKey];
             XLFormRowDescriptor *rowDescriptor = validationStatus.rowDescriptor;
@@ -48,7 +48,7 @@
     
     [self updateCells];
 
-    return !errors.isFilled;
+    return !errors.count;
 }
 
 #pragma mark - Accessors

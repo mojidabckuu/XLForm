@@ -7,7 +7,10 @@
 //
 
 #import "FTXLBaseTableViewCell.h"
-#import "FTXLTextFieldRowDescriptor.h"
+
+#import "XLForm.h"
+
+#import "XLForm+Helpers.h"
 
 @interface FTXLBaseTableViewCell () <UIPickerViewDataSource, UIPickerViewDelegate>
 

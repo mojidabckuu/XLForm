@@ -12,7 +12,7 @@
 
 @interface FTXLBaseTableViewCell : XLFormBaseCell <XLErrorViewProtocol>
 
-@property (weak, nonatomic) IBOutlet FTProjectLabel *labelError;
+@property (weak, nonatomic) IBOutlet UILabel *labelError;
 
 @property (nonatomic, weak) IBOutlet UIView<XLErrorProtocol> *errorView;
 

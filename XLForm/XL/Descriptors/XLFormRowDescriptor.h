@@ -145,3 +145,5 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 @property (nullable, nonatomic, strong) Class formSegueClass;
 
 @end
+
+#import "XLFormRowDescriptor+Addons.h"
