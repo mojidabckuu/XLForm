@@ -10,4 +10,6 @@
 
 @interface XLLabelBehavior : XLBehavior
 
+@property (nonatomic, strong) NSString *regex;
+
 @end

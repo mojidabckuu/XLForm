@@ -6,8 +6,10 @@
 //
 //
 
-#import "XLBehavior.h"
+#import "XLLabelBehavior.h"
 
-@interface XLTextBehavior : XLBehavior
+@interface XLTextBehavior : XLLabelBehavior <UITextInputTraits>
+
+@property (nonatomic, assign) NSUInteger length;
 
 @end
