@@ -36,6 +36,8 @@
 //helpers
 #import "XLFormOptionsObject.h"
 
+#import "XLForm+Helpers.h"
+
 //Controllers
 #import "XLFormOptionsViewController.h"
 #import "XLFormViewController.h"
