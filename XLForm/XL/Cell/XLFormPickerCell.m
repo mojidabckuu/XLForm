@@ -109,9 +109,13 @@
         self.inlineRowDescriptor.value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
         [self.formViewController updateFormRow:self.inlineRowDescriptor];
     }
-    else{
+    else {
         [self becomeFirstResponder];
-        self.rowDescriptor.value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
+        if([self.rowDescriptor.selectorOptions isKindOfClass:[XLFormOptionsObject class]]) {
+            self.rowDescriptor.value = [[self.rowDescriptor.selectorOptions objectAtIndex:row] formValue];
+        } else {
+            self.rowDescriptor.value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
+        }
     }
 }
 
