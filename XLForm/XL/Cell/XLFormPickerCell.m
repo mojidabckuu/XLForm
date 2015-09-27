@@ -106,9 +106,6 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     id value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
-    if([value respondsToSelector:@selector(formValue)]) {
-        value = [value formValue];
-    }
     if (self.inlineRowDescriptor){
         self.inlineRowDescriptor.value = value;
         [self.formViewController updateFormRow:self.inlineRowDescriptor];

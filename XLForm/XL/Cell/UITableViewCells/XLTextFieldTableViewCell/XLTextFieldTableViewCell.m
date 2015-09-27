@@ -23,7 +23,10 @@
 
 - (void)update {
     [super update];
-    self.textField.text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:self.rowDescriptor.value] : self.rowDescriptor.value;
+    id value = [self.rowDescriptor.value respondsToSelector:@selector(formValue)] ? [self.rowDescriptor.value formValue] : self.rowDescriptor.value;
+    NSString *displayText = [self.rowDescriptor.value respondsToSelector:@selector(formDisplayText)] ? [self.rowDescriptor.value formDisplayText] : nil;
+    NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : displayText;
+    self.textField.text = text;
     self.textField.placeholder = self.rowDescriptor.placeholder;
     self.titleLabel.text = self.rowDescriptor.title;
     self.subtitleLabel.text = self.rowDescriptor.subtitle;

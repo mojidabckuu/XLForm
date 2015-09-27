@@ -22,10 +22,13 @@
     } else if(self.rowDescriptor.subtitle) {
         self.detailTextLabel.text = self.rowDescriptor.subtitle;
     }
+    id value = [self.rowDescriptor.value respondsToSelector:@selector(formValue)] ? [self.rowDescriptor.value formValue] : self.rowDescriptor.value;
+    NSString *displayText = [self.rowDescriptor.value respondsToSelector:@selector(formDisplayText)] ? [self.rowDescriptor.value formDisplayText] : nil;
+    NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : displayText;
     if(self.valueLabel) {
-        self.valueLabel.text = self.rowDescriptor.value;
+        self.valueLabel.text = text;
     } else {
-        self.detailTextLabel.text = self.rowDescriptor.value;
+        self.detailTextLabel.text = text;
     }
 }
 
