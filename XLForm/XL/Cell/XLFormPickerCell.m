@@ -105,21 +105,17 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
+    id value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
+    if([value respondsToSelector:@selector(formValue)]) {
+        value = [value formValue];
+    }
     if (self.inlineRowDescriptor){
-        if([self.rowDescriptor.selectorOptions isKindOfClass:[XLFormOptionsObject class]]) {
-            self.inlineRowDescriptor.value = [[self.inlineRowDescriptor.selectorOptions objectAtIndex:row] formValue];
-        } else {
-            self.inlineRowDescriptor.value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
-        }
+        self.inlineRowDescriptor.value = value;
         [self.formViewController updateFormRow:self.inlineRowDescriptor];
     }
     else {
         [self becomeFirstResponder];
-        if([self.rowDescriptor.selectorOptions isKindOfClass:[XLFormOptionsObject class]]) {
-            self.rowDescriptor.value = [[self.rowDescriptor.selectorOptions objectAtIndex:row] formValue];
-        } else {
-            self.rowDescriptor.value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
-        }
+        self.rowDescriptor.value = value;
     }
 }
 
