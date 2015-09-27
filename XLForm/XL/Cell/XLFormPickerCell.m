@@ -106,7 +106,11 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     if (self.inlineRowDescriptor){
-        self.inlineRowDescriptor.value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
+        if([self.rowDescriptor.selectorOptions isKindOfClass:[XLFormOptionsObject class]]) {
+            self.inlineRowDescriptor.value = [[self.inlineRowDescriptor.selectorOptions objectAtIndex:row] formValue];
+        } else {
+            self.inlineRowDescriptor.value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
+        }
         [self.formViewController updateFormRow:self.inlineRowDescriptor];
     }
     else {
