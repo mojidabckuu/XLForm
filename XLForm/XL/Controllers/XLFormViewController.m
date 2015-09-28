@@ -717,7 +717,7 @@
     if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
     }
-    return height != 0 ?: self.tableView.rowHeight;
+    return height != 0 ? height : self.tableView.rowHeight;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -728,9 +728,9 @@
         height = [cellClass formDescriptorCellEstimatedHeightForRowDescriptor:rowDescriptor];
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
-        return height != 0 ?: self.tableView.estimatedRowHeight;
+        return height != 0 ? height : self.tableView.estimatedRowHeight;
     }
-    return height != 0 ?: 44;
+    return height != 0 ? height: 44;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
