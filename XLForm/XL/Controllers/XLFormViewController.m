@@ -710,27 +710,27 @@
     return [[self.form.formSections objectAtIndex:section] footerTitle];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.form formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cellForFormController:self] class];
+    CGFloat height = 0;
     if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
-        return [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
+        height = [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
     }
-    return self.tableView.rowHeight;
+    return height != 0 ?: self.tableView.rowHeight;
 }
 
--(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.form formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cellForFormController:self] class];
-    if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
-        return [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
+    CGFloat height = 0;
+    if ([cellClass respondsToSelector:@selector(formDescriptorCellEstimatedHeightForRowDescriptor:)]){
+        height = [cellClass formDescriptorCellEstimatedHeightForRowDescriptor:rowDescriptor];
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
-        return self.tableView.estimatedRowHeight;
+        return height != 0 ?: self.tableView.estimatedRowHeight;
     }
-    return 44;
+    return height != 0 ?: 44;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

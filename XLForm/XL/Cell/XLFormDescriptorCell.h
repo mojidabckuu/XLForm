@@ -40,6 +40,7 @@
 @optional
 
 +(CGFloat)formDescriptorCellHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
++(CGFloat)formDescriptorCellEstimatedHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
 -(BOOL)formDescriptorCellCanBecomeFirstResponder;
 -(BOOL)formDescriptorCellBecomeFirstResponder;
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller;
