@@ -683,17 +683,15 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     NSArray *visibleIndexPaths = self.tableView.indexPathsForVisibleRows;
     for(NSString *key in dictionary) {
         XLFormRowDescriptor *rowDescriptor = dictionary[key];
+        XLFormBaseCell *cell = [rowDescriptor cellForFormController:nil];
+        [cell update];
+        rowDescriptor.height = @([cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height);
         NSIndexPath *rowIndexPath = [self indexPathOfFormRow:rowDescriptor];
         if([visibleIndexPaths containsObject:rowIndexPath]) {
             [indexPaths addObject:rowIndexPath];
         }
     }
-    
     [self.tableView beginUpdates];
-    for(NSIndexPath *indexPath in indexPaths) {
-        XLFormBaseCell *cell = (XLFormBaseCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        [cell update];
-    }
     [self.tableView endUpdates];
 }
 
