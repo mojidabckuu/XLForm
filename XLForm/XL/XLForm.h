@@ -27,7 +27,6 @@
 
 //Descriptors
 #import "XLFormDescriptor.h"
-#import "XLForm+Validation.h"
 #import "XLFormSectionDescriptor.h"
 #import "XLFormRowDescriptor.h"
 

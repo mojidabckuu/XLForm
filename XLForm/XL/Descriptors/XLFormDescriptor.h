@@ -56,6 +56,11 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 @property (getter=isDisabled) BOOL disabled;
 @property (nonatomic) XLFormRowNavigationOptions rowNavigationOptions;
 
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, assign, getter=isValidationEnabled) BOOL validationEnabled;
+
+- (BOOL)isValid;
+
 @property (weak, nullable) id<XLFormDescriptorDelegate> delegate;
 
 +(nonnull instancetype)formDescriptor;
