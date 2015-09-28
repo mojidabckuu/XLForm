@@ -11,5 +11,6 @@
 @interface XLFormOptionsObject (Init)
 
 + (NSArray *)optionsWithItems:(id<NSFastEnumeration>)items keyPath:(NSString *)keyPath formatter:(NSFormatter *)formatter;
++ (NSArray *)optionsWithItems:(id<NSFastEnumeration>)items formatter:(NSFormatter *)formatter sortedBy:(NSString *)sortedBy;
 
 @end
