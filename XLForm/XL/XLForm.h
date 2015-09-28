@@ -27,6 +27,7 @@
 
 //Descriptors
 #import "XLFormDescriptor.h"
+#import "XLForm+Validation.h"
 #import "XLFormSectionDescriptor.h"
 #import "XLFormRowDescriptor.h"
 
@@ -52,9 +53,9 @@
 #import "XLFormInlineSelectorCell.h"
 #import "XLFormTextFieldCell.h"
 #import "XLFormTextViewCell.h"
-#import "XLFormSelectorCell.h"
+//#import "XLFormSelectorCell.h"
 #import "XLFormDatePickerCell.h"
-#import "XLFormButtonCell.h"
+
 #import "XLFormSwitchCell.h"
 #import "XLFormCheckCell.h"
 #import "XLFormDatePickerCell.h"
