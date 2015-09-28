@@ -713,7 +713,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.form formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cellForFormController:self] class];
-    CGFloat height = 0;
+    CGFloat height = [rowDescriptor.height floatValue];
     if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
     }
@@ -723,7 +723,7 @@
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.form formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cellForFormController:self] class];
-    CGFloat height = 0;
+    CGFloat height = [rowDescriptor.height floatValue];
     if ([cellClass respondsToSelector:@selector(formDescriptorCellEstimatedHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellEstimatedHeightForRowDescriptor:rowDescriptor];
     }

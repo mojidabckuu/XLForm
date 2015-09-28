@@ -126,23 +126,6 @@
     return [super resignFirstResponder];
 }
 
-+ (CGFloat)formDescriptorCellHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor {
-    if(rowDescriptor.height) {
-        return [rowDescriptor.height floatValue];
-    }
-    return rowDescriptor.sectionDescriptor.formDescriptor.tableView.rowHeight;
-}
-
-+(CGFloat)formDescriptorCellEstimatedHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor {
-    if(rowDescriptor.height) {
-        return [rowDescriptor.height floatValue];
-    }
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        return rowDescriptor.sectionDescriptor.formDescriptor.tableView.estimatedRowHeight;
-    }
-    return 44;
-}
-
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller {
     if(self.rowDescriptor.selectionStyle != XLFormRowSelectionStyleUndefined) {
         [self performSelectionWithFormController:controller];
