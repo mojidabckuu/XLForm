@@ -15,10 +15,15 @@
 @implementation XLFormDescriptor (Validation)
 
 - (BOOL)isValid {
+    NSMutableDictionary *errorsDictionary = [NSMutableDictionary dictionary];
+    
     for (XLFormSectionDescriptor *section in self.formSections) {
         for (XLFormRowDescriptor *row in section.formRows) {
             if([row conformsToProtocol:@protocol(XLErrorProtocol)]) {
-                id<XLErrorProtocol> errorRow = (id)row;
+                XLFormRowDescriptor<XLErrorProtocol> *errorRow = (id)row;
+                if(errorRow.error) {
+                    [errorsDictionary setObject:errorRow forKey:errorRow.tag];
+                }
                 errorRow.error = nil;
             }
         }
@@ -34,7 +39,10 @@
             XLFormValidationStatus *validationStatus = error.userInfo[XLValidationStatusErrorKey];
             XLFormRowDescriptor *rowDescriptor = validationStatus.rowDescriptor;
             if([rowDescriptor conformsToProtocol:@protocol(XLErrorProtocol)]) {
-                id<XLErrorProtocol> errorRowDescriptor = (id)rowDescriptor;
+                XLFormRowDescriptor<XLErrorProtocol> *errorRowDescriptor = (id)rowDescriptor;
+                if(![errorsDictionary objectForKey:errorRowDescriptor.tag]) {
+                    [errorsDictionary setObject:errorRowDescriptor forKey:errorRowDescriptor.tag];
+                }
                 NSString *errorText = validationStatus.msg;
                 if(!errorText.length) {
                     errorText = NSLocalizedString(@"Empty errror text", @"XLForm validation");
@@ -46,7 +54,7 @@
         NSAssert(self.tableView, @"You need bind reference to UITableView instance");
     }
     
-    [self updateCells];
+    [self updateCellsWithDictionary:errorsDictionary];
 
     return !errors.count;
 }
@@ -78,6 +86,25 @@
 - (void)updateCells {
     [self.tableView beginUpdates];
     for(NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+        XLFormBaseCell *cell = (XLFormBaseCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        [cell update];
+    }
+    [self.tableView endUpdates];
+}
+
+- (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    NSArray *visibleIndexPaths = self.tableView.indexPathsForVisibleRows;
+    for(NSString *key in dictionary) {
+        XLFormRowDescriptor *rowDescriptor = dictionary[key];
+        NSIndexPath *rowIndexPath = [self indexPathOfFormRow:rowDescriptor];
+        if([visibleIndexPaths containsObject:rowIndexPath]) {
+            [indexPaths addObject:rowIndexPath];
+        }
+    }
+    
+    [self.tableView beginUpdates];
+    for(NSIndexPath *indexPath in indexPaths) {
         XLFormBaseCell *cell = (XLFormBaseCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         [cell update];
     }
