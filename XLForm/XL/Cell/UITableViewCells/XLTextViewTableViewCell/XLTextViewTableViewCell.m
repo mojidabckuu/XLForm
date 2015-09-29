@@ -54,11 +54,11 @@
 #pragma mark -
 
 - (BOOL)formDescriptorCellCanBecomeFirstResponder {
-    return [super formDescriptorCellCanBecomeFirstResponder];
+    return YES;
 }
 
 - (BOOL)formDescriptorCellBecomeFirstResponder {
-    return [super formDescriptorCellBecomeFirstResponder];
+    return [self.textView becomeFirstResponder];
 }
 
 #pragma mark - Accessors
