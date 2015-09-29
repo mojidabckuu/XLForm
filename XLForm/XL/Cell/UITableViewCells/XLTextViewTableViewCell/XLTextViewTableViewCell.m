@@ -51,6 +51,16 @@
     self.textView.textColor  = self.rowDescriptor.isDisabled ? [UIColor grayColor] : [UIColor blackColor];
 }
 
+#pragma mark -
+
+- (BOOL)formDescriptorCellCanBecomeFirstResponder {
+    return [super formDescriptorCellCanBecomeFirstResponder];
+}
+
+- (BOOL)formDescriptorCellBecomeFirstResponder {
+    return [super formDescriptorCellBecomeFirstResponder];
+}
+
 #pragma mark - Accessors
 
 //- (UITextView *)textView {
