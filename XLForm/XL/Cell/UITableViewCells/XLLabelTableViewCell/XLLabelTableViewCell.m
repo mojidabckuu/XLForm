@@ -22,9 +22,8 @@
     } else if(self.rowDescriptor.subtitle) {
         self.detailTextLabel.text = self.rowDescriptor.subtitle;
     }
-    id value = [self.rowDescriptor.value respondsToSelector:@selector(formValue)] ? [self.rowDescriptor.value formValue] : self.rowDescriptor.value;
-    NSString *displayText = [self.rowDescriptor.value respondsToSelector:@selector(formDisplayText)] ? [self.rowDescriptor.value formDisplayText] : self.rowDescriptor.value;
-    NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : displayText;
+    id value = self.rowDescriptor.value;
+    NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : value;
     if(self.valueLabel) {
         self.valueLabel.text = text;
     } else {
