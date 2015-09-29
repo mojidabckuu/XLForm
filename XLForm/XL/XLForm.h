@@ -48,10 +48,16 @@
 #import "XLFormRowDescriptorViewController.h"
 
 //Cells
+#import "XLTextFieldTableViewCell.h"
+#import "XLTextViewTableViewCell.h"
+#import "XLButtonTableViewCell.h"
+#import "XLLabelTableViewCell.h"
+
+
 #import "XLFormBaseCell.h"
 #import "XLFormInlineSelectorCell.h"
-#import "XLFormTextFieldCell.h"
-#import "XLFormTextViewCell.h"
+//#import "XLFormTextFieldCell.h"
+//#import "XLFormTextViewCell.h"
 //#import "XLFormSelectorCell.h"
 #import "XLFormDatePickerCell.h"
 
@@ -68,6 +74,7 @@
 //Validation
 #import "XLFormRegexValidator.h"
 
+#import <UITextView+Placeholder/UITextView+Placeholder.h>
 
 extern NSString *const XLFormRowDescriptorTypeText;
 extern NSString *const XLFormRowDescriptorTypeName;

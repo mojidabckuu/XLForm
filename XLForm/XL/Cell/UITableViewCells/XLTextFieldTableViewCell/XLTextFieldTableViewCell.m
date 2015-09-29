@@ -32,6 +32,8 @@
     self.textField.enabled = self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined;
 }
 
+#pragma mark - Responderer
+
 - (BOOL)becomeFirstResponder {
     if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined) {
         return [self.textField becomeFirstResponder];
