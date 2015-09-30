@@ -66,6 +66,7 @@
 @synthesize cellConfig = _cellConfig;
 @synthesize cellConfigIfDisabled = _cellConfigIfDisabled;
 @synthesize cellConfigAtConfigure = _cellConfigAtConfigure;
+@synthesize cellConfigIfInlined = _cellConfigIfInlined;
 
 -(instancetype)init
 {
@@ -154,6 +155,13 @@
     if (_cellConfigAtConfigure) return _cellConfigAtConfigure;
     _cellConfigAtConfigure = [NSMutableDictionary dictionary];
     return _cellConfigAtConfigure;
+}
+
+- (NSMutableDictionary *)cellConfigIfInlined {
+    if(!_cellConfigIfInlined) {
+        _cellConfigIfInlined = [NSMutableDictionary dictionary];
+    }
+    return _cellConfigIfInlined;
 }
 
 -(NSString *)description
