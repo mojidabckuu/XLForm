@@ -43,6 +43,11 @@ typedef NS_ENUM(NSUInteger, XLPredicateType) {
 -(void)formRowHasBeenAdded:(XLFormRowDescriptor *)formRow atIndexPath:(NSIndexPath *)indexPath;
 -(void)formRowHasBeenRemoved:(XLFormRowDescriptor *)formRow atIndexPath:(NSIndexPath *)indexPath;
 -(void)formRowDescriptorValueHasChanged:(XLFormRowDescriptor *)formRow oldValue:(id)oldValue newValue:(id)newValue;
+
+-(void)formRowDescriptorHasChangeHidhlight:(XLFormRowDescriptor *)formRow hightlight:(BOOL)hightlight;
+-(BOOL)formRowDescriptorShouldBecomeResponderer:(XLFormRowDescriptor *)formRow;
+-(BOOL)formRowDescriptorShouldResignResponderer:(XLFormRowDescriptor *)formRow;
+
 -(void)formRowDescriptorPredicateHasChanged:(XLFormRowDescriptor *)formRow
                                    oldValue:(id)oldValue
                                    newValue:(id)newValue

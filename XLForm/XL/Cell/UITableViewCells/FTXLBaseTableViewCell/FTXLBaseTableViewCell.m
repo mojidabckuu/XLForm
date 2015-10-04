@@ -83,54 +83,79 @@
 }
 
 - (BOOL)becomeFirstResponder {
+    BOOL result = NO;
+    BOOL shouldBecome = [self.formViewController formRowDescriptorShouldBecomeResponderer:self.rowDescriptor];
+    if(!shouldBecome) {
+        return NO;
+    }
     if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleInline) {
         if (self.isFirstResponder){
-            return [super becomeFirstResponder];
-        }
-        BOOL result = [super becomeFirstResponder];
-        if (result) {
-            NSString *type = nil;
-            switch (self.rowDescriptor.selectionType) {
-                case XLFormRowSelectionTypeDatePicker:
-                    type = XLFormRowDescriptorTypeDatePicker;
-                    break;
-                case XLFormRowSelectionTypePickerView:
-                    type = XLFormRowDescriptorTypePicker;
-                    break;
-                default:
-                    break;
+            result = [super becomeFirstResponder];
+        } else {
+            result = [super becomeFirstResponder];
+            if (result) {
+                NSString *type = nil;
+                switch (self.rowDescriptor.selectionType) {
+                    case XLFormRowSelectionTypeDatePicker:
+                        type = XLFormRowDescriptorTypeDatePicker;
+                        break;
+                    case XLFormRowSelectionTypePickerView:
+                        type = XLFormRowDescriptorTypePicker;
+                        break;
+                    default:
+                        break;
+                }
+                self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
+                XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:type];
+                [inlineRowDescriptor.cellConfig setValuesForKeysWithDictionary:self.rowDescriptor.cellConfigIfInlined];
+                UITableViewCell<XLFormDescriptorCell> * cell = [inlineRowDescriptor cellForFormController:self.formViewController];
+                NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
+                UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
+                inlineCell.inlineRowDescriptor = self.rowDescriptor;
+                [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
+                [self.formViewController updateFormRow:self.rowDescriptor];
+                [self.formViewController ensureRowIsVisible:inlineRowDescriptor];
             }
-            XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:type];
-            [inlineRowDescriptor.cellConfig setValuesForKeysWithDictionary:self.rowDescriptor.cellConfigIfInlined];
-            UITableViewCell<XLFormDescriptorCell> * cell = [inlineRowDescriptor cellForFormController:self.formViewController];
-            NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
-            UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
-            inlineCell.inlineRowDescriptor = self.rowDescriptor;
-            [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
-            [self.formViewController ensureRowIsVisible:inlineRowDescriptor];
         }
-        return result;
+    } else {
+        result = [super becomeFirstResponder];
     }
-    return [super becomeFirstResponder];
+    return result;
 }
 
--(BOOL)resignFirstResponder {
+- (BOOL)resignFirstResponder {
+    BOOL result = NO;
+    BOOL shouldResign = [self.formViewController formRowDescriptorShouldResignResponderer:self.rowDescriptor];
+    if(!shouldResign) {
+        return result;
+    }
     if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleInline) {
         NSIndexPath * selectedRowPath = [self.formViewController.form indexPathOfFormRow:self.rowDescriptor];
         NSIndexPath * nextRowPath = [NSIndexPath indexPathForRow:selectedRowPath.row + 1 inSection:selectedRowPath.section];
         XLFormRowDescriptor * nextFormRow = [self.formViewController.form formRowAtIndex:nextRowPath];
         XLFormSectionDescriptor * formSection = [self.formViewController.form.formSections objectAtIndex:nextRowPath.section];
-        BOOL result = [super resignFirstResponder];
+        result = [super resignFirstResponder];
         [formSection removeFormRow:nextFormRow];
-        return result;
+    } else {
+        result = [super resignFirstResponder];
     }
-    return [super resignFirstResponder];
+    return result;
 }
 
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller {
     if(self.rowDescriptor.selectionStyle != XLFormRowSelectionStyleUndefined) {
         [self performSelectionWithFormController:controller];
     }
+}
+
+#pragma mark - Hightlight
+
+- (void)highlight {
+    [self.formViewController formRowDescriptorHasChangeHidhlight:self.rowDescriptor hightlight:YES];
+}
+
+- (void)unhighlight {
+    [self.formViewController formRowDescriptorHasChangeHidhlight:self.rowDescriptor hightlight:NO];
 }
 
 #pragma mark - Accessors
