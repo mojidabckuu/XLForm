@@ -221,6 +221,7 @@
     }
     if(presenterClass) {
         XLFormPresenter *presenter = [[presenterClass alloc] init];
+        presenter.sourceViewController = viewController;
         presenter.rowDescriptor = self.rowDescriptor;
         [presenter presentWithCompletionBlock:nil];
     }
