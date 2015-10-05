@@ -22,7 +22,8 @@
     
     id controller = selectorViewController;
     if(![self.destinationViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:selectorViewController];
+        Class navigationControllerClass = [self.sourceViewController.navigationController class] ?: [UINavigationController class];
+        UINavigationController *navigationController = [[navigationControllerClass alloc] initWithRootViewController:selectorViewController];
         UIBarButtonItem *doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStyleDone target:self action:@selector(dismiss:)];
         selectorViewController.navigationItem.rightBarButtonItem = doneBarButtonItem;
         controller = navigationController;
