@@ -138,18 +138,10 @@
 
 #pragma mark - helpers
 
--(NSInteger)selectedIndex
-{
+-(NSInteger)selectedIndex {
     XLFormRowDescriptor * formRow = self.inlineRowDescriptor ?: self.rowDescriptor;
-    if (formRow.value){
-        for (id option in formRow.selectorOptions){
-            if ([[option valueData] isEqual:formRow.value]){
-                return [formRow.selectorOptions indexOfObject:option];
-            }
-        }
-    }
-    return -1;
+    NSInteger index = [formRow.selectorOptions indexOfObject:formRow.value];
+    return index != NSNotFound ? index : -1;
 }
-
 
 @end
