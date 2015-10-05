@@ -181,7 +181,8 @@
     if([self.value respondsToSelector:@selector(displayText)]) {
         return [self.value displayText];
     }
-    return self.formatter ? [self.formatter stringForObjectValue:self.value] : self.value;
+    id formattedValue = self.formatter ? [self.formatter stringForObjectValue:self.value] : self.value;
+    return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
 }
 
 -(void)setAction:(XLFormAction *)action
