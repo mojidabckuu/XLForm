@@ -28,7 +28,7 @@
         controller = navigationController;
     }
     
-    [self.sourceViewController.navigationController pushViewController:controller animated:YES];
+    [self.sourceViewController presentViewController:controller animated:YES completion:completionBlock];
 }
 
 #pragma mark - User interaction
