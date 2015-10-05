@@ -50,6 +50,7 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 @property (readonly, nonnull) NSString * rowType;
 @property (nullable) NSString * title;
 @property (nonatomic, nullable) id value;
+@property (nonatomic, readonly, nullable) NSString *formattedValue;
 @property (nullable) Class valueTransformer;
 @property UITableViewCellStyle cellStyle;
 

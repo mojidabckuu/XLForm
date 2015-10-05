@@ -177,6 +177,13 @@
     return _action;
 }
 
+- (NSString *)formattedValue {
+    if([self.value respondsToSelector:@selector(displayText)]) {
+        return [self.value displayText];
+    }
+    return self.formatter ? [self.formatter stringForObjectValue:self.value] : self.value;
+}
+
 -(void)setAction:(XLFormAction *)action
 {
     _action = action;
