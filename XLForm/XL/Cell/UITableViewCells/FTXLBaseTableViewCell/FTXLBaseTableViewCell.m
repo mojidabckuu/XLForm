@@ -109,7 +109,9 @@
                     default:
                         break;
                 }
-                self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
+                if(!self.rowDescriptor.value) {
+                    self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
+                }
                 XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:type];
                 [inlineRowDescriptor.cellConfig setValuesForKeysWithDictionary:self.rowDescriptor.cellConfigIfInlined];
                 UITableViewCell<XLFormDescriptorCell> * cell = [inlineRowDescriptor cellForFormController:self.formViewController];
