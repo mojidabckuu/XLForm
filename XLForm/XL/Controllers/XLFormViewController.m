@@ -305,6 +305,17 @@
     [self updateAfterDependentRowChanged:formRow];
 }
 
+- (BOOL)formRowDescriptorShouldBecomeResponderer:(XLFormRowDescriptor *)formRow {
+    return YES;
+}
+
+- (BOOL)formRowDescriptorShouldResignResponderer:(XLFormRowDescriptor *)formRow {
+    return YES;
+}
+
+-(void)formRowDescriptorHasChangeHidhlight:(XLFormRowDescriptor *)formRow hightlight:(BOOL)hightlight {
+}
+
 -(void)formRowDescriptorPredicateHasChanged:(XLFormRowDescriptor *)formRow oldValue:(id)oldValue newValue:(id)newValue predicateType:(XLPredicateType)predicateType
 {
     if (oldValue != newValue) {
