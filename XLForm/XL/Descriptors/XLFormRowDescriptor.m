@@ -182,7 +182,7 @@
 }
 
 - (NSString *)formatValue:(id)value {
-    if([value respondsToSelector:@selector(displayText)]) {
+    if([value isKindOfClass:[XLFormOptionsObject class]]) {
         return [value displayText];
     }
     id formattedValue = self.formatter ? [self.formatter stringForObjectValue:value] : value;
