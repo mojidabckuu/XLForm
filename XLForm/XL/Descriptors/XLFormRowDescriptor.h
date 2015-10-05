@@ -81,6 +81,8 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 -(void)removeValidator:(nonnull id<XLFormValidatorProtocol>)validator;
 -(nonnull XLFormValidationStatus *)doValidation;
 
+- (NSString *)formatValue:(id)value;
+
 // ===========================
 // property used for Selectors
 // ===========================

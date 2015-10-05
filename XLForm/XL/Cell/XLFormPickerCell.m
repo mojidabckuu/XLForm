@@ -95,12 +95,14 @@
 
 #pragma mark - UIPickerViewDelegate
 
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     if (self.inlineRowDescriptor){
-        return [[self.inlineRowDescriptor.selectorOptions objectAtIndex:row] displayText];
+        id value = [self.inlineRowDescriptor.selectorOptions objectAtIndex:row];
+        return [self.inlineRowDescriptor formatValue:value];
+    } else {
+        id value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
+        return [self.rowDescriptor formatValue:value];
     }
-    return [[self.rowDescriptor.selectorOptions objectAtIndex:row] displayText];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component

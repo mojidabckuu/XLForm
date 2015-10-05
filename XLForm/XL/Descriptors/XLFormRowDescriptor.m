@@ -178,10 +178,14 @@
 }
 
 - (NSString *)formattedValue {
-    if([self.value respondsToSelector:@selector(displayText)]) {
-        return [self.value displayText];
+    return [self formatValue:self.value];
+}
+
+- (NSString *)formatValue:(id)value {
+    if([value respondsToSelector:@selector(displayText)]) {
+        return [value displayText];
     }
-    id formattedValue = self.formatter ? [self.formatter stringForObjectValue:self.value] : self.value;
+    id formattedValue = self.formatter ? [self.formatter stringForObjectValue:value] : value;
     return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
 }
 
