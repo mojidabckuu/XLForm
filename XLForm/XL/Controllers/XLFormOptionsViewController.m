@@ -71,7 +71,9 @@
     // register option cell
     [self.tableView registerClass:[XLFormRightDetailCell class] forCellReuseIdentifier:CELL_REUSE_IDENTIFIER];
     
-    self.selectedValues = [NSMutableArray array];
+    id value = self.rowDescriptor.value ?: @[];
+    NSArray *values = [value isKindOfClass:[NSArray class]] ? value : @[value];
+    self.selectedValues = [NSMutableArray arrayWithArray:values];
 }
 
 #pragma mark - UITableView data source
@@ -125,84 +127,9 @@
     }
     self.rowDescriptor.value = [self.selectedValues copy];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-//    if([[self selectedValues] containsObject:cellObject]) {
-//        self
-//    }
-//    if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelector] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]){
-//        if ([self selectedValuesContainsOption:cellObject]){
-//            self.rowDescriptor.value = [self selectedValuesRemoveOption:cellObject];
-//            cell.accessoryType = UITableViewCellAccessoryNone;
-//        }
-//        else{
-//            self.rowDescriptor.value = [self selectedValuesAddOption:cellObject];
-//            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//        }
-//    }
-//    else{
-//        if ([[self.rowDescriptor.value valueData] isEqual:[cellObject valueData]]){
-//            if (!self.rowDescriptor.required){
-//                self.rowDescriptor.value = nil;
-//            }
-//            cell.accessoryType = UITableViewCellAccessoryNone;
-//        }
-//        else{
-//            if (self.rowDescriptor.value){
-//                NSInteger index = [[self selectorOptions] formIndexForItem:self.rowDescriptor.value];
-//                if (index != NSNotFound){
-//                    NSIndexPath * oldSelectedIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
-//                    UITableViewCell *oldSelectedCell = [tableView cellForRowAtIndexPath:oldSelectedIndexPath];
-//                    oldSelectedCell.accessoryType = UITableViewCellAccessoryNone;
-//                }
-//            }
-//            self.rowDescriptor.value = cellObject;
-//            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//        }
-//        
-//    }
-    
 }
 
-//#pragma mark - Helper
-//
-//-(NSMutableArray *)selectedValues
-//{
-//    if (self.rowDescriptor.value == nil){
-//        return [NSMutableArray array];
-//    }
-//    NSAssert([self.rowDescriptor.value isKindOfClass:[NSArray class]], @"XLFormRowDescriptor value must be NSMutableArray");
-//    return [NSMutableArray arrayWithArray:self.rowDescriptor.value];
-//}
-//
-//-(BOOL)selectedValuesContainsOption:(id)option
-//{
-//    return ([self.selectedValues formIndexForItem:option] != NSNotFound);
-//}
-//
-//-(NSMutableArray *)selectedValuesRemoveOption:(id)option
-//{
-//    for (id selectedValueItem in self.selectedValues) {
-//        if ([[selectedValueItem valueData] isEqual:[option valueData]]){
-//            NSMutableArray * result = self.selectedValues;
-//            [result removeObject:selectedValueItem];
-//            return result;
-//        }
-//    }
-//    return self.selectedValues;
-//}
-//
-//-(NSMutableArray *)selectedValuesAddOption:(id)option
-//{
-//    NSAssert([self.selectedValues formIndexForItem:option] == NSNotFound, @"XLFormRowDescriptor value must not contain the option");
-//    NSMutableArray * result = self.selectedValues;
-//    [result addObject:option];
-//    return result;
-//}
-//
-//
-
--(NSString *)valueDisplayTextForOption:(id)option
-{
+-(NSString *)valueDisplayTextForOption:(id)option {
     if (self.rowDescriptor.valueTransformer){
         NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
         NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
@@ -216,8 +143,7 @@
 
 #pragma mark - Helpers
 
--(NSArray *)selectorOptions
-{
+-(NSArray *)selectorOptions {
     if (self.rowDescriptor.rowType == XLFormRowDescriptorTypeSelectorLeftRight){
         XLFormLeftRightSelectorOption * option = [self leftOptionForOption:self.rowDescriptor.leftRightSelectorLeftOptionSelected];
         return option.rightOptions;
@@ -227,13 +153,11 @@
     }
 }
 
--(XLFormLeftRightSelectorOption *)leftOptionForOption:(id)option
-{
+-(XLFormLeftRightSelectorOption *)leftOptionForOption:(id)option {
     return [[self.rowDescriptor.selectorOptions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary * __unused bindings) {
         XLFormLeftRightSelectorOption * evaluatedLeftOption = (XLFormLeftRightSelectorOption *)evaluatedObject;
         return [evaluatedLeftOption.leftValue isEqual:option];
     }]] firstObject];
 }
-
 
 @end
