@@ -28,20 +28,27 @@
 @implementation XLFormOptionsObject
 {
     NSString * _formDisplaytext;
+    NSString * _tag;
     id _formValue;
 }
 
 +(XLFormOptionsObject *)formOptionsObjectWithValue:(id)value displayText:(NSString *)displayText
 {
-    return [[XLFormOptionsObject alloc] initWithValue:value displayText:displayText];
+    return [[XLFormOptionsObject alloc] initWithValue:value displayText:displayText tag:nil];
 }
 
--(id)initWithValue:(id)value displayText:(NSString *)displayText
++(XLFormOptionsObject *)formOptionsObjectWithValue:(id)value displayText:(NSString *)displayText tag:(NSString *)tag {
+    XLFormOptionsObject *optionObject = [[XLFormOptionsObject alloc] initWithValue:value displayText:displayText tag:tag];
+    return optionObject;
+}
+
+-(id)initWithValue:(id)value displayText:(NSString *)displayText tag:(NSString *)tag
 {
     self = [super init];
     if (self){
         _formValue = value;
         _formDisplaytext = displayText;
+        _tag = tag;
     }
     return self;
 }
@@ -76,6 +83,10 @@
 -(id)formValue
 {
     return _formValue;
+}
+
+-(NSString *)tag {
+    return _tag;
 }
 
 @end

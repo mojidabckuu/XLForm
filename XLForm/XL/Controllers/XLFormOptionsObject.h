@@ -29,6 +29,7 @@
 @interface XLFormOptionsObject : NSObject <XLFormOptionObject>
 
 +(XLFormOptionsObject *)formOptionsObjectWithValue:(id)value displayText:(NSString *)displayText;
++(XLFormOptionsObject *)formOptionsObjectWithValue:(id)value displayText:(NSString *)displayText tag:(NSString *)tag;
 +(XLFormOptionsObject *)formOptionsOptionForValue:(id)value fromOptions:(NSArray *)options;
 +(XLFormOptionsObject *)formOptionsOptionForDisplayText:(NSString *)displayText fromOptions:(NSArray *)options;
 
