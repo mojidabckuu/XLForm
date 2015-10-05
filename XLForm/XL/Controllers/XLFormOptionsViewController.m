@@ -82,25 +82,13 @@
     return [[self selectorOptions] count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRightDetailCell * cell = [tableView dequeueReusableCellWithIdentifier:CELL_REUSE_IDENTIFIER forIndexPath:indexPath];
     id cellObject =  [[self selectorOptions] objectAtIndex:indexPath.row];
     cell.textLabel.text = [self valueDisplayTextForOption:cellObject];
-    if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelector] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]){
-        cell.accessoryType = ([self selectedValuesContainsOption:cellObject] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-    }
-    else{
-        if ([[self.rowDescriptor.value valueData] isEqual:[cellObject valueData]]){
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        }
-        else{
-            cell.accessoryType = UITableViewCellAccessoryNone;
-        }
-    }
+    cell.accessoryType = ([[self selectedValues] containsObject:cellObject] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
     return cell;
 }
-
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {

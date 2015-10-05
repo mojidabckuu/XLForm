@@ -66,14 +66,6 @@
     return nil;
 }
 
--(BOOL)isEqual:(id)object
-{
-    if (![[self class] isEqual:[object class]]){
-        return NO;
-    }
-    return [self.formValue isEqual:((XLFormOptionsObject *)object).formValue];
-}
-
 #pragma mark - XLFormOptionObject
 
 -(NSString *)formDisplayText
