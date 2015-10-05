@@ -62,6 +62,8 @@
     [self.sourceViewController presentViewController:alertController animated:YES completion:nil];
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+
 #pragma mark - UIActionSheet delegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -76,4 +78,6 @@
         }
     }
 }
+
+#endif
 @end
