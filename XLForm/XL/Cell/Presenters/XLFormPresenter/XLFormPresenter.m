@@ -10,6 +10,8 @@
 
 #import "XLFormRowDescriptor.h"
 
+#import "XLFormOptionsViewController.h"
+
 @implementation XLFormPresenter
 
 @synthesize rowDescriptor = _rowDescriptor;
@@ -46,6 +48,9 @@
         Class viewControllerClass = NSClassFromString(self.rowDescriptor.action.viewControllerNibName);
         NSAssert(viewControllerClass, @"class owner of self.rowDescriptor.action.viewControllerNibName must be equal to %@", self.rowDescriptor.action.viewControllerNibName);
         return [[viewControllerClass alloc] initWithNibName:self.rowDescriptor.action.viewControllerNibName bundle:nil];
+    } else if(self.rowDescriptor.selectorOptions) {
+        XLFormOptionsViewController * optionsViewController = [[XLFormOptionsViewController alloc] initWithStyle:UITableViewStyleGrouped titleHeaderSection:nil titleFooterSection:nil];
+        return optionsViewController;
     }
     return nil;
 }
