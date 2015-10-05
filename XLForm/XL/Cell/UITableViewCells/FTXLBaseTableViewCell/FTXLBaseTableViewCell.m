@@ -12,6 +12,8 @@
 
 #import "XLForm+Helpers.h"
 
+#import "XLFormPresenters.h"
+
 @interface FTXLBaseTableViewCell () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (nonatomic, strong) UIPickerView *pickerView;
@@ -143,9 +145,10 @@
 }
 
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller {
-    if(self.rowDescriptor.selectionStyle != XLFormRowSelectionStyleUndefined) {
-        [self performSelectionWithFormController:controller];
-    }
+    [self performSelectionWithFormController:controller];
+//    if(self.rowDescriptor.selectionStyle != XLFormRowSelectionStyleUndefined) {
+//        
+//    }
 }
 
 #pragma mark - Hightlight
@@ -203,6 +206,26 @@
 }
 
 - (void)performSelectionWithFormController:(XLFormViewController *)viewController {
+    Class presenterClass = nil;
+    switch (self.rowDescriptor.selectionStyle) {
+        case XLFormRowSelectionStylePush: presenterClass = [XLFormPushPresenter class]; break;
+        case XLFormRowSelectionStylePresent: presenterClass = [XLFormModalPresenter class]; break;
+        case XLFormRowSelectionStyleActionSheet: presenterClass = [XLFormActionSheetPresenter class]; break;
+        case XLFormRowSelectionStyleAlertView: presenterClass = [XLFormAlertViewPresenter class]; break;
+        case XLFormRowSelectionStylePopover: presenterClass = [XLFormPopoverPresenter class]; break;
+        case XLFormRowSelectionStyleInline:
+        case XLFormRowSelectionStylePicker:
+            presenterClass = nil;
+            break;
+        default: presenterClass = [XLFormSeguePresenter class]; break;
+    }
+    if(presenterClass) {
+        XLFormPresenter *presenter = [[presenterClass alloc] init];
+        presenter.rowDescriptor = self.rowDescriptor;
+        [presenter presentWithCompletionBlock:nil];
+    }
+    return;
+    
     if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePush || self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePopover) {
         if(self.rowDescriptor.action.formSegueIdenfifier) {
             [viewController performSegueWithIdentifier:self.rowDescriptor.action.formSegueIdenfifier sender:self.rowDescriptor];
