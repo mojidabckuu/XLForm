@@ -12,23 +12,12 @@
 
 - (void)update {
     [super update];
-    if(self.titleLabel) {
-        self.titleLabel.text = self.rowDescriptor.title;
-    } else if(self.rowDescriptor.title) {
-        self.textLabel.text = self.rowDescriptor.title;
-    }
-    if(self.subtitleLabel) {
-        self.subtitleLabel.text = self.rowDescriptor.subtitle;
-    } else if(self.rowDescriptor.subtitle) {
-        self.detailTextLabel.text = self.rowDescriptor.subtitle;
-    }
-    id value = self.rowDescriptor.value;
-    NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : value;
-    if(self.valueLabel) {
-        self.valueLabel.text = text;
-    } else {
-        self.detailTextLabel.text = text;
-    }
+    UILabel *titleLabel = self.titleLabel ?: self.textLabel;
+    titleLabel.text = self.rowDescriptor.title;
+    UILabel *subtitleLabel = self.subtitleLabel ?: self.detailTextLabel;
+    subtitleLabel.text = self.rowDescriptor.subtitle;
+    UILabel *valueLabel = self.valueLabel ?: self.detailTextLabel;
+    valueLabel.text = [self.rowDescriptor formattedValue];
 }
 
 @end
