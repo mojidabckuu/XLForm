@@ -13,3 +13,5 @@
 @property (nonatomic, assign) NSUInteger length;
 
 @end
+
+#import "XLTextBehavior+PredefinedBehaviors.h"
