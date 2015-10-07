@@ -39,7 +39,6 @@
 @synthesize nextButton = _nextButton;
 @synthesize doneButton = _doneButton;
 
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 44.0)];

@@ -27,6 +27,8 @@
 
 #import "XLFormDatePickerCell.h"
 
+#import "XLFormContent.h"
+
 @implementation XLFormDatePickerCell
 
 @synthesize datePicker = _datePicker;
@@ -53,7 +55,7 @@
 {
     if (self.inlineRowDescriptor){
         self.inlineRowDescriptor.value = sender.date;
-        [self.formViewController updateFormRow:self.inlineRowDescriptor];
+        [self.formViewController.formContent updateFormRow:self.inlineRowDescriptor];
     }
     else{
         [self becomeFirstResponder];

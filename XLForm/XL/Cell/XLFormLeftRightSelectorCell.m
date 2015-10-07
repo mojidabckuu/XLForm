@@ -28,6 +28,8 @@
 #import "NSObject+XLFormAdditions.h"
 #import "XLFormLeftRightSelectorCell.h"
 
+#import "XLFormContent.h"
+
 @interface XLFormLeftRightSelectorCell() <UIActionSheetDelegate>
 
 @end
@@ -209,7 +211,7 @@
                                                               handler:^(UIAlertAction *action) {
                                                                   weakSelf.rowDescriptor.value = nil;
                                                                   weakSelf.rowDescriptor.leftRightSelectorLeftOptionSelected = [self leftOptionForDescription:[leftOption.leftValue displayText]].leftValue;
-                                                                  [weakSelf.formViewController updateFormRow:weakSelf.rowDescriptor];
+                                                                  [weakSelf.formViewController.formContent updateFormRow:weakSelf.rowDescriptor];
                                                               }]];
         }
         

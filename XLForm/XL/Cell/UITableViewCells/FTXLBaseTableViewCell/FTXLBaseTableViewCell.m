@@ -14,6 +14,8 @@
 
 #import "XLFormPresenters.h"
 
+#import "XLFormContent.h"
+
 @interface FTXLBaseTableViewCell () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (nonatomic, strong) XLFormPresenter *presenter;
@@ -119,8 +121,7 @@
                 UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
                 inlineCell.inlineRowDescriptor = self.rowDescriptor;
                 [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
-                [self.formViewController updateFormRow:self.rowDescriptor];
-                [self.formViewController ensureRowIsVisible:inlineRowDescriptor];
+                [self.formViewController.formContent ensureRowIsVisible:inlineRowDescriptor];
             }
         }
     } else {

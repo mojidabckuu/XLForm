@@ -10,7 +10,8 @@
 
 @interface XLTextBehavior : XLLabelBehavior <UITextInputTraits>
 
-@property (nonatomic, assign) NSUInteger length;
+@property (nonatomic, assign) BOOL instantMatching; // default is YES
+@property (nonatomic, assign) NSUInteger length; // default is 20
 
 @end
 

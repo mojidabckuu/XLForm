@@ -31,6 +31,8 @@
 #import "NSPredicate+XLFormAdditions.h"
 #import "NSString+XLFormAdditions.h"
 
+#import "XLFormInlineRowDescriptorCell.h"
+
 NSString * const XLFormErrorDomain = @"XLFormErrorDomain";
 NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
 
@@ -683,7 +685,7 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     NSArray *visibleIndexPaths = self.tableView.indexPathsForVisibleRows;
     for(NSString *key in dictionary) {
         XLFormRowDescriptor *rowDescriptor = dictionary[key];
-        XLFormBaseCell *cell = [rowDescriptor cellForFormController:nil];
+        XLFormBaseCell *cell = [rowDescriptor cell];
         [cell update];
         rowDescriptor.height = @([cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height);
         NSIndexPath *rowIndexPath = [self indexPathOfFormRow:rowDescriptor];
@@ -693,6 +695,38 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     }
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
+}
+
+-(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction
+{
+    if (!currentRow || (self.rowNavigationOptions & XLFormRowNavigationOptionEnabled) != XLFormRowNavigationOptionEnabled) {
+        return nil;
+    }
+    XLFormRowDescriptor * nextRow = (direction == XLFormRowNavigationDirectionNext) ? [self nextRowDescriptorForRow:currentRow] : [self previousRowDescriptorForRow:currentRow];
+    if (!nextRow) {
+        return nil;
+    }
+    if ([[nextRow cell] conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)]) {
+        id<XLFormInlineRowDescriptorCell> inlineCell = (id<XLFormInlineRowDescriptorCell>)[nextRow cell];
+        if (inlineCell.inlineRowDescriptor){
+            return [self nextRowDescriptorForRow:nextRow withDirection:direction];
+        }
+    }
+    XLFormRowNavigationOptions rowNavigationOptions = self.rowNavigationOptions;
+    if (nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionStopDisableRow) == XLFormRowNavigationOptionStopDisableRow)){
+        return nil;
+    }
+    if (!nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionStopInlineRow) == XLFormRowNavigationOptionStopInlineRow) && [[[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes] allKeys] containsObject:nextRow.rowType]){
+        return nil;
+    }
+    id<XLFormDescriptorCell> cell = [nextRow cell];
+    if (!nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionSkipCanNotBecomeFirstResponderRow) != XLFormRowNavigationOptionSkipCanNotBecomeFirstResponderRow) && (![cell formDescriptorCellCanBecomeFirstResponder])){
+        return nil;
+    }
+    if (!nextRow.isDisabled && [cell formDescriptorCellCanBecomeFirstResponder]){
+        return nextRow;
+    }
+    return [self nextRowDescriptorForRow:nextRow withDirection:direction];
 }
 
 @end

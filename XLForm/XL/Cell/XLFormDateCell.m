@@ -28,6 +28,8 @@
 #import "XLFormRowDescriptor.h"
 #import "XLFormDateCell.h"
 
+#import "XLFormContent.h"
+
 @interface XLFormDateCell()
 
 @property (nonatomic) UIDatePicker *datePicker;
@@ -81,7 +83,7 @@
             inlineCell.inlineRowDescriptor = self.rowDescriptor;
             
             [formSection addFormRow:datePickerRowDescriptor afterRow:self.rowDescriptor];
-            [self.formViewController ensureRowIsVisible:datePickerRowDescriptor];
+            [self.formViewController.formContent ensureRowIsVisible:datePickerRowDescriptor];
         }
     }
     return result;
@@ -124,7 +126,7 @@
 
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
 {
-    [self.formViewController.tableView deselectRowAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
+    [self.formViewController.formView deselectItemAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
 }
 
 -(BOOL)formDescriptorCellCanBecomeFirstResponder

@@ -26,6 +26,8 @@
 #import "UIView+XLFormAdditions.h"
 #import "XLFormPickerCell.h"
 
+#import "XLFormContent.h"
+
 @interface XLFormPickerCell() <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @end
@@ -113,7 +115,7 @@
     }
     if (self.inlineRowDescriptor){
         self.inlineRowDescriptor.value = value;
-        [self.formViewController updateFormRow:self.inlineRowDescriptor];
+        [self.formViewController.formContent updateFormRow:self.inlineRowDescriptor];
     }
     else {
         [self becomeFirstResponder];

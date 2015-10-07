@@ -25,10 +25,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface XLFormRowNavigationAccessoryView : UIToolbar
+#import "XLFormRowNavigationAccessoryViewProtocol.h"
 
-@property (nonatomic) UIBarButtonItem *previousButton;
-@property (nonatomic) UIBarButtonItem *nextButton;
-@property (nonatomic) UIBarButtonItem *doneButton;
+@interface XLFormRowNavigationAccessoryView : UIToolbar <XLFormRowNavigationAccessoryViewProtocol>
 
 @end

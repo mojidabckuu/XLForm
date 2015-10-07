@@ -43,13 +43,13 @@
     // TODO: add arrow direction
     [self.popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     //        }
-    [self.sourceViewController.tableView deselectRowAtIndexPath:[self.sourceViewController.tableView indexPathForCell:cell] animated:YES];
+    [self.sourceViewController.formView deselectItemAtIndexPath:[self.sourceViewController.formView indexPathForCell:cell] animated:YES];
 }
 
 #pragma mark - UIPopoverController delegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    [self.sourceViewController.tableView reloadData];
+    [self.sourceViewController.formView reloadData];
 }
 
 @end

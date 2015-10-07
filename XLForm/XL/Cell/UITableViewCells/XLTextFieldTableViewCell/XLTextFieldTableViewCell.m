@@ -10,6 +10,8 @@
 
 #import "XLForm.h"
 
+#import "XLTextBehavior.h"
+
 @interface XLTextFieldTableViewCell () <UITextFieldDelegate>
 
 @end
@@ -64,45 +66,55 @@
     return [super formDescriptorCellBecomeFirstResponder];
 }
 
+#pragma mark - Accessors
+
+- (XLTextBehavior *)behavior {
+    return (XLTextBehavior *)self.rowDescriptor.behavior;
+}
+
 #pragma mark - UITextField delegate
 
-//- (BOOL)textFieldShouldClear:(UITextField *)textField
-//{
-//    return [self.formViewController textFieldShouldClear:textField];
-//}
-//
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
+    return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if(textField.returnKeyType == UIReturnKeyDefault) {
         [textField resignFirstResponder];
     }
     return YES;
 }
-//
-//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-//{
-//    return [self.formViewController textFieldShouldBeginEditing:textField];
-//}
-//
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    return [self.formViewController textFieldShouldEndEditing:textField];
-//}
-//
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-//    return [self.formViewController textField:textField shouldChangeCharactersInRange:range replacementString:string];
-//}
-//
-//- (void)textFieldDidBeginEditing:(UITextField *)textField
-//{
-//    [self.formViewController beginEditing:self.rowDescriptor];
-//    [self.formViewController textFieldDidBeginEditing:textField];
-//}
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *text = [self.textField.text stringByReplacingCharactersInRange:range withString:string];
+    if([self.behavior instantMatching]) {
+        if(self.behavior.regex) {
+            NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", self.behavior.regex];
+            return [regex evaluateWithObject:text];
+        } else {
+            NSUInteger length = [textField.text length] - range.length + [string length];
+            textField.text = [[textField.text stringByReplacingCharactersInRange:range withString:string] substringToIndex:self.behavior.length];
+            return length <= self.behavior.length;
+        }
+    }
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    [self.formViewController beginEditing:self.rowDescriptor];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDidChange:textField];
-//    [self.formViewController endEditing:self.rowDescriptor];
-//    [self.formViewController textFieldDidEndEditing:textField];
+    [self.formViewController endEditing:self.rowDescriptor];
 }
 
 #pragma mark - Utils

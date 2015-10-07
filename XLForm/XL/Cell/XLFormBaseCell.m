@@ -25,6 +25,8 @@
 
 #import "XLFormBaseCell.h"
 
+#import "XLFormContent.h"
+
 @implementation XLFormBaseCell
 
 - (id)init
@@ -97,7 +99,7 @@
 
 -(UIView *)inputAccessoryView
 {
-    UIView * inputAccessoryView = [self.formViewController inputAccessoryViewForRowDescriptor:self.rowDescriptor];
+    UIView * inputAccessoryView = [self.formViewController.formContent inputAccessoryViewForRowDescriptor:self.rowDescriptor];
     if (inputAccessoryView){
         return inputAccessoryView;
     }

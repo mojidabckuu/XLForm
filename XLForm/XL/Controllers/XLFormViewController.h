@@ -28,34 +28,26 @@
 #import "XLFormDescriptor.h"
 #import "XLFormSectionDescriptor.h"
 #import "XLFormDescriptorDelegate.h"
-#import "XLFormRowNavigationAccessoryView.h"
 #import "XLFormBaseCell.h"
+
+#import "XLFormRowNavigationDirections.h"
+
+#import "XLCollectionViewProtocol.h"
 
 @class XLFormViewController;
 @class XLFormRowDescriptor;
 @class XLFormSectionDescriptor;
 @class XLFormDescriptor;
 @class XLFormBaseCell;
-
-typedef NS_ENUM(NSUInteger, XLFormRowNavigationDirection) {
-    XLFormRowNavigationDirectionPrevious = 0,
-    XLFormRowNavigationDirectionNext
-};
+@class XLFormContent;
 
 @protocol XLFormViewControllerDelegate <NSObject>
 
 @optional
 
--(void)didSelectFormRow:(XLFormRowDescriptor *)formRow;
--(void)deselectFormRow:(XLFormRowDescriptor *)formRow;
--(void)reloadFormRow:(XLFormRowDescriptor *)formRow;
--(XLFormBaseCell *)updateFormRow:(XLFormRowDescriptor *)formRow;
-
 -(NSDictionary *)formValues;
 -(NSDictionary *)httpParameters;
 
--(XLFormRowDescriptor *)formRowFormMultivaluedFormSection:(XLFormSectionDescriptor *)formSection;
--(void)multivaluedInsertButtonTapped:(XLFormRowDescriptor *)formRow;
 -(UIStoryboard *)storyboardForRow:(XLFormRowDescriptor *)formRow;
 
 -(NSArray *)formValidationErrors;
@@ -66,22 +58,17 @@ typedef NS_ENUM(NSUInteger, XLFormRowNavigationDirection) {
 -(UITableViewRowAnimation)insertRowAnimationForSection:(XLFormSectionDescriptor *)formSection;
 -(UITableViewRowAnimation)deleteRowAnimationForSection:(XLFormSectionDescriptor *)formSection;
 
-// InputAccessoryView
--(UIView *)inputAccessoryViewForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
--(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction;
-
 // highlight/unhighlight
 -(void)beginEditing:(XLFormRowDescriptor *)rowDescriptor;
 -(void)endEditing:(XLFormRowDescriptor *)rowDescriptor;
 
--(void)ensureRowIsVisible:(XLFormRowDescriptor *)inlineRowDescriptor;
-
 @end
 
-@interface XLFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, XLFormDescriptorDelegate, UITextFieldDelegate, UITextViewDelegate, UIActionSheetDelegate, XLFormViewControllerDelegate>
+@interface XLFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, XLFormDescriptorDelegate, UIActionSheetDelegate, XLFormViewControllerDelegate>
 
 @property XLFormDescriptor * form;
-@property IBOutlet UITableView * tableView;
+@property IBOutlet UIScrollView<XLCollectionViewProtocol> *formView;
+@property (nonatomic, strong) XLFormContent *formContent;
 
 -(id)initWithForm:(XLFormDescriptor *)form;
 -(id)initWithForm:(XLFormDescriptor *)form style:(UITableViewStyle)style;

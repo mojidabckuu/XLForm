@@ -49,7 +49,7 @@
     for (id option in self.rowDescriptor.selectorOptions) {
         UIAlertAction *action = [UIAlertAction actionWithTitle:[option displayText] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [weakSelf.rowDescriptor setValue:option];
-            [weakSelf.sourceViewController.tableView reloadData];
+            [weakSelf.sourceViewController.formView reloadData];
         }];
         [alertController addAction:action];
     }

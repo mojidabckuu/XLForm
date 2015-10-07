@@ -129,6 +129,10 @@
     return _cell;
 }
 
+- (XLFormBaseCell *)cell {
+    return _cell;
+}
+
 - (void)configureCellAtCreationTime
 {
     [self.cellConfigAtConfigure enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, __unused BOOL *stop) {

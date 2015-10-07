@@ -58,8 +58,7 @@
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
 {
     self.rowDescriptor.value = [NSNumber numberWithBool:![self.rowDescriptor.value boolValue]];
-    [self.formViewController updateFormRow:self.rowDescriptor];
-    [controller.tableView deselectRowAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
+    [controller.formView deselectItemAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
 }
 
 @end

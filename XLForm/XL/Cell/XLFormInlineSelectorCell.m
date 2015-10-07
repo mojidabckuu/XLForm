@@ -26,6 +26,8 @@
 #import "XLForm.h"
 #import "XLFormInlineSelectorCell.h"
 
+#import "XLFormContent.h"
+
 @interface XLFormInlineSelectorCell()
 
 @end
@@ -54,7 +56,7 @@
         UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
         inlineCell.inlineRowDescriptor = self.rowDescriptor;
         [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
-        [self.formViewController ensureRowIsVisible:inlineRowDescriptor];
+        [self.formViewController.formContent ensureRowIsVisible:inlineRowDescriptor];
     }
     return result;
 }
@@ -108,7 +110,7 @@
 
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
 {
-    [controller.tableView deselectRowAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
+    [controller.formView deselectItemAtIndexPath:[controller.form indexPathOfFormRow:self.rowDescriptor] animated:YES];
 }
 
 -(void)highlight

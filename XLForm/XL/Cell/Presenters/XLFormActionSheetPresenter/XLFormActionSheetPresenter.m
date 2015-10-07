@@ -55,7 +55,7 @@
         }
         UIAlertAction *action = [UIAlertAction actionWithTitle:[formOption displayText] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [weakSelf.rowDescriptor setValue:option];
-            [weakSelf.sourceViewController.tableView reloadData];
+            [weakSelf.sourceViewController.formView reloadData];
         }];
         [alertController addAction:action];
     }

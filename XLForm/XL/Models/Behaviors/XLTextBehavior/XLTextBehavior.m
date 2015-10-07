@@ -18,4 +18,15 @@
 @synthesize enablesReturnKeyAutomatically = _enablesReturnKeyAutomatically;
 @synthesize secureTextEntry = _secureTextEntry;
 
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+    self = [super init];
+    if(self) {
+        self.instantMatching = YES;
+        self.length = 20;
+    }
+    return self;
+}
+
 @end
