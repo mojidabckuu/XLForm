@@ -34,6 +34,8 @@
 
 #import "XLCollectionViewProtocol.h"
 
+#import "XLFormContent.h"
+
 @class XLFormViewController;
 @class XLFormRowDescriptor;
 @class XLFormSectionDescriptor;

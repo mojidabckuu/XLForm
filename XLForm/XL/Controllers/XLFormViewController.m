@@ -31,9 +31,10 @@
 #import "NSString+XLFormAdditions.h"
 
 #import "XLFormContentFactory.h"
-#import "XLFormContent.h"
 
 #import "XLFormRowNavigationAccessoryView.h"
+
+#import "UIDevice+System.h"
 
 @interface XLFormRowDescriptor(_XLFormViewController)
 
@@ -65,8 +66,6 @@
 @end
 
 @implementation XLFormViewController
-
-@synthesize form = _form;
 
 #pragma mark - Lifecycle
 

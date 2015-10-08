@@ -32,13 +32,13 @@
 
 - (void)navigateToDirection:(XLFormRowNavigationDirection)direction;
 
--(void)didSelectFormRow:(XLFormRowDescriptor *)formRow;
--(void)deselectFormRow:(XLFormRowDescriptor *)formRow;
--(void)reloadFormRow:(XLFormRowDescriptor *)formRow;
--(id<XLFormDescriptorCell>)updateFormRow:(XLFormRowDescriptor *)formRow;
+- (void)didSelectFormRow:(XLFormRowDescriptor *)formRow;
+- (void)deselectFormRow:(XLFormRowDescriptor *)formRow;
+- (void)reloadFormRow:(XLFormRowDescriptor *)formRow;
+- (id<XLFormDescriptorCell>)updateFormRow:(XLFormRowDescriptor *)formRow;
 
--(UIView *)inputAccessoryViewForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
+- (UIView *)inputAccessoryViewForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
 
--(void)ensureRowIsVisible:(XLFormRowDescriptor *)inlineRowDescriptor;
+- (void)ensureRowIsVisible:(XLFormRowDescriptor *)inlineRowDescriptor;
 
 @end

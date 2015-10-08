@@ -16,6 +16,8 @@
 
 #import "UIView+XLFormAdditions.h"
 
+#import "UIDevice+System.h"
+
 @implementation XLFormTableViewContent
 
 #pragma mark - Accessors

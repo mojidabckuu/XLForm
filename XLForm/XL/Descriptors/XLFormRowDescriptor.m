@@ -46,7 +46,7 @@
 
 @interface XLFormRowDescriptor() <NSCopying>
 
-@property XLFormBaseCell * cell;
+@property (nonatomic)  XLFormBaseCell * cell;
 @property (nonatomic) NSMutableArray *validators;
 
 @property BOOL isDirtyDisablePredicateCache;
