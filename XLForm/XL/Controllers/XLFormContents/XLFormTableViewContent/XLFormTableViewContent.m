@@ -153,8 +153,8 @@
                 //                self.formDescriptorView.editing = !self.formDescriptorView.editing;
             });
             [self.formView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-            UITableViewCell<XLFormDescriptorCell> * cell = (UITableViewCell<XLFormDescriptorCell> *)[formRowDescriptor cellForFormController:self];
-            if ([cell formDescriptorCellCanBecomeFirstResponder]){
+            id<XLFormDescriptorCell> cell = [formRowDescriptor cell];
+            if ([cell formDescriptorCellCanBecomeFirstResponder]) {
                 [cell formDescriptorCellBecomeFirstResponder];
             }
         }

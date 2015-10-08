@@ -44,8 +44,12 @@
     if (self.rowDescriptor.action.formBlock){
         self.rowDescriptor.action.formBlock(self.rowDescriptor);
     }
-    else if (self.rowDescriptor.action.formSelector){
-        [controller performFormSelector:self.rowDescriptor.action.formSelector withObject:self.rowDescriptor];
+    else if (self.rowDescriptor.action.formSelector) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
+        [controller performSelector:self.rowDescriptor.action.formSelector withObject:self.rowDescriptor];
+#pragma GCC diagnostic pop
+        
     }
     else if ([self.rowDescriptor.action.formSegueIdenfifier length] != 0){
         [controller performSegueWithIdentifier:self.rowDescriptor.action.formSegueIdenfifier sender:self.rowDescriptor];

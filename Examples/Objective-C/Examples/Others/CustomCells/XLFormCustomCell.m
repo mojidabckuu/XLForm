@@ -54,7 +54,7 @@
     // i.e new behaviour when cell has been selected
     self.textLabel.text = [self.textLabel.text isEqualToString:@"I can do any custom behaviour..."] ? @"Am a custom cell, select me!" : @"I can do any custom behaviour...";
     self.rowDescriptor.value = self.textLabel.text;
-    [self.formViewController.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
+    [self.formViewController.formView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
 }
 
 @end

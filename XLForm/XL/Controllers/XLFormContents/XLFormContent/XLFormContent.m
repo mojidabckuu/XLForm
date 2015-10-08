@@ -16,6 +16,10 @@
 
 #import "XLFormRowNavigationAccessoryView.h"
 
+#import "XLTextBehavior.h"
+
+#import "XLTextInput.h"
+
 @implementation XLFormContent
 
 #pragma mark - Lifecycle
@@ -63,6 +67,13 @@
 }
 
 #pragma mark - CRUD
+
+- (void)didSelectFormRow:(XLFormRowDescriptor *)formRow {
+    if ([[formRow cell] respondsToSelector:@selector(formDescriptorCellDidSelectedWithFormController:)]){
+        // TODO: fix it
+        [[formRow cell] formDescriptorCellDidSelectedWithFormController:self];
+    }
+}
 
 -(void)deselectFormRow:(XLFormRowDescriptor *)formRow {
     NSIndexPath * indexPath = [self.formDescriptor indexPathOfFormRow:formRow];
@@ -115,5 +126,60 @@
         [self.formView scrollToRowAtIndexPath:indexOfOutOfWindowCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
 }
+
+#pragma mark - XLTextInput delegate
+
+- (BOOL)textInputShouldClear:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    return YES;
+}
+
+- (BOOL)textInputShouldBeginEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
+    inputView.returnKeyType = nextRow ? UIReturnKeyNext : UIReturnKeyDefault;
+    return YES;
+}
+
+- (BOOL)textInputShouldEndEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    return YES;
+}
+
+- (void)textInputViewDidBeginEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    
+}
+
+- (void)textInputViewDidEndEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    
+}
+
+- (BOOL)textInputViewShouldReturn:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    // called when 'return' key pressed. return NO to ignore.
+    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
+    if (nextRow){
+        id<XLFormDescriptorCell> nextCell = [nextRow cell];
+        if ([nextCell formDescriptorCellCanBecomeFirstResponder]) {
+            [nextCell formDescriptorCellBecomeFirstResponder];
+            return YES;
+        }
+    }
+    [self.formView endEditing:YES];
+    return YES;
+}
+
+- (BOOL)textInputView:(id<UITextInput, XLTextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow {
+    NSString *text = [inputView.text stringByReplacingCharactersInRange:range withString:string];
+    XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
+    if([behavior instantMatching]) {
+        if(behavior.regex) {
+            NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", behavior.regex];
+            return [regex evaluateWithObject:text];
+        } else {
+            NSUInteger length = [inputView.text length] - range.length + [string length];
+            inputView.text = [[inputView.text stringByReplacingCharactersInRange:range withString:string] substringToIndex:behavior.length];
+            return length <= behavior.length;
+        }
+    }
+    return YES;
+}
+
 
 @end

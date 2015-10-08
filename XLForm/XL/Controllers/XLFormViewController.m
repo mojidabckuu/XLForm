@@ -30,8 +30,6 @@
 #import "XLForm.h"
 #import "NSString+XLFormAdditions.h"
 
-#import "XLFormController.h"
-
 #import "XLFormContentFactory.h"
 #import "XLFormContent.h"
 
@@ -58,17 +56,11 @@
 @end
 
 
-@interface XLFormViewController()
-{
+@interface XLFormViewController() {
     NSNumber *_oldBottomTableContentInset;
     CGRect _keyboardFrame;
 }
 @property UITableViewStyle tableViewStyle;
-
-
-
-@property (nonatomic, strong) XLFormController *formController;
-
 
 @end
 
@@ -76,7 +68,7 @@
 
 @synthesize form = _form;
 
-#pragma mark - Initialization
+#pragma mark - Lifecycle
 
 -(id)initWithForm:(XLFormDescriptor *)form
 {
@@ -128,16 +120,13 @@
     [super viewDidLoad];
 
     if (!self.formView){
-        self.formView = [[UITableView alloc] initWithFrame:self.view.bounds
-                                                      style:self.tableViewStyle];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:self.tableViewStyle];
+        self.formView = (UIScrollView<XLCollectionViewProtocol> *)tableView;
         self.formView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     if (!self.formView.superview){
         [self.view addSubview:self.formView];
     }
-    
-    self.formController = [[XLFormController alloc] init];
-    self.formController.formView = self.formView;
     
     id content = [XLFormContentFactory formContentWithView:self.formView];
     
@@ -405,8 +394,6 @@
     [[rowDescriptor cellForFormController:self] unhighlight];
 }
 
-
-
 #pragma mark - User interaction
 
 -(void)rowNavigationAction:(UIBarButtonItem *)sender {
@@ -453,17 +440,6 @@
         [alertView show];
     }
 #endif
-}
-
--(void)performFormSelector:(SEL)selector withObject:(id)sender
-{
-    UIResponder * responder = [self targetForAction:selector withSender:sender];;
-    if (responder) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
-        [responder performSelector:selector withObject:sender];
-#pragma GCC diagnostic pop
-    }
 }
 
 #pragma mark - Private

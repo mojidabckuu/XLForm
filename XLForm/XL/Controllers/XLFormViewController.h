@@ -64,7 +64,7 @@
 
 @end
 
-@interface XLFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, XLFormDescriptorDelegate, UIActionSheetDelegate, XLFormViewControllerDelegate>
+@interface XLFormViewController : UIViewController <XLFormDescriptorDelegate, UIActionSheetDelegate, XLFormViewControllerDelegate>
 
 @property XLFormDescriptor * form;
 @property IBOutlet UIScrollView<XLCollectionViewProtocol> *formView;
@@ -74,7 +74,5 @@
 -(id)initWithForm:(XLFormDescriptor *)form style:(UITableViewStyle)style;
 +(NSMutableDictionary *)cellClassesForRowDescriptorTypes;
 +(NSMutableDictionary *)inlineRowDescriptorTypesForRowDescriptorTypes;
-
--(void)performFormSelector:(SEL)selector withObject:(id)sender;
 
 @end

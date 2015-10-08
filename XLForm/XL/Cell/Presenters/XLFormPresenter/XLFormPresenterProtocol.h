@@ -15,10 +15,10 @@
 
 @required
 
-@property (nonatomic, strong) XLFormRowDescriptor *rowDescriptor;
+@property (nonnull, nonatomic, strong) XLFormRowDescriptor *rowDescriptor;
 
-@property (nonatomic, strong) XLFormViewController *sourceViewController;
-@property (nonatomic, strong) UIViewController *destinationViewController;
+@property (nonnull, nonatomic, strong) XLFormViewController *sourceViewController;
+@property (nonnull, nonatomic, strong) UIViewController *destinationViewController;
 
 - (void)presentWithCompletionBlock:(void (^ __nullable)(void))completionBlock;
 

@@ -12,7 +12,8 @@
 
 #import "XLFormRowNavigationAccessoryViewProtocol.h"
 
-@protocol XLCollectionViewProtocol;
+#import "XLCollectionViewProtocol.h"
+
 @protocol XLFormDescriptorCell;
 
 @class XLFormDescriptor;
