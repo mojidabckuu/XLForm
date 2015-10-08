@@ -14,12 +14,15 @@
 
 #import "XLCollectionViewProtocol.h"
 
+#import "XLTextInput.h"
+#import "XLFormTextInputDelegate.h"
+
 @protocol XLFormDescriptorCell;
 
 @class XLFormDescriptor;
 @class XLFormRowDescriptor;
 
-@interface XLFormContent : NSObject
+@interface XLFormContent : NSObject <XLFormTextInputDelegate>
 
 @property (nonatomic, weak) XLFormDescriptor *formDescriptor;
 @property (nonatomic, weak) UIScrollView<XLCollectionViewProtocol> *formView;

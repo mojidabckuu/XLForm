@@ -148,21 +148,22 @@
 }
 
 - (void)textInputViewDidEndEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
-    
 }
 
-- (BOOL)textInputViewShouldReturn:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
-    // called when 'return' key pressed. return NO to ignore.
+- (BOOL)textInputViewShouldReturn:(id<UITextInput, XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
+    if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyNext) {
+        return YES;
+    }
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
-    if (nextRow){
+    if (nextRow) {
         id<XLFormDescriptorCell> nextCell = [nextRow cell];
         if ([nextCell formDescriptorCellCanBecomeFirstResponder]) {
             [nextCell formDescriptorCellBecomeFirstResponder];
             return YES;
         }
     }
-    [self.formView endEditing:YES];
-    return YES;
+    return NO;
 }
 
 - (BOOL)textInputView:(id<UITextInput, XLTextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow {
@@ -179,6 +180,28 @@
         }
     }
     return YES;
+}
+
+- (void)textInputDidChange:(id<UITextInput, XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    id value = nil;
+    NSString *errorDescription = nil;
+    BOOL success = [formRow.formatter getObjectValue:&value forString:inputView.text errorDescription:&errorDescription];
+    formRow.value = success ? value : nil;
+    if(success) {
+        NSLog(@"ERROR : %@", errorDescription);
+    }
+//    if([inputView.text length] > 0) { // TODO: use formatters to convert to expected value
+//        if ([formRow.rowType isEqualToString:XLFormRowDescriptorTypeNumber] || [formRow.rowType isEqualToString:XLFormRowDescriptorTypeDecimal]){
+//            formRow.value =  @([inputView.text doubleValue]);
+//        } else if ([formRow.rowType isEqualToString:XLFormRowDescriptorTypeInteger]){
+//            formRow.value = @([inputView.text integerValue]);
+//        } else {
+//            formRow.value = inputView.text;
+//        }
+//    } else {
+//        formRow.value = nil;
+//    }
+
 }
 
 

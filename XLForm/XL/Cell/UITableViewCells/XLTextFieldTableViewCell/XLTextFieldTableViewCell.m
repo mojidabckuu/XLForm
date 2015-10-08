@@ -12,6 +12,8 @@
 
 #import "XLTextBehavior.h"
 
+#import "XLFormContent.h"
+
 @interface XLTextFieldTableViewCell () <UITextFieldDelegate>
 
 @end
@@ -75,37 +77,27 @@
 #pragma mark - UITextField delegate
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
-    return YES;
+    return [self.formViewController.formContent textInputShouldClear:textField formRow:self.rowDescriptor];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if(textField.returnKeyType == UIReturnKeyDefault) {
-        [textField resignFirstResponder];
-    }
-    return YES;
+    return [self.formViewController.formContent textInputViewShouldReturn:textField formRow:self.rowDescriptor];
+//    if(textField.returnKeyType == UIReturnKeyDefault) {
+//        [textField resignFirstResponder];
+//    }
+//    return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    return YES;
+    return [self.formViewController.formContent textInputShouldBeginEditing:textField formRow:self.rowDescriptor];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    return YES;
+    return [self.formViewController.formContent textInputShouldEndEditing:textField formRow:self.rowDescriptor];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSString *text = [self.textField.text stringByReplacingCharactersInRange:range withString:string];
-    if([self.behavior instantMatching]) {
-        if(self.behavior.regex) {
-            NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", self.behavior.regex];
-            return [regex evaluateWithObject:text];
-        } else {
-            NSUInteger length = [textField.text length] - range.length + [string length];
-            textField.text = [[textField.text stringByReplacingCharactersInRange:range withString:string] substringToIndex:self.behavior.length];
-            return length <= self.behavior.length;
-        }
-    }
-    return YES;
+    return [self.formViewController.formContent textInputView:textField shouldChangeCharactersInRange:range replacementString:string formRow:self.rowDescriptor];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -113,6 +105,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+    [self.formViewController.formContent textInputViewDidEndEditing:textField formRow:self.rowDescriptor];
     [self textFieldDidChange:textField];
     [self.formViewController endEditing:self.rowDescriptor];
 }
@@ -120,17 +113,7 @@
 #pragma mark - Utils
 
 - (void)textFieldDidChange:(UITextField *)textField{
-    if([self.textField.text length] > 0) { // TODO: use formatters to convert to expected value
-        if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeNumber] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeDecimal]){
-            self.rowDescriptor.value =  @([self.textField.text doubleValue]);
-        } else if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeInteger]){
-            self.rowDescriptor.value = @([self.textField.text integerValue]);
-        } else {
-            self.rowDescriptor.value = self.textField.text;
-        }
-    } else {
-        self.rowDescriptor.value = nil;
-    }
+    [self.formViewController.formContent textInputDidChange:textField formRow:self.rowDescriptor];
 }
 
 @end

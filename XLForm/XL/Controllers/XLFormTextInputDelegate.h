@@ -24,4 +24,6 @@
 
 - (BOOL)textInputView:(id<UITextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow;
 
+- (void)textInputDidChange:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow;
+
 @end

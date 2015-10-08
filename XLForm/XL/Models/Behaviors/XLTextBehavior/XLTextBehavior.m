@@ -25,6 +25,7 @@
     if(self) {
         self.instantMatching = YES;
         self.length = 20;
+        self.instantReturn = YES;
     }
     return self;
 }

@@ -29,6 +29,13 @@
 #import "XLFormValidatorProtocol.h"
 #import "XLFormValidationStatus.h"
 
+typedef NS_ENUM(NSInteger, XLFormRowDescriptorType) {
+    XLFormRowDescriptorTypeNone = 0,
+    XLFormRowDescriptorTypeInt,
+    XLFormRowDescriptorTypeDec,
+    XLFormRowDescriptorTypeString
+};
+
 @class XLFormViewController;
 @class XLFormSectionDescriptor;
 @protocol XLFormValidatorProtocol;
@@ -49,6 +56,7 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 @property (nullable) id cellClass;
 @property (readwrite, nullable) NSString * tag;
 @property (readonly, nonnull) NSString * rowType;
+@property (nonatomic, assign) XLFormRowDescriptorType rowtype; // TODO: use rowType instead
 @property (nullable) NSString * title;
 @property (nonatomic, nullable) id value;
 @property (nonatomic, readonly, nullable) NSString *formattedValue;

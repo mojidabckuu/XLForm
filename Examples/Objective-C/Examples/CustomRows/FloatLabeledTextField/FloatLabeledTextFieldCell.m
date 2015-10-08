@@ -101,37 +101,37 @@ const static CGFloat kFloatingLabelFontSize = 11.0f;
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
-    return [self.formViewController textFieldShouldClear:textField];
+    return [self.formViewController.formContent.formContent textFieldShouldClear:textField];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    return [self.formViewController textFieldShouldReturn:textField];
+    return [self.formViewController.formContent textFieldShouldReturn:textField];
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    return [self.formViewController textFieldShouldBeginEditing:textField];
+    return [self.formViewController.formContent textFieldShouldBeginEditing:textField];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
-    return [self.formViewController textFieldShouldEndEditing:textField];
+    return [self.formViewController.formContent textFieldShouldEndEditing:textField];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    return [self.formViewController textField:textField shouldChangeCharactersInRange:range replacementString:string];
+    return [self.formViewController.formContent textField:textField shouldChangeCharactersInRange:range replacementString:string];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self.formViewController textFieldDidBeginEditing:textField];
+    [self.formViewController.formContent textFieldDidBeginEditing:textField];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [self textFieldDidChange:textField];
-    [self.formViewController textFieldDidEndEditing:textField];
+    [self.formViewController.formContent textFieldDidEndEditing:textField];
 }
 
 -(void)setReturnKeyType:(UIReturnKeyType)returnKeyType

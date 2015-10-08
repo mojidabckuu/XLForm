@@ -13,4 +13,6 @@
 @optional
 @property (nullable, nonatomic, copy) NSString *text;
 
+@property (nonatomic, assign) UIReturnKeyType returnKeyType;
+
 @end

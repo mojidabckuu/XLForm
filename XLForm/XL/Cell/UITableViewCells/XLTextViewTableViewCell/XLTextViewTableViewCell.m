@@ -14,6 +14,8 @@
 
 #import <UITextView+Placeholder/UITextView+Placeholder.h>
 
+#import "XLFormContent.h"
+
 @interface XLTextViewTableViewCell () <UITextViewDelegate>
 
 @end
@@ -80,37 +82,34 @@
 
 #pragma mark - UITextView delegate
 
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    return [self.formViewController.formContent textInputShouldBeginEditing:textView formRow:self.rowDescriptor];
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    return [self.formViewController.formContent textInputShouldEndEditing:textView formRow:self.rowDescriptor];
+}
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    // TODO: use rowDescriptor text behavior input definition
-    if([text isEqualToString:@"\n"]) {
+    BOOL shouldChange = [self.formViewController.formContent textInputView:textView shouldChangeCharactersInRange:range replacementString:text formRow:self.rowDescriptor];
+    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textView formRow:self.rowDescriptor];
+    if(shouldReturn) {
         [textView resignFirstResponder];
         return NO;
     }
-    return YES;
+    return shouldChange;
 }
 
-- (void)textViewDidChange:(UITextView *)textView {
-    [self textViewDidChange];
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [self.formViewController.formContent textInputViewDidBeginEditing:textView formRow:self.rowDescriptor];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    [self textViewDidChange];
+    [self.formViewController.formContent textInputViewDidEndEditing:textView formRow:self.rowDescriptor];
 }
 
-#pragma mark - User interaction
-
-- (void)textViewDidChange {
-    if([self.textView.text length] > 0) { // TODO: use formatters to convert to expected value
-        if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeNumber] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeDecimal]){
-            self.rowDescriptor.value =  @([self.textView.text doubleValue]);
-        } else if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeInteger]){
-            self.rowDescriptor.value = @([self.textView.text integerValue]);
-        } else {
-            self.rowDescriptor.value = self.textView.text;
-        }
-    } else {
-        self.rowDescriptor.value = nil;
-    }
+- (void)textViewDidChange:(UITextView *)textView {
+    [self.formViewController.formContent textInputDidChange:textView formRow:self.rowDescriptor];
 }
 
 @end
