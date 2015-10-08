@@ -44,4 +44,9 @@
     [self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }
 
+- (void)updateRows {
+    [self beginUpdates];
+    [self endUpdates];
+}
+
 @end

@@ -24,10 +24,9 @@
 // THE SOFTWARE.
 
 
-#import "NSObject+XLFormAdditions.h"
 #import "XLFormDescriptor.h"
-#import "XLFormRowDescriptor+Addons.h"
-#import "XLFormRowDescriptor+Error.h"
+
+
 #import "NSPredicate+XLFormAdditions.h"
 #import "NSString+XLFormAdditions.h"
 
@@ -130,7 +129,6 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     formSection.hidden = formSection.hidden;
 }
 
-
 -(void)addFormRow:(XLFormRowDescriptor *)formRow beforeRow:(XLFormRowDescriptor *)beforeRow
 {
     if (beforeRow.sectionDescriptor){
@@ -146,8 +144,6 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     XLFormRowDescriptor * beforeRowForm = [self formRowWithTag:beforeRowTag];
     [self addFormRow:formRow beforeRow:beforeRowForm];
 }
-
-
 
 -(void)addFormRow:(XLFormRowDescriptor *)formRow afterRow:(XLFormRowDescriptor *)afterRow
 {
@@ -318,8 +314,8 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         if (section.multivaluedTag.length > 0){
             NSMutableArray * multiValuedValuesArray = [NSMutableArray new];
             for (XLFormRowDescriptor * row in section.formRows) {
-                if ([row.value valueData]){
-                    [multiValuedValuesArray addObject:[row.value valueData]];
+                if (row.value){
+                    [multiValuedValuesArray addObject:row.value];
                 }
             }
             [result setObject:multiValuedValuesArray forKey:section.multivaluedTag];
@@ -327,8 +323,8 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         else{
             for (XLFormRowDescriptor * row in section.formRows) {
                 NSString * httpParameterKey = nil;
-                if ((httpParameterKey = [self httpParameterKeyForRow:row cell:[row cellForFormController:formViewController]])){
-                    id parameterValue = [row.value valueData] ?: [NSNull null];
+                if ((httpParameterKey = [self httpParameterKeyForRow:row cell:[row cell]])){
+                    id parameterValue = row.value ?: [NSNull null];
                     [result setObject:parameterValue forKey:httpParameterKey];
                 }
             }
@@ -348,31 +344,11 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     return nil;
 }
 
--(NSArray *)localValidationErrors:(XLFormViewController *)formViewController {
-    NSMutableArray * result = [NSMutableArray array];
-    for (XLFormSectionDescriptor * section in self.formSections) {
-        for (XLFormRowDescriptor * row in section.formRows) {
-            XLFormValidationStatus* status = [row doValidation];
-            if (status != nil && (![status isValid])) {
-                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: status.msg,
-                                            XLValidationStatusErrorKey: status };
-                NSError * error = [[NSError alloc] initWithDomain:XLFormErrorDomain code:XLFormErrorCodeGen userInfo:userInfo];
-                if (error){
-                    [result addObject:error];
-                }
-            }
-        }
-    }
-    
-    return result;
-}
-
-
 - (void)setFirstResponder:(XLFormViewController *)formViewController
 {
     for (XLFormSectionDescriptor * formSection in self.formSections) {
         for (XLFormRowDescriptor * row in formSection.formRows) {
-            UITableViewCell<XLFormDescriptorCell> * cell = [row cellForFormController:formViewController];
+            UITableViewCell<XLFormDescriptorCell> * cell = [row cell];
             if ([cell formDescriptorCellCanBecomeFirstResponder]){
                 if ([cell formDescriptorCellBecomeFirstResponder]){
                     return;
@@ -469,8 +445,6 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         row.hidden = row.hidden;
         row.disabled = row.disabled;
     }];
-
-    
 }
 
 #pragma mark - EvaluateForm
@@ -561,7 +535,6 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     }
 }
 
-
 -(void)addObserversOfObject:(id)sectionOrRow predicateType:(XLPredicateType)predicateType
 {
     NSPredicate* predicate;
@@ -631,71 +604,20 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     }
 }
 
-#pragma mark - Validation
+#pragma mark - Accessors
 
 - (BOOL)isValid {
-    NSMutableDictionary *errorsDictionary = [NSMutableDictionary dictionary];
-    
-    for (XLFormSectionDescriptor *section in self.formSections) {
-        for (XLFormRowDescriptor *row in section.formRows) {
-            if([row conformsToProtocol:@protocol(XLErrorProtocol)]) {
-                XLFormRowDescriptor<XLErrorProtocol> *errorRow = (id)row;
-                if(errorRow.error) {
-                    [errorsDictionary setObject:errorRow forKey:errorRow.tag];
-                }
-                errorRow.error = nil;
-            }
-        }
+    if(self.isValidationEnabled) {
+        return [self.delegate validateForm];
     }
+    return YES;
+}
+
+- (nonnull NSArray *)validateFormRows {
     
-    if(!self.isValidationEnabled) {
-        return YES;
-    }
-    
-    NSArray *errors = [self localValidationErrors:nil];
-    if (errors.count) {
-        for (NSError *error in errors) {
-            XLFormValidationStatus *validationStatus = error.userInfo[XLValidationStatusErrorKey];
-            XLFormRowDescriptor *rowDescriptor = validationStatus.rowDescriptor;
-            if([rowDescriptor conformsToProtocol:@protocol(XLErrorProtocol)]) {
-                XLFormRowDescriptor<XLErrorProtocol> *errorRowDescriptor = (id)rowDescriptor;
-                if(![errorsDictionary objectForKey:errorRowDescriptor.tag]) {
-                    [errorsDictionary setObject:errorRowDescriptor forKey:errorRowDescriptor.tag];
-                }
-                NSString *errorText = validationStatus.msg;
-                if(!errorText.length) {
-                    errorText = NSLocalizedString(@"Empty errror text", @"XLForm validation");
-                }
-                NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errorText};
-                errorRowDescriptor.error = [NSError errorWithDomain:@"com.XLForm.ext" code:0 userInfo:userInfo];
-            }
-        }
-        NSAssert(self.tableView, @"You need bind reference to UITableView instance");
-    }
-    
-    [self updateCellsWithDictionary:errorsDictionary];
-    
-    return !errors.count;
 }
 
 #pragma mark - Utils
-
-- (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    NSArray *visibleIndexPaths = self.tableView.indexPathsForVisibleRows;
-    for(NSString *key in dictionary) {
-        XLFormRowDescriptor *rowDescriptor = dictionary[key];
-        XLFormBaseCell *cell = [rowDescriptor cell];
-        [cell update];
-        rowDescriptor.height = @([cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height);
-        NSIndexPath *rowIndexPath = [self indexPathOfFormRow:rowDescriptor];
-        if([visibleIndexPaths containsObject:rowIndexPath]) {
-            [indexPaths addObject:rowIndexPath];
-        }
-    }
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
-}
 
 -(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction
 {

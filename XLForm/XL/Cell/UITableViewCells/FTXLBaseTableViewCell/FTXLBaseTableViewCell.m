@@ -116,9 +116,9 @@
                 }
                 XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:type];
                 [inlineRowDescriptor.cellConfig setValuesForKeysWithDictionary:self.rowDescriptor.cellConfigIfInlined];
-                UITableViewCell<XLFormDescriptorCell> * cell = [inlineRowDescriptor cellForFormController:self.formViewController];
+                id<XLFormDescriptorCell> cell = [inlineRowDescriptor cell];
                 NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
-                UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
+                id<XLFormInlineRowDescriptorCell> inlineCell = cell;
                 inlineCell.inlineRowDescriptor = self.rowDescriptor;
                 [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
                 [self.formViewController.formContent ensureRowIsVisible:inlineRowDescriptor];
@@ -192,12 +192,11 @@
     [self setNeedsLayout];
 }
 
--(NSInteger)selectedIndex {
+- (NSInteger)selectedIndex {
     if (self.rowDescriptor.value){
-        for (id option in self.rowDescriptor.selectorOptions){
-            if ([[option valueData] isEqual:[self.rowDescriptor.value valueData]]){
-                return [self.rowDescriptor.selectorOptions indexOfObject:option];
-            }
+        NSInteger index = [self.rowDescriptor.selectorOptions indexOfObject:self.rowDescriptor.value];
+        if(index != NSNotFound) {
+            return index;
         }
     }
     return -1;
@@ -280,7 +279,7 @@
             return tranformedValue;
         }
     }
-    return [self.rowDescriptor.value displayText];
+    return [self.rowDescriptor formattedValue];
 }
 
 @end

@@ -37,6 +37,8 @@
 -(void)configure;
 -(void)update;
 
+@property (nonatomic, readonly, strong) UIView *contentView;
+
 @optional
 
 +(CGFloat)formDescriptorCellHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;

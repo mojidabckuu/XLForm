@@ -1,6 +1,8 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 
+pod 'VGCondition', :git => 'https://github.com/mojidabckuu/VGCondition.git'
+
 pod 'XLForm', :path => '../../'
 
 #Following pods are used for custom row examples

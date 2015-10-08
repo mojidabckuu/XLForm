@@ -30,9 +30,6 @@
 #import "XLFormSectionDescriptor.h"
 #import "XLFormRowDescriptor.h"
 
-// Categories
-#import "NSObject+XLFormAdditions.h"
-
 //helpers
 #import "XLFormOptionsObject.h"
 
@@ -65,7 +62,7 @@
 #import "XLFormCheckCell.h"
 #import "XLFormDatePickerCell.h"
 #import "XLFormPickerCell.h"
-#import "XLFormLeftRightSelectorCell.h"
+
 #import "XLFormDateCell.h"
 #import "XLFormStepCounterCell.h"
 #import "XLFormSegmentedCell.h"

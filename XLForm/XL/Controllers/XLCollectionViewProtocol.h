@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGSize itemSize;
 @property (nonatomic, assign) CGSize estimatedItemSize;
 
+@property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleRows;
+
 @property (nonatomic, readonly, nullable) NSIndexPath *indexPathForSelectedRow;
 
 - (NSIndexPath *)indexPathForCell:(id<XLFormDescriptorCell>)cell;
@@ -42,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Reload
 - (void)reloadData;
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation;
+
+#pragma mark - Update
+- (void)updateRows;
 
 @end
 

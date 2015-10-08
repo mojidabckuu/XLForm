@@ -51,14 +51,14 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 
 @interface XLFormDescriptor : NSObject
 
-@property (readonly, nonatomic, nonnull) NSMutableArray * formSections;
 @property (readonly, nullable) NSString * title;
+@property (readonly, nonatomic, nonnull) NSMutableArray * formSections;
+
 @property (nonatomic) BOOL assignFirstResponderOnShow;
 @property (nonatomic) BOOL addAsteriskToRequiredRowsTitle;
 @property (getter=isDisabled) BOOL disabled;
 @property (nonatomic) XLFormRowNavigationOptions rowNavigationOptions;
 
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign, getter=isValidationEnabled) BOOL validationEnabled;
 
 - (BOOL)isValid;
@@ -90,7 +90,7 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 -(nonnull NSDictionary *)formValues;
 -(nonnull NSDictionary *)httpParameters:(nonnull XLFormViewController *)formViewController;
 
--(nonnull NSArray *)localValidationErrors:(nonnull XLFormViewController *)formViewController;
+- (nonnull NSArray *)validateFormRows;
 -(void)setFirstResponder:(nonnull XLFormViewController *)formViewController;
 
 -(nullable XLFormRowDescriptor *)nextRowDescriptorForRow:(nonnull XLFormRowDescriptor *)currentRow;

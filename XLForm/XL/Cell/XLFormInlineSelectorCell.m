@@ -51,7 +51,7 @@
     BOOL result = [super becomeFirstResponder];
     if (result){
         XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes][self.rowDescriptor.rowType]];
-        UITableViewCell<XLFormDescriptorCell> * cell = [inlineRowDescriptor cellForFormController:self.formViewController];
+        id<XLFormDescriptorCell> cell = [inlineRowDescriptor cell];
         NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
         UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;
         inlineCell.inlineRowDescriptor = self.rowDescriptor;
@@ -127,9 +127,8 @@
 
 #pragma mark - Helpers
 
--(NSString *)valueDisplayText
-{
-    return (self.rowDescriptor.value ? [self.rowDescriptor.value displayText] : self.rowDescriptor.noValueDisplayText);
+-(NSString *)valueDisplayText {
+    return (self.rowDescriptor.formattedValue ?: self.rowDescriptor.noValueDisplayText);
 }
 
 

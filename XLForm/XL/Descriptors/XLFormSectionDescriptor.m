@@ -83,7 +83,8 @@
         _sectionOptions = sectionOptions;
         _title = title;
         if ([self canInsertUsingButton]){
-            _multivaluedAddButton = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:XLFormRowDescriptorTypeButton title:@"Add Item"];
+            _multivaluedAddButton = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:XLFormRowDescriptorTypeButton];
+            _multivaluedAddButton.title = NSLocalizedString(@"Add Item", nil);
             [_multivaluedAddButton.cellConfig setObject:@(NSTextAlignmentLeft) forKey:@"textLabel.textAlignment"];
             _multivaluedAddButton.action.formSelector = NSSelectorFromString(@"multivaluedInsertButtonTapped:");
             [self insertObject:_multivaluedAddButton inFormRowsAtIndex:0];

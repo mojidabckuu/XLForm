@@ -34,7 +34,7 @@
     if ([selectorViewController conformsToProtocol:@protocol(XLFormRowDescriptorPopoverViewController)]){
         ((id<XLFormRowDescriptorPopoverViewController>)selectorViewController).popoverController = self.popoverController;
     }
-    UITableViewCell *cell = [self.rowDescriptor cellForFormController:self.sourceViewController];
+    UITableViewCell *cell = [self.rowDescriptor cell];
     // TODO: add realistion to attached Rect.
 //        if (self.detailTextLabel.window){
 //            [self.popoverController presentPopoverFromRect:CGRectMake(0, 0, self.detailTextLabel.frame.size.width, self.detailTextLabel.frame.size.height) inView:self.detailTextLabel permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];

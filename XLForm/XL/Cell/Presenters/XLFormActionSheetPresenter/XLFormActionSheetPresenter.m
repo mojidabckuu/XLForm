@@ -12,8 +12,6 @@
 
 #import "XLFormOptionsObject.h"
 
-#import "NSObject+XLFormAdditions.h"
-
 @interface XLFormActionSheetPresenter () <UIActionSheetDelegate>
 
 @end
@@ -36,7 +34,7 @@
 - (void)presentActionSheet {
     UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:self.rowDescriptor.selectorTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
     for (id option in self.rowDescriptor.selectorOptions) {
-        [actionSheet addButtonWithTitle:[option displayText]];
+        [actionSheet addButtonWithTitle:[self.rowDescriptor formatValue:option]];
     }
     actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     actionSheet.tag = [self.rowDescriptor hash];
@@ -53,7 +51,8 @@
         if(![option isKindOfClass:[XLFormOptionsObject class]]) {
             formOption = [XLFormOptionsObject formOptionsObjectWithValue:option displayText:[self.rowDescriptor formattedValue]];
         }
-        UIAlertAction *action = [UIAlertAction actionWithTitle:[formOption displayText] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSString *title = [self.rowDescriptor formatValue:formOption];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [weakSelf.rowDescriptor setValue:option];
             [weakSelf.sourceViewController.formView reloadData];
         }];

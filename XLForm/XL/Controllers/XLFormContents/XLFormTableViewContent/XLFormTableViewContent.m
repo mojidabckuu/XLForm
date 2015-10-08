@@ -18,6 +18,8 @@
 
 #import "UIDevice+System.h"
 
+#import "UIView+XLFormAdditions.h"
+
 @implementation XLFormTableViewContent
 
 #pragma mark - Accessors
@@ -178,7 +180,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cell] class];
-    CGFloat height = [rowDescriptor.height floatValue];
+    CGFloat height = rowDescriptor.size.height;
     if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
     }
@@ -188,7 +190,7 @@
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
     Class cellClass = [[rowDescriptor cell] class];
-    CGFloat height = [rowDescriptor.height floatValue];
+    CGFloat height = rowDescriptor.size.height;
     if ([cellClass respondsToSelector:@selector(formDescriptorCellEstimatedHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellEstimatedHeightForRowDescriptor:rowDescriptor];
     }

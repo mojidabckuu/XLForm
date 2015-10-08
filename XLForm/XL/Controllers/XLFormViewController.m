@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 
 #import "UIView+XLFormAdditions.h"
-#import "NSObject+XLFormAdditions.h"
+
 #import "XLFormViewController.h"
 #import "UIView+XLFormAdditions.h"
 #import "XLForm.h"
@@ -249,7 +249,6 @@
                                                XLFormRowDescriptorTypeDatePicker : [XLFormDatePickerCell class],
                                                XLFormRowDescriptorTypePicker : [XLFormPickerCell class],
                                                XLFormRowDescriptorTypeSlider : [XLFormSliderCell class],
-                                               XLFormRowDescriptorTypeSelectorLeftRight : [XLFormLeftRightSelectorCell class],
                                                XLFormRowDescriptorTypeStepCounter: [XLFormStepCounterCell class]
                                                } mutableCopy];
     });
@@ -314,6 +313,54 @@
         [self updateAfterDependentRowChanged:formRow];
     }
 }
+
+- (BOOL)validateForm {
+    NSMutableDictionary *errorsDictionary = [NSMutableDictionary dictionary];
+    
+    for (XLFormSectionDescriptor *section in self.form.formSections) {
+        for (XLFormRowDescriptor *row in section.formRows) {
+            if([row conformsToProtocol:@protocol(XLErrorProtocol)]) {
+                XLFormRowDescriptor<XLErrorProtocol> *errorRow = (id)row;
+                if(errorRow.error) {
+                    [errorsDictionary setObject:errorRow forKey:errorRow.tag];
+                }
+                errorRow.error = nil;
+            }
+        }
+    }
+    BOOL valid = YES;
+    for(XLFormSectionDescriptor *section in self.form.formSections) {
+        for(XLFormRowDescriptor *row in section.formRows) {
+            if(![row isValid]) {
+                valid = NO;
+                if(![errorsDictionary objectForKey:row.tag]) {
+                    [errorsDictionary setObject:row forKey:row.tag];
+                }
+            }
+        }
+    }
+    
+    [self updateCellsWithDictionary:errorsDictionary];
+    
+    return valid;
+}
+
+- (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    NSArray *visibleIndexPaths = self.formView.indexPathsForVisibleRows;
+    for(NSString *key in dictionary) {
+        XLFormRowDescriptor *rowDescriptor = dictionary[key];
+        id<XLFormDescriptorCell> cell = [rowDescriptor cell];
+        [cell update];
+        rowDescriptor.size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        NSIndexPath *rowIndexPath = [self.form indexPathOfFormRow:rowDescriptor];
+        if([visibleIndexPaths containsObject:rowIndexPath]) {
+            [indexPaths addObject:rowIndexPath];
+        }
+    }
+    [self.formView updateRows];
+}
+
 
 -(void)updateAfterDependentRowChanged:(XLFormRowDescriptor *)formRow
 {
@@ -385,12 +432,12 @@
 
 -(void)beginEditing:(XLFormRowDescriptor *)rowDescriptor
 {
-    [[rowDescriptor cellForFormController:self] highlight];
+    [[rowDescriptor cell] highlight];
 }
 
 -(void)endEditing:(XLFormRowDescriptor *)rowDescriptor
 {
-    [[rowDescriptor cellForFormController:self] unhighlight];
+    [[rowDescriptor cell] unhighlight];
 }
 
 #pragma mark - User interaction
@@ -405,11 +452,6 @@
 }
 
 #pragma mark - Methods
-
--(NSArray *)formValidationErrors
-{
-    return [self.form localValidationErrors:self];
-}
 
 -(void)showFormValidationError:(NSError *)error
 {

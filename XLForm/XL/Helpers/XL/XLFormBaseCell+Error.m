@@ -8,8 +8,6 @@
 
 #import "XLFormBaseCell+Error.h"
 
-#import "XLFormRowDescriptor+Error.h"
-
 #import <objc/runtime.h>
 
 @implementation XLFormBaseCell (Error)

@@ -23,12 +23,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "NSObject+XLFormAdditions.h"
 #import "XLFormOptionsViewController.h"
 #import "XLFormRightDetailCell.h"
 #import "XLForm.h"
-#import "NSObject+XLFormAdditions.h"
-#import "NSArray+XLFormAdditions.h"
 
 #define CELL_REUSE_IDENTIFIER  @"OptionCell"
 
@@ -138,26 +135,13 @@
             return transformedValue;
         }
     }
-    return [option displayText];
+    return [self.rowDescriptor formatValue:option];
 }
 
 #pragma mark - Helpers
 
 -(NSArray *)selectorOptions {
-    if (self.rowDescriptor.rowType == XLFormRowDescriptorTypeSelectorLeftRight){
-        XLFormLeftRightSelectorOption * option = [self leftOptionForOption:self.rowDescriptor.leftRightSelectorLeftOptionSelected];
-        return option.rightOptions;
-    }
-    else{
-        return self.rowDescriptor.selectorOptions;
-    }
-}
-
--(XLFormLeftRightSelectorOption *)leftOptionForOption:(id)option {
-    return [[self.rowDescriptor.selectorOptions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary * __unused bindings) {
-        XLFormLeftRightSelectorOption * evaluatedLeftOption = (XLFormLeftRightSelectorOption *)evaluatedObject;
-        return [evaluatedLeftOption.leftValue isEqual:option];
-    }]] firstObject];
+    return self.rowDescriptor.selectorOptions;
 }
 
 @end

@@ -53,4 +53,6 @@ typedef NS_ENUM(NSUInteger, XLPredicateType) {
                                    newValue:(id)newValue
                               predicateType:(XLPredicateType)predicateType;
 
+- (BOOL)validateForm;
+
 @end

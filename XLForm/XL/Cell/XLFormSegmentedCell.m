@@ -25,7 +25,6 @@
 
 #import "XLFormSegmentedCell.h"
 
-#import "NSObject+XLFormAdditions.h"
 #import "UIView+XLFormAdditions.h"
 
 @interface XLFormSegmentedCell()
@@ -103,28 +102,23 @@
 -(NSArray *)getItems
 {
     NSMutableArray * result = [[NSMutableArray alloc] init];
-    for (id option in self.rowDescriptor.selectorOptions)
-        [result addObject:[option displayText]];
+    for (id option in self.rowDescriptor.selectorOptions) {
+        [result addObject:[self.rowDescriptor formatValue:option]];
+    }
     return result;
 }
 
--(void)updateSegmentedControl
-{
+-(void)updateSegmentedControl {
     [self.segmentedControl removeAllSegments];
-    
     [[self getItems] enumerateObjectsUsingBlock:^(id object, NSUInteger idex, __unused BOOL *stop){
-        [self.segmentedControl insertSegmentWithTitle:[object displayText] atIndex:idex animated:NO];
+        [self.segmentedControl insertSegmentWithTitle:object atIndex:idex animated:NO];
     }];
 }
 
--(NSInteger)selectedIndex
-{
-    if (self.rowDescriptor.value){
-        for (id option in self.rowDescriptor.selectorOptions){
-            if ([[option valueData] isEqual:[self.rowDescriptor.value valueData]]){
-                return [self.rowDescriptor.selectorOptions indexOfObject:option];
-            }
-        }
+-(NSInteger)selectedIndex {
+    NSInteger index = [self.rowDescriptor.selectorOptions indexOfObject:self.rowDescriptor.value];
+    if(index != NSNotFound) {
+        return index;
     }
     return UISegmentedControlNoSegment;
 }

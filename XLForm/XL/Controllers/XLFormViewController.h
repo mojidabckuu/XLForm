@@ -52,7 +52,6 @@
 
 -(UIStoryboard *)storyboardForRow:(XLFormRowDescriptor *)formRow;
 
--(NSArray *)formValidationErrors;
 -(void)showFormValidationError:(NSError *)error;
 
 -(UITableViewRowAnimation)insertRowAnimationForRow:(XLFormRowDescriptor *)formRow;

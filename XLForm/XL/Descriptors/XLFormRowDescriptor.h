@@ -29,6 +29,10 @@
 #import "XLFormValidatorProtocol.h"
 #import "XLFormValidationStatus.h"
 
+#import "XLFormAction.h"
+
+#import "XLErrorProtocol.h"
+
 typedef NS_ENUM(NSInteger, XLFormRowDescriptorType) {
     XLFormRowDescriptorTypeNone = 0,
     XLFormRowDescriptorTypeInt,
@@ -36,130 +40,97 @@ typedef NS_ENUM(NSInteger, XLFormRowDescriptorType) {
     XLFormRowDescriptorTypeString
 };
 
+typedef NS_ENUM(NSInteger, XLFormRowSelectionStyle) {
+    XLFormRowSelectionStylePush = 1,
+    XLFormRowSelectionStylePresent,
+    XLFormRowSelectionStyleActionSheet,
+    XLFormRowSelectionStyleAlertView,
+    XLFormRowSelectionStyleInline,
+    XLFormRowSelectionStylePicker,
+    XLFormRowSelectionStylePopover,
+    
+    XLFormRowSelectionStyleUndefined = 0
+};
+
+typedef NS_ENUM(NSInteger, XLFormRowSelectionType) {
+    XLFormRowSelectionTypePickerView = 0,
+    XLFormRowSelectionTypeDatePicker = 1,
+    XLFormRowSelectionTypeAssets
+};
+
+
 @class XLFormViewController;
 @class XLFormSectionDescriptor;
 @protocol XLFormValidatorProtocol;
 @class XLFormAction;
-@class XLFormBaseCell;
 @class XLBehavior;
-
-typedef NS_ENUM(NSUInteger, XLFormPresentationMode) {
-    XLFormPresentationModeDefault = 0,
-    XLFormPresentationModePush,
-    XLFormPresentationModePresent
-};
 
 typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLFormRowDescriptor* __nonnull rowDescriptor);
 
-@interface XLFormRowDescriptor : NSObject
+@interface XLFormRowDescriptor : NSObject <XLErrorProtocol>
 
-@property (nullable) id cellClass;
+@property (weak, null_unspecified) XLFormSectionDescriptor * sectionDescriptor;
+
 @property (readwrite, nullable) NSString * tag;
+@property (nullable) NSString * title;
+@property (nonatomic, strong) NSString *subtitle;
+
+@property (nonatomic, strong) NSString *placeholder;
+@property (nonatomic, strong) NSFormatter *formatter;
+
+@property (nonatomic, assign) CGSize size;
+
+@property (nonatomic, assign, getter=isRequired) BOOL required;
+
 @property (readonly, nonnull) NSString * rowType;
 @property (nonatomic, assign) XLFormRowDescriptorType rowtype; // TODO: use rowType instead
-@property (nullable) NSString * title;
+
 @property (nonatomic, nullable) id value;
 @property (nonatomic, readonly, nullable) NSString *formattedValue;
 @property (nullable) Class valueTransformer;
+
+@property (nonnull, nonatomic, readonly) UIView<XLFormDescriptorCell> *cell;
+@property (nullable) id cellClass;
 @property UITableViewCellStyle cellStyle;
 @property (nonatomic, strong, nullable) XLBehavior *behavior;
-
-@property (copy, nullable) XLOnChangeBlock onChangeBlock;
 
 @property (nonatomic, readonly, nonnull) NSMutableDictionary * cellConfig;
 @property (nonatomic, readonly, nonnull) NSMutableDictionary * cellConfigIfDisabled;
 @property (nonatomic, readonly, nonnull) NSMutableDictionary * cellConfigAtConfigure;
 @property (nonatomic, readonly, nonnull) NSMutableDictionary * cellConfigIfInlined;
 
-@property (nonnull) id disabled;
--(BOOL)isDisabled;
-@property (nonnull) id hidden;
--(BOOL)isHidden;
-@property (getter=isRequired) BOOL required;
-
+// =========
+// Selection
+// =========
 @property (nonnull) XLFormAction * action;
+@property (copy, nullable) XLOnChangeBlock onChangeBlock;
 
-@property (weak, null_unspecified) XLFormSectionDescriptor * sectionDescriptor;
-
-+(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag rowType:(nonnull NSString *)rowType;
-+(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag rowType:(nonnull NSString *)rowType title:(nullable NSString *)title;
-
--(nonnull XLFormBaseCell *)cellForFormController:(nonnull XLFormViewController *)formController;
--(nonnull XLFormBaseCell *)cell;
-
-@property (nullable) NSString *requireMsg;
--(void)addValidator:(nonnull id<XLFormValidatorProtocol>)validator;
--(void)removeValidator:(nonnull id<XLFormValidatorProtocol>)validator;
--(nonnull XLFormValidationStatus *)doValidation;
-
-- (nullable NSString *)formatValue:(id)value;
-
-// ===========================
-// property used for Selectors
-// ===========================
+@property (nonatomic, assign) XLFormRowSelectionStyle selectionStyle;
+@property (nonatomic, assign) XLFormRowSelectionType selectionType;
+@property (nonatomic, assign) BOOL mutlipleSelection;
 @property (nullable) NSString * noValueDisplayText;
 @property (nullable) NSString * selectorTitle;
 @property (nullable) NSArray * selectorOptions;
 
-@property (null_unspecified) id leftRightSelectorLeftOptionSelected;
+// =====
+// State
+// =====
+@property (nullable, nonatomic, strong) id disabled;
+-(BOOL)isDisabled;
+@property (nullable, nonatomic, strong) id hidden;
+-(BOOL)isHidden;
 
+// ==========
+// Validation
+// ==========
+@property (nullable, nonatomic, strong) NSArray *conditions;
+@property (nonatomic, assign) BOOL isValid;
 
-// =====================================
-// Deprecated
-// =====================================
-@property (null_unspecified) Class buttonViewController DEPRECATED_ATTRIBUTE DEPRECATED_MSG_ATTRIBUTE("Use action.viewControllerClass instead");
-@property XLFormPresentationMode buttonViewControllerPresentationMode DEPRECATED_ATTRIBUTE DEPRECATED_MSG_ATTRIBUTE("use action.viewControllerPresentationMode instead");
-@property (null_unspecified) Class selectorControllerClass DEPRECATED_ATTRIBUTE DEPRECATED_MSG_ATTRIBUTE("Use action.viewControllerClass instead");
+- (nullable NSString *)formatValue:(id)value;
 
-
-@end
-
-
-// =====================================
-// helper object used for LEFTRIGHTSelector Descriptor
-// =====================================
-@interface XLFormLeftRightSelectorOption : NSObject
-
-@property (readonly, nonnull) id leftValue;
-@property (readonly, nonnull) NSArray *  rightOptions;
-@property (readonly, null_unspecified) NSString * httpParameterKey;
-@property (nullable) Class rightSelectorControllerClass;
-
-@property (nullable) NSString * noValueDisplayText;
-@property (nullable) NSString * selectorTitle;
-
-
-+(nonnull XLFormLeftRightSelectorOption *)formLeftRightSelectorOptionWithLeftValue:(nonnull id)leftValue
-                                                          httpParameterKey:(null_unspecified NSString *)httpParameterKey
-                                                              rightOptions:(nonnull NSArray *)rightOptions;
-
+// =====
+// Init
+// =====
++(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag rowType:(NSString *)rowType;
 
 @end
-
-
-@protocol XLFormOptionObject
-
-@required
-
--(nonnull NSString *)formDisplayText;
--(nonnull id)formValue;
--(nullable NSString *)tag;
-
-@end
-
-@interface XLFormAction : NSObject
-
-@property (nullable, nonatomic, strong) Class viewControllerClass;
-@property (nullable, nonatomic, strong) NSString * viewControllerStoryboardId;
-@property (nullable, nonatomic, strong) NSString * viewControllerNibName;
-
-@property (nonatomic) XLFormPresentationMode viewControllerPresentationMode;
-
-@property (nullable, nonatomic, strong) void (^formBlock)(XLFormRowDescriptor * __nonnull sender);
-@property (nullable, nonatomic) SEL formSelector;
-@property (nullable, nonatomic, strong) NSString * formSegueIdenfifier;
-@property (nullable, nonatomic, strong) Class formSegueClass;
-
-@end
-
-#import "XLFormRowDescriptor+Addons.h"

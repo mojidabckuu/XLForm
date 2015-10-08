@@ -28,6 +28,8 @@
 #import "XLFormRowDescriptor.h"
 #import "NSString+XLFormAdditions.h"
 
+#import "VGValidation.h"
+
 @interface XLFormDescriptor (_XLFormRowDescriptor)
 
 @property (readonly) NSDictionary* allRowsByTag;
@@ -46,8 +48,7 @@
 
 @interface XLFormRowDescriptor() <NSCopying>
 
-@property (nonatomic)  XLFormBaseCell * cell;
-@property (nonatomic) NSMutableArray *validators;
+@property (nonatomic) XLFormBaseCell *rowCell;
 
 @property BOOL isDirtyDisablePredicateCache;
 @property (nonatomic) NSNumber* disablePredicateCache;
@@ -58,18 +59,23 @@
 
 @implementation XLFormRowDescriptor
 
-@synthesize action = _action;
+@synthesize error = _error;
+
+@synthesize isDirtyDisablePredicateCache = _isDirtyDisablePredicateCache;
+@synthesize disablePredicateCache = _disablePredicateCache;
+@synthesize isDirtyHidePredicateCache = _isDirtyHidePredicateCache;
+@synthesize hidePredicateCache = _hidePredicateCache;
 @synthesize disabled = _disabled;
 @synthesize hidden = _hidden;
-@synthesize hidePredicateCache = _hidePredicateCache;
-@synthesize disablePredicateCache = _disablePredicateCache;
+
 @synthesize cellConfig = _cellConfig;
-@synthesize cellConfigIfDisabled = _cellConfigIfDisabled;
 @synthesize cellConfigAtConfigure = _cellConfigAtConfigure;
+@synthesize cellConfigIfDisabled = _cellConfigIfDisabled;
 @synthesize cellConfigIfInlined = _cellConfigIfInlined;
 
--(instancetype)init
-{
+#pragma mark - Lifecycle
+
+-(instancetype)init {
     @throw [NSException exceptionWithName:NSGenericException reason:@"initWithTag:(NSString *)tag rowType:(NSString *)rowType title:(NSString *)title must be used" userInfo:nil];
 }
 
@@ -79,15 +85,16 @@
     if (self){
         NSAssert(((![rowType isEqualToString:XLFormRowDescriptorTypeSelectorPopover] && ![rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]) || (([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) && ([rowType isEqualToString:XLFormRowDescriptorTypeSelectorPopover] || [rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]))), @"You must be running under UIUserInterfaceIdiomPad to use either XLFormRowDescriptorTypeSelectorPopover or XLFormRowDescriptorTypeMultipleSelectorPopover rows.");
         _tag = tag;
+
         _disabled = @NO;
         _hidden = @NO;
         _rowType = rowType;
         _title = title;
         _cellStyle = UITableViewCellStyleValue1;
-        _validators = [NSMutableArray new];
         _cellConfig = [NSMutableDictionary dictionary];
         _cellConfigIfDisabled = [NSMutableDictionary dictionary];
         _cellConfigAtConfigure = [NSMutableDictionary dictionary];
+        _cellConfigIfInlined = [NSMutableDictionary dictionary];
         _isDirtyDisablePredicateCache = YES;
         _disablePredicateCache = nil;
         _isDirtyHidePredicateCache = YES;
@@ -110,33 +117,28 @@
     return [[[self class] alloc] initWithTag:tag rowType:rowType title:title];
 }
 
--(XLFormBaseCell *)cellForFormController:(XLFormViewController *)formController
-{
-    if (!_cell){
+- (UIView<XLFormDescriptorCell> *)cell {
+    if (!_rowCell){
         id cellClass = self.cellClass ?: [XLFormViewController cellClassesForRowDescriptorTypes][self.rowType];
         NSAssert(cellClass, @"Not defined XLFormRowDescriptorType: %@", self.rowType ?: @"");
         if ([cellClass isKindOfClass:[NSString class]]) {
             NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
             if ([bundle pathForResource:cellClass ofType:@"nib"]){
-                _cell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
+                _rowCell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
             }
         } else {
-            _cell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
+            _rowCell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
         }
-        NSAssert([_cell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
+//        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
         [self configureCellAtCreationTime];
     }
-    return _cell;
-}
-
-- (XLFormBaseCell *)cell {
-    return _cell;
+    return _rowCell;
 }
 
 - (void)configureCellAtCreationTime
 {
     [self.cellConfigAtConfigure enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, __unused BOOL *stop) {
-        [_cell setValue:(value == [NSNull null]) ? nil : value forKeyPath:keyPath];
+        [_rowCell setValue:(value == [NSNull null]) ? nil : value forKeyPath:keyPath];
     }];
 }
 
@@ -187,15 +189,10 @@
 
 - (NSString *)formatValue:(id)value {
     if([value isKindOfClass:[XLFormOptionsObject class]]) {
-        return [value displayText];
+        return [value formDisplayText];
     }
     id formattedValue = self.formatter ? [self.formatter stringForObjectValue:value] : value;
     return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
-}
-
--(void)setAction:(XLFormAction *)action
-{
-    _action = action;
 }
 
 // In the implementation
@@ -208,7 +205,6 @@
     rowDescriptorCopy.valueTransformer = [self.valueTransformer copy];
     rowDescriptorCopy->_hidden = _hidden;
     rowDescriptorCopy->_disabled = _disabled;
-    rowDescriptorCopy.required = self.isRequired;
     rowDescriptorCopy.isDirtyDisablePredicateCache = YES;
     rowDescriptorCopy.isDirtyHidePredicateCache = YES;
 
@@ -217,7 +213,6 @@
     // =====================
     rowDescriptorCopy.action = [self.action copy];
 
-
     // ===========================
     // property used for Selectors
     // ===========================
@@ -225,7 +220,6 @@
     rowDescriptorCopy.noValueDisplayText = [self.noValueDisplayText copy];
     rowDescriptorCopy.selectorTitle = [self.selectorTitle copy];
     rowDescriptorCopy.selectorOptions = [self.selectorOptions copy];
-    rowDescriptorCopy.leftRightSelectorLeftOptionSelected = [self.leftRightSelectorLeftOptionSelected copy];
 
     return rowDescriptorCopy;
 }
@@ -384,8 +378,7 @@
 }
 
 
--(void)setHidden:(id)hidden
-{
+-(void)setHidden:(id)hidden {
     if ([_hidden isKindOfClass:[NSPredicate class]]){
         [self.sectionDescriptor.formDescriptor removeObserversOfObject:self predicateType:XLPredicateTypeHidden];
     }
@@ -396,238 +389,23 @@
     [self evaluateIsHidden]; // check and update if this row should be hidden.
 }
 
--(id)hidden
-{
+-(id)hidden {
     return _hidden;
 }
 
+#pragma mark - Validation
 
-#pragma mark - validation
-
--(void)addValidator:(id<XLFormValidatorProtocol>)validator
-{
-    if (validator == nil || ![validator conformsToProtocol:@protocol(XLFormValidatorProtocol)])
-        return;
-
-    if(![self.validators containsObject:validator]) {
-        [self.validators addObject:validator];
+- (BOOL)isValid {
+    NSError *error = nil;
+    NSMutableArray *conditions = [NSMutableArray arrayWithArray:self.conditions];
+    if(self.isRequired) {
+        [conditions addObject:[VGConditionPresent condition]];
     }
-}
-
--(void)removeValidator:(id<XLFormValidatorProtocol>)validator
-{
-    if (validator == nil|| ![validator conformsToProtocol:@protocol(XLFormValidatorProtocol)])
-        return;
-
-    if ([self.validators containsObject:validator]) {
-        [self.validators removeObject:validator];
-    }
-}
-
-- (BOOL)valueIsEmpty
-{
-    return self.value == nil || [self.value isKindOfClass:[NSNull class]] || ([self.value respondsToSelector:@selector(length)] && [self.value length]==0);
-}
-
--(XLFormValidationStatus *)doValidation
-{
-    XLFormValidationStatus *valStatus = nil;
-
-    if (self.required) {
-        // do required validation here
-        if ([self valueIsEmpty]) {
-            valStatus = [XLFormValidationStatus formValidationStatusWithMsg:@"" status:NO rowDescriptor:self];
-            NSString *msg = nil;
-            if (self.requireMsg != nil) {
-                msg = self.requireMsg;
-            } else {
-                // default message for required msg
-                msg = NSLocalizedString(@"%@ can't be empty", nil);
-            }
-
-            if (self.title != nil) {
-                valStatus.msg = [NSString stringWithFormat:msg, self.title];
-            } else {
-                valStatus.msg = [NSString stringWithFormat:msg, self.tag];
-            }
-
-            return valStatus;
-        }
-    }
-    // custom validator
-    for(id<XLFormValidatorProtocol> v in self.validators) {
-        if ([v conformsToProtocol:@protocol(XLFormValidatorProtocol)]) {
-            XLFormValidationStatus *vStatus = [v isValid:self];
-            // fail validation
-            if (vStatus != nil && !vStatus.isValid) {
-                return vStatus;
-            }
-            valStatus = vStatus;
-        } else {
-            valStatus = nil;
-        }
-    }
-    return valStatus;
-}
-
-
-#pragma mark - Deprecations
-
--(void)setButtonViewController:(Class)buttonViewController
-{
-    self.action.viewControllerClass = buttonViewController;
-}
-
--(Class)buttonViewController
-{
-    return self.action.viewControllerClass;
-}
-
--(void)setSelectorControllerClass:(Class)selectorControllerClass
-{
-    self.action.viewControllerClass = selectorControllerClass;
-}
-
--(Class)selectorControllerClass
-{
-    return self.action.viewControllerClass;
-}
-
--(void)setButtonViewControllerPresentationMode:(XLFormPresentationMode)buttonViewControllerPresentationMode
-{
-    self.action.viewControllerPresentationMode = buttonViewControllerPresentationMode;
-}
-
--(XLFormPresentationMode)buttonViewControllerPresentationMode
-{
-    return self.action.viewControllerPresentationMode;
-}
-
-@end
-
-
-
-@implementation XLFormLeftRightSelectorOption
-
-
-+(XLFormLeftRightSelectorOption *)formLeftRightSelectorOptionWithLeftValue:(id)leftValue
-                                                          httpParameterKey:(NSString *)httpParameterKey
-                                                              rightOptions:(NSArray *)rightOptions;
-{
-    return [[XLFormLeftRightSelectorOption alloc] initWithLeftValue:leftValue
-                                                   httpParameterKey:httpParameterKey
-                                                       rightOptions:rightOptions];
-}
-
-
--(id)initWithLeftValue:(NSString *)leftValue httpParameterKey:(NSString *)httpParameterKey rightOptions:(NSArray *)rightOptions
-{
-    self = [super init];
-    if (self){
-        _selectorTitle = nil;
-        _leftValue = leftValue;
-        _rightOptions = rightOptions;
-        _httpParameterKey = httpParameterKey;
-    }
-    return self;
-}
-
-
-@end
-
-@implementation XLFormAction
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _viewControllerPresentationMode = XLFormPresentationModeDefault;
-    }
-    return self;
-}
-
-// In the implementation
--(id)copyWithZone:(NSZone *)zone
-{
-    XLFormAction * actionCopy = [[XLFormAction alloc] init];
-    actionCopy.viewControllerPresentationMode = self.viewControllerPresentationMode;
-    if (self.viewControllerClass){
-        actionCopy.viewControllerClass = [self.viewControllerClass copy];
-    }
-    else if ([self.viewControllerStoryboardId length]  != 0){
-        actionCopy.viewControllerStoryboardId = [self.viewControllerStoryboardId copy];
-    }
-    else if ([self.viewControllerNibName length] != 0){
-        actionCopy.viewControllerNibName = [self.viewControllerNibName copy];
-    }
-    if (self.formBlock){
-        actionCopy.formBlock = [self.formBlock copy];
-    }
-    else if (self.formSelector){
-        actionCopy.formSelector = self.formSelector;
-    }
-    else if (self.formSegueIdenfifier){
-        actionCopy.formSegueIdenfifier = [self.formSegueIdenfifier copy];
-    }
-    else if (self.formSegueClass){
-        actionCopy.formSegueClass = [self.formSegueClass copy];
-    }
-    return actionCopy;
-}
-
--(void)setViewControllerClass:(Class)viewControllerClass
-{
-    _viewControllerClass = viewControllerClass;
-    _viewControllerNibName = nil;
-    _viewControllerStoryboardId = nil;
-}
-
--(void)setViewControllerNibName:(NSString *)viewControllerNibName
-{
-    _viewControllerClass = nil;
-    _viewControllerNibName = viewControllerNibName;
-    _viewControllerStoryboardId = nil;
-}
-
--(void)setViewControllerStoryboardId:(NSString *)viewControllerStoryboardId
-{
-    _viewControllerClass = nil;
-    _viewControllerNibName = nil;
-    _viewControllerStoryboardId = viewControllerStoryboardId;
-}
-
-
--(void)setFormSelector:(SEL)formSelector
-{
-    _formBlock = nil;
-    _formSegueClass = nil;
-    _formSegueIdenfifier = nil;
-    _formSelector = formSelector;
-}
-
-
--(void)setFormBlock:(void (^)(XLFormRowDescriptor *))formBlock
-{
-    _formSegueClass = nil;
-    _formSegueIdenfifier = nil;
-    _formSelector = nil;
-    _formBlock = formBlock;
-}
-
--(void)setFormSegueClass:(Class)formSegueClass
-{
-    _formSelector = nil;
-    _formBlock = nil;
-    _formSegueIdenfifier = nil;
-    _formSegueClass = formSegueClass;
-}
-
--(void)setFormSegueIdenfifier:(NSString *)formSegueIdenfifier
-{
-    _formSelector = nil;
-    _formBlock = nil;
-    _formSegueClass = nil;
-    _formSegueIdenfifier = formSegueIdenfifier;
+    BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
+        return conditions;
+    } error:&error];
+    self.error = error;
+    return valid;
 }
 
 @end

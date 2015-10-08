@@ -9,6 +9,4 @@
 
 #import "XLFormBaseCell+Error.h"
 
-#import "XLFormRowDescriptor+Helpers.h"
-
 #import "XLFormOptionsObject+Init.h"

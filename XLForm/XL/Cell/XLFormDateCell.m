@@ -73,13 +73,13 @@
             NSIndexPath * nextRowPath = [NSIndexPath indexPathForRow:(selectedRowPath.row + 1) inSection:selectedRowPath.section];
             XLFormSectionDescriptor * formSection = [self.formViewController.form.formSections objectAtIndex:nextRowPath.section];
             XLFormRowDescriptor * datePickerRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:XLFormRowDescriptorTypeDatePicker];
-            XLFormDatePickerCell * datePickerCell = (XLFormDatePickerCell *)[datePickerRowDescriptor cellForFormController:self.formViewController];
+            XLFormDatePickerCell * datePickerCell = (XLFormDatePickerCell *)[datePickerRowDescriptor cell];
             [self setModeToDatePicker:datePickerCell.datePicker];
             if (self.rowDescriptor.value){                
                 [datePickerCell.datePicker setDate:self.rowDescriptor.value animated:[self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeCountDownTimerInline]];
             }
             NSAssert([datePickerCell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
-            UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)datePickerCell;
+            id<XLFormInlineRowDescriptorCell> inlineCell = datePickerCell;
             inlineCell.inlineRowDescriptor = self.rowDescriptor;
             
             [formSection addFormRow:datePickerRowDescriptor afterRow:self.rowDescriptor];
@@ -244,7 +244,7 @@
             NSIndexPath * nextRowPath = [NSIndexPath indexPathForRow:selectedRowPath.row + 1 inSection:selectedRowPath.section];
             XLFormRowDescriptor * nextFormRow = [self.formViewController.form formRowAtIndex:nextRowPath];
             if ([nextFormRow.rowType isEqualToString:XLFormRowDescriptorTypeDatePicker]){
-                XLFormDatePickerCell * datePickerCell = (XLFormDatePickerCell *)[nextFormRow cellForFormController:self.formViewController];
+                XLFormDatePickerCell * datePickerCell = (XLFormDatePickerCell *)[nextFormRow cell];
                 [self setModeToDatePicker:datePickerCell.datePicker];
             }
         }

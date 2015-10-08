@@ -10,10 +10,6 @@
 
 #import "XLFormRowDescriptor.h"
 
-#import "XLFormOptionsObject.h"
-
-#import "NSObject+XLFormAdditions.h"
-
 @interface XLFormAlertViewPresenter () <UIAlertViewDelegate>
 
 @end
@@ -36,7 +32,7 @@
 - (void)presentAlertView {
     UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:self.rowDescriptor.selectorTitle message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
     for (id option in self.rowDescriptor.selectorOptions) {
-        [alertView addButtonWithTitle:[option displayText]];
+        [alertView addButtonWithTitle:[self.rowDescriptor formatValue:option]];
     }
     alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     alertView.tag = [self.rowDescriptor hash];
@@ -47,7 +43,7 @@
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle:self.rowDescriptor.selectorTitle message:nil preferredStyle:UIAlertControllerStyleAlert];
     __weak __typeof(self)weakSelf = self;
     for (id option in self.rowDescriptor.selectorOptions) {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:[option displayText] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:[self.rowDescriptor formatValue:option] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [weakSelf.rowDescriptor setValue:option];
             [weakSelf.sourceViewController.formView reloadData];
         }];
@@ -65,7 +61,7 @@
     if(alertView.cancelButtonIndex != buttonIndex) {
         NSString * title = [alertView buttonTitleAtIndex:buttonIndex];
         for (id option in self.rowDescriptor.selectorOptions){
-            if ([[option displayText] isEqualToString:title]){
+            if ([self.rowDescriptor formatValue:option] isEqualToString:title]){
                 [self.rowDescriptor setValue:option];
                 [self.sourceViewController.tableView reloadData];
                 break;
