@@ -10,4 +10,7 @@
 
 @interface XLRowTypesStorage : NSObject
 
++(NSMutableDictionary *)cellClassesForRowDescriptorTypes;
++(NSMutableDictionary *)inlineRowDescriptorTypesForRowDescriptorTypes;
+
 @end
