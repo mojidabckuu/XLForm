@@ -102,9 +102,12 @@
         [self addObserver:self forKeyPath:@"value" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:0];
         [self addObserver:self forKeyPath:@"disablePredicateCache" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:0];
         [self addObserver:self forKeyPath:@"hidePredicateCache" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:0];
-        
     }
     return self;
+}
+
++(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag {
+    return [[self class] formRowDescriptorWithTag:tag rowType:@"" title:nil];
 }
 
 +(instancetype)formRowDescriptorWithTag:(NSString *)tag rowType:(NSString *)rowType

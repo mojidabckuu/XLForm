@@ -11,6 +11,7 @@
 @implementation XLTextBehavior
 
 @synthesize autocapitalizationType = _autocapitalizationType;
+@synthesize autocorrectionType = _autocorrectionType;
 @synthesize spellCheckingType = _spellCheckingType;
 @synthesize keyboardType = _keyboardType;
 @synthesize keyboardAppearance = _keyboardAppearance;

@@ -183,10 +183,6 @@
     [super didReceiveMemoryWarning];
 }
 
-
-
-
-
 #pragma mark - XLFormDescriptorDelegate
 
 -(void)formRowHasBeenAdded:(XLFormRowDescriptor *)formRow atIndexPath:(NSIndexPath *)indexPath {
@@ -429,8 +425,7 @@
     }
 }
 
-- (void)keyboardWillHide:(NSNotification *)notification
-{
+- (void)keyboardWillHide:(NSNotification *)notification {
     UIView * firstResponderView = [self.formView findFirstResponder];
     UITableViewCell<XLFormDescriptorCell> * cell = [firstResponderView formDescriptorCell];
     if (cell){
@@ -452,8 +447,7 @@
 
 #pragma mark - Segue
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([sender isKindOfClass:[XLFormRowDescriptor class]]){
         UIViewController * destinationViewController = segue.destinationViewController;
         XLFormRowDescriptor * rowDescriptor = (XLFormRowDescriptor *)sender;

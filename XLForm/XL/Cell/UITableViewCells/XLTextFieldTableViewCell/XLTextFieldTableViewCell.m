@@ -34,6 +34,20 @@
     self.titleLabel.text = self.rowDescriptor.title;
     self.subtitleLabel.text = self.rowDescriptor.subtitle;
     self.textField.enabled = self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined;
+    [self updateBehavior];
+}
+
+#pragma mark - Setup
+
+- (void)updateBehavior {
+    XLTextBehavior *behavior = [self behavior] ?: [[XLTextBehavior alloc] init];
+    self.textField.autocorrectionType = behavior.autocorrectionType;
+    self.textField.autocapitalizationType = behavior.autocapitalizationType;
+    self.textField.secureTextEntry = behavior.isSecureTextEntry;
+    self.textField.spellCheckingType = behavior.spellCheckingType;
+    self.textField.returnKeyType = behavior.returnKeyType;
+    self.textField.keyboardType = behavior.keyboardType;
+    self.textField.keyboardAppearance = behavior.keyboardAppearance;
 }
 
 #pragma mark - Responderer
@@ -81,11 +95,10 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    return [self.formViewController.formContent textInputViewShouldReturn:textField formRow:self.rowDescriptor];
-//    if(textField.returnKeyType == UIReturnKeyDefault) {
-//        [textField resignFirstResponder];
-//    }
-//    return YES;
+    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textField formRow:self.rowDescriptor];
+    if(shouldReturn) {
+        [self resignFirstResponder];
+    }
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {

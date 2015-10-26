@@ -10,6 +10,19 @@
 
 @implementation XLTextBehavior (PredefinedBehaviors)
 
++ (instancetype)defaultBehavior {
+    XLTextBehavior *defaultBehavior = [[XLTextBehavior alloc] init];
+    defaultBehavior.autocapitalizationType = UITextAutocapitalizationTypeWords;
+    defaultBehavior.autocorrectionType = UITextAutocorrectionTypeDefault;
+    defaultBehavior.spellCheckingType = UITextSpellCheckingTypeNo;
+    defaultBehavior.keyboardType = UIKeyboardTypeDefault;
+    defaultBehavior.keyboardAppearance = UIKeyboardAppearanceDefault;
+    defaultBehavior.enablesReturnKeyAutomatically = YES;
+    defaultBehavior.returnKeyType = UIReturnKeyDefault;
+    defaultBehavior.secureTextEntry = NO;
+    return defaultBehavior;
+}
+
 + (instancetype)emailBehavior {
     XLTextBehavior *emailBehavior = [[XLTextBehavior alloc] init];
     emailBehavior.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -24,6 +37,8 @@
 + (instancetype)passwordBehavior {
     XLTextBehavior *passwordBehavior = [[XLTextBehavior alloc] init];
     passwordBehavior.length = 20;
+    passwordBehavior.secureTextEntry = YES;
+    passwordBehavior.returnKeyType = UIReturnKeyDone;
     return passwordBehavior;
 }
 

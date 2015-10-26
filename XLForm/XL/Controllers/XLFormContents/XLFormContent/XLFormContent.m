@@ -141,7 +141,8 @@
 
 - (BOOL)textInputShouldBeginEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
-    inputView.returnKeyType = nextRow ? UIReturnKeyNext : UIReturnKeyDefault;
+    inputView.returnKeyType = nextRow ? UIReturnKeyNext : inputView.returnKeyType == UIReturnKeyDefault ? UIReturnKeyDone : inputView.returnKeyType;
+    NSLog(@"%@", @(inputView.returnKeyType));
     return YES;
 }
 
@@ -156,9 +157,9 @@
 - (void)textInputViewDidEndEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
 }
 
-- (BOOL)textInputViewShouldReturn:(id<UITextInput, XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+- (BOOL)textInputViewShouldReturn:(id<XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
-    if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyNext) {
+    if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyDone) {
         return YES;
     }
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
@@ -172,7 +173,7 @@
     return NO;
 }
 
-- (BOOL)textInputView:(id<UITextInput, XLTextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow {
+- (BOOL)textInputView:(id<XLTextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow {
     NSString *text = [inputView.text stringByReplacingCharactersInRange:range withString:string];
     XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
     if([behavior instantMatching]) {
@@ -181,20 +182,25 @@
             return [regex evaluateWithObject:text];
         } else {
             NSUInteger length = [inputView.text length] - range.length + [string length];
-            inputView.text = [[inputView.text stringByReplacingCharactersInRange:range withString:string] substringToIndex:behavior.length];
+            NSString *text = [inputView.text stringByReplacingCharactersInRange:range withString:string];
+            NSInteger maxLength = text.length >= behavior.length ? behavior.length : text.length;
             return length <= behavior.length;
         }
     }
     return YES;
 }
 
-- (void)textInputDidChange:(id<UITextInput, XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+- (void)textInputDidChange:(id<XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     id value = nil;
     NSString *errorDescription = nil;
-    BOOL success = [formRow.formatter getObjectValue:&value forString:inputView.text errorDescription:&errorDescription];
-    formRow.value = success ? value : nil;
-    if(success) {
-        NSLog(@"ERROR : %@", errorDescription);
+    if(formRow.formatter) {
+        BOOL success = [formRow.formatter getObjectValue:&value forString:inputView.text errorDescription:&errorDescription];
+        formRow.value = success ? value : nil;
+        if(!success) {
+            NSLog(@"ERROR : %@ formatter: %@", errorDescription, formRow.formatter);
+        }
+    } else {
+        formRow.value = inputView.text;
     }
 //    if([inputView.text length] > 0) { // TODO: use formatters to convert to expected value
 //        if ([formRow.rowType isEqualToString:XLFormRowDescriptorTypeNumber] || [formRow.rowType isEqualToString:XLFormRowDescriptorTypeDecimal]){

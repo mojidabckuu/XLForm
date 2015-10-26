@@ -132,5 +132,6 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 // Init
 // =====
 +(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag rowType:(NSString *)rowType;
++(nonnull instancetype)formRowDescriptorWithTag:(nullable NSString *)tag;
 
 @end

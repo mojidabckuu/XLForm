@@ -37,6 +37,9 @@
 
 #import "XLRowTypesStorage.h"
 
+//Input
+#import "XLTextBehavior.h"
+
 //Controllers
 #import "XLFormOptionsViewController.h"
 #import "XLFormViewController.h"

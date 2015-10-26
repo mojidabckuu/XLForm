@@ -10,6 +10,8 @@
 
 @interface XLTextBehavior (PredefinedBehaviors)
 
++ (instancetype)defaultBehavior;
+
 + (instancetype)emailBehavior;
 + (instancetype)passwordBehavior;
 
