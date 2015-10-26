@@ -127,13 +127,13 @@
         [self.view addSubview:self.formView];
     }
     
-    id content = [XLFormContentFactory formContentWithView:self.formView];
+    self.formContent = [XLFormContentFactory formContentWithView:self.formView];
     
     if (!self.formView.delegate) {
-        self.formView.delegate = content;
+        self.formView.delegate = self.formContent;
     }
     if (!self.formView.dataSource){
-        self.formView.dataSource = content;
+        self.formView.dataSource = self.formContent;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
 //        self.formView.rowHeight = UITableViewAutomaticDimension;
@@ -148,8 +148,7 @@
     _oldBottomTableContentInset = nil;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSIndexPath *selected = [self.formView indexPathForSelectedRow];
     if (selected){
@@ -159,38 +158,20 @@
         [self.formView selectItemAtIndexPath:selected animated:NO scrollPosition:UITableViewScrollPositionNone];
         [self.formView deselectItemAtIndexPath:selected animated:YES];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contentSizeCategoryChanged:)
-                                                 name:UIContentSizeCategoryDidChangeNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentSizeCategoryChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
+-(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIContentSizeCategoryDidChangeNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (self.form.assignFirstResponderOnShow) {
         self.form.assignFirstResponderOnShow = NO;
@@ -198,81 +179,13 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - CellClasses
 
-+(NSMutableDictionary *)cellClassesForRowDescriptorTypes
-{
-    static NSMutableDictionary * _cellClassesForRowDescriptorTypes;
 
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _cellClassesForRowDescriptorTypes = [@{
-//                                               XLFormRowDescriptorTypeText:[XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeName: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypePhone:[XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeURL:[XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeEmail: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeTwitter: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeAccount: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypePassword: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeNumber: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeInteger: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeDecimal: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeZipCode: [XLFormTextFieldCell class],
-//                                               XLFormRowDescriptorTypeSelectorPush: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorPopover: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorActionSheet: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorAlertView: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorPickerView: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorPickerViewInline: [XLFormInlineSelectorCell class],
-//                                               XLFormRowDescriptorTypeSelectorSegmentedControl: [XLFormSegmentedCell class],
-//                                               XLFormRowDescriptorTypeMultipleSelector: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeMultipleSelectorPopover: [XLFormSelectorCell class],
-//                                               XLFormRowDescriptorTypeTextView: [XLFormTextViewCell class],
-//                                               XLFormRowDescriptorTypeButton: [XLFormButtonCell class],
-//                                               XLFormRowDescriptorTypeInfo: [XLFormSelectorCell class],
-                                               XLFormRowDescriptorTypeBooleanSwitch : [XLFormSwitchCell class],
-                                               XLFormRowDescriptorTypeBooleanCheck : [XLFormCheckCell class],
-                                               XLFormRowDescriptorTypeDate: [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeTime: [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeDateTime : [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeCountDownTimer : [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeDateInline: [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeTimeInline: [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeDateTimeInline: [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeCountDownTimerInline : [XLFormDateCell class],
-                                               XLFormRowDescriptorTypeDatePicker : [XLFormDatePickerCell class],
-                                               XLFormRowDescriptorTypePicker : [XLFormPickerCell class],
-                                               XLFormRowDescriptorTypeSlider : [XLFormSliderCell class],
-                                               XLFormRowDescriptorTypeStepCounter: [XLFormStepCounterCell class]
-                                               } mutableCopy];
-    });
-    return _cellClassesForRowDescriptorTypes;
-}
 
-#pragma mark - inlineRowDescriptorTypes
-
-+(NSMutableDictionary *)inlineRowDescriptorTypesForRowDescriptorTypes
-{
-    static NSMutableDictionary * _inlineRowDescriptorTypesForRowDescriptorTypes;
-
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _inlineRowDescriptorTypesForRowDescriptorTypes = [
-                                                          @{XLFormRowDescriptorTypeSelectorPickerViewInline: XLFormRowDescriptorTypePicker,
-                                                            XLFormRowDescriptorTypeDateInline: XLFormRowDescriptorTypeDatePicker,
-                                                            XLFormRowDescriptorTypeDateTimeInline: XLFormRowDescriptorTypeDatePicker,
-                                                            XLFormRowDescriptorTypeTimeInline: XLFormRowDescriptorTypeDatePicker,
-                                                            XLFormRowDescriptorTypeCountDownTimerInline: XLFormRowDescriptorTypeDatePicker
-                                                            } mutableCopy];
-    });
-    return _inlineRowDescriptorTypesForRowDescriptorTypes;
-}
 
 #pragma mark - XLFormDescriptorDelegate
 
@@ -564,8 +477,9 @@
     _form = form;
     _form.delegate = self;
     [_form forceEvaluate];
-    if ([self isViewLoaded]){
-        [self.formView reloadData];
+    self.formContent.formDescriptor = form;
+    if ([self isViewLoaded]) {
+        [self.formContent reload];
     }
 }
 

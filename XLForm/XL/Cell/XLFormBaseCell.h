@@ -27,6 +27,8 @@
 #import "XLFormViewController.h"
 #import <UIKit/UIKit.h>
 
+#import "XLRowTypesStorage.h"
+
 @class XLFormViewController;
 @class XLFormRowDescriptor;
 

@@ -20,12 +20,22 @@
 
 #import "UIView+XLFormAdditions.h"
 
+#import "XLRowTypesStorage.h"
+
 @implementation XLFormTableViewContent
 
 #pragma mark - Accessors
 
 - (UITableView *)tableView {
     return (UITableView *)self.formView;
+}
+
+#pragma mark - Modifiers
+
+- (void)setFormView:(UIScrollView<XLCollectionViewProtocol> *)formView {
+    [super setFormView:formView];
+    [self tableView].rowHeight = UITableViewAutomaticDimension;
+    [self tableView].estimatedRowHeight = 44.0;
 }
 
 #pragma mark - User interaction
@@ -66,7 +76,6 @@
     }
     return [[[self.formDescriptor.formSections objectAtIndex:section] formRows] count];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor * rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
@@ -184,7 +193,8 @@
     if ([cellClass respondsToSelector:@selector(formDescriptorCellHeightForRowDescriptor:)]){
         height = [cellClass formDescriptorCellHeightForRowDescriptor:rowDescriptor];
     }
-    return height != 0 ? height : self.formView.itemSize.height;
+    CGFloat itemHeight = self.formView.itemSize.height;
+    return height != 0 ? height : itemHeight;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -219,7 +229,7 @@
     XLFormSectionDescriptor * section = row.sectionDescriptor;
     if (section.sectionOptions & XLFormSectionOptionCanInsert){
         if (section.formRows.count == indexPath.row + 2){
-            if ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:row.rowType]){
+            if ([[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:row.rowType]){
                 UITableViewCell<XLFormDescriptorCell> * cell = [row cell];
                 UIView * firstResponder = [cell findFirstResponder];
                 if (firstResponder){
@@ -247,7 +257,7 @@
     XLFormSectionDescriptor * sectionDescriptor = [self.formDescriptor formSectionAtIndex:sourceIndexPath.section];
     XLFormRowDescriptor * proposedDestination = [sectionDescriptor.formRows objectAtIndex:proposedDestinationIndexPath.row];
     XLFormBaseCell * proposedDestinationCell = [proposedDestination cell];
-    if (([proposedDestinationCell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)] && ((id<XLFormInlineRowDescriptorCell>)proposedDestinationCell).inlineRowDescriptor) || ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:proposedDestinationCell.rowDescriptor.rowType] && [[proposedDestinationCell findFirstResponder] formDescriptorCell] == proposedDestinationCell)) {
+    if (([proposedDestinationCell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)] && ((id<XLFormInlineRowDescriptorCell>)proposedDestinationCell).inlineRowDescriptor) || ([[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:proposedDestinationCell.rowDescriptor.rowType] && [[proposedDestinationCell findFirstResponder] formDescriptorCell] == proposedDestinationCell)) {
         if (sourceIndexPath.row < proposedDestinationIndexPath.row){
             return [NSIndexPath indexPathForRow:proposedDestinationIndexPath.row + 1 inSection:sourceIndexPath.section];
         }
@@ -278,7 +288,7 @@
     // end editing if inline cell is first responder
     UITableViewCell<XLFormDescriptorCell> * cell = [[self.formView findFirstResponder] formDescriptorCell];
     if ([[self.formDescriptor indexPathOfFormRow:cell.rowDescriptor] isEqual:indexPath]){
-        if ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:cell.rowDescriptor.rowType]){
+        if ([[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:cell.rowDescriptor.rowType]){
             [self.formView endEditing:YES];
         }
     }

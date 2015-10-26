@@ -119,7 +119,7 @@
 
 - (UIView<XLFormDescriptorCell> *)cell {
     if (!_rowCell){
-        id cellClass = self.cellClass ?: [XLFormViewController cellClassesForRowDescriptorTypes][self.rowType];
+        id cellClass = self.cellClass ?: [XLRowTypesStorage cellClassesForRowDescriptorTypes][self.rowType];
         NSAssert(cellClass, @"Not defined XLFormRowDescriptorType: %@", self.rowType ?: @"");
         if ([cellClass isKindOfClass:[NSString class]]) {
             NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];

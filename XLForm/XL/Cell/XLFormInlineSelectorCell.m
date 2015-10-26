@@ -50,7 +50,7 @@
     _beforeChangeColor = self.detailTextLabel.textColor;
     BOOL result = [super becomeFirstResponder];
     if (result){
-        XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes][self.rowDescriptor.rowType]];
+        XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes][self.rowDescriptor.rowType]];
         id<XLFormDescriptorCell> cell = [inlineRowDescriptor cell];
         NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
         UITableViewCell<XLFormInlineRowDescriptorCell> * inlineCell = (UITableViewCell<XLFormInlineRowDescriptorCell> *)cell;

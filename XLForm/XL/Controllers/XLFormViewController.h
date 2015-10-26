@@ -73,7 +73,5 @@
 
 -(id)initWithForm:(XLFormDescriptor *)form;
 -(id)initWithForm:(XLFormDescriptor *)form style:(UITableViewStyle)style;
-+(NSMutableDictionary *)cellClassesForRowDescriptorTypes;
-+(NSMutableDictionary *)inlineRowDescriptorTypesForRowDescriptorTypes;
 
 @end

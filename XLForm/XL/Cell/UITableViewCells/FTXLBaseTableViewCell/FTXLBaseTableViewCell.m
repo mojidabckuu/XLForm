@@ -42,7 +42,7 @@
 }
 
 + (void)load {
-    [XLFormViewController.cellClassesForRowDescriptorTypes setObject:[[self class] identifier] forKey:[[self class] identifier]];
+    [XLRowTypesStorage.cellClassesForRowDescriptorTypes setObject:[[self class] identifier] forKey:[[self class] identifier]];
 }
 
 #pragma mark - XLFormDescriptorCell protocol

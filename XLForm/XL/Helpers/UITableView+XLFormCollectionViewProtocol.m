@@ -49,4 +49,24 @@
     [self endUpdates];
 }
 
+#pragma mark - Modifiers
+
+- (void)setItemSize:(CGSize)itemSize {
+    self.rowHeight = itemSize.height;
+}
+
+- (void)setEstimatedItemSize:(CGSize)estimatedItemSize {
+    self.estimatedRowHeight = estimatedItemSize.height;
+}
+
+#pragma mark - Accessors
+
+- (CGSize)itemSize {
+    return CGSizeMake(0, self.rowHeight);
+}
+
+- (CGSize)estimatedItemSize {
+    return CGSizeMake(0, self.estimatedRowHeight);
+}
+
 @end

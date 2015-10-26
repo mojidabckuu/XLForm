@@ -35,6 +35,8 @@
 
 #import "XLForm+Helpers.h"
 
+#import "XLRowTypesStorage.h"
+
 //Controllers
 #import "XLFormOptionsViewController.h"
 #import "XLFormViewController.h"
@@ -70,6 +72,8 @@
 
 //Validation
 #import "XLFormRegexValidator.h"
+
+#import <VGCondition/VGValidation.h>
 
 #import <UITextView+Placeholder/UITextView+Placeholder.h>
 

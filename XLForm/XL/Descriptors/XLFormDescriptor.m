@@ -32,6 +32,8 @@
 
 #import "XLFormInlineRowDescriptorCell.h"
 
+#import "XLRowTypesStorage.h"
+
 NSString * const XLFormErrorDomain = @"XLFormErrorDomain";
 NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
 
@@ -638,7 +640,7 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     if (nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionStopDisableRow) == XLFormRowNavigationOptionStopDisableRow)){
         return nil;
     }
-    if (!nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionStopInlineRow) == XLFormRowNavigationOptionStopInlineRow) && [[[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes] allKeys] containsObject:nextRow.rowType]){
+    if (!nextRow.isDisabled && ((rowNavigationOptions & XLFormRowNavigationOptionStopInlineRow) == XLFormRowNavigationOptionStopInlineRow) && [[[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes] allKeys] containsObject:nextRow.rowType]){
         return nil;
     }
     id<XLFormDescriptorCell> cell = [nextRow cell];

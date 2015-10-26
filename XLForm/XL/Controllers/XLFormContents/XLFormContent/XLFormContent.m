@@ -20,6 +20,8 @@
 
 #import "XLTextInput.h"
 
+#import "XLRowTypesStorage.h"
+
 @implementation XLFormContent
 
 #pragma mark - Lifecycle
@@ -59,7 +61,7 @@
     UIView * firstResponder = [self.formView findFirstResponder];
     if ([firstResponder conformsToProtocol:@protocol(XLFormDescriptorCell)]){
         id<XLFormDescriptorCell> cell = (id<XLFormDescriptorCell>)firstResponder;
-        if ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:cell.rowDescriptor.rowType]){
+        if ([[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:cell.rowDescriptor.rowType]){
             return;
         }
     }
@@ -89,6 +91,10 @@
     }
 }
 
+- (void)reload {
+    [self.formView reloadData];
+}
+
 -(XLFormBaseCell *)updateFormRow:(XLFormRowDescriptor *)formRow {
     XLFormBaseCell * cell = [formRow cell];
     cell.rowDescriptor = formRow;
@@ -104,7 +110,7 @@
     if ((self.formDescriptor.rowNavigationOptions & XLFormRowNavigationOptionEnabled) != XLFormRowNavigationOptionEnabled){
         return nil;
     }
-    if ([[[[self class] inlineRowDescriptorTypesForRowDescriptorTypes] allKeys] containsObject:rowDescriptor.rowType]) {
+    if ([[[XLRowTypesStorage inlineRowDescriptorTypesForRowDescriptorTypes] allKeys] containsObject:rowDescriptor.rowType]) {
         return nil;
     }
     id<XLFormDescriptorCell> cell = [rowDescriptor cell];

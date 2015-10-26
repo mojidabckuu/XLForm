@@ -35,6 +35,7 @@
 - (void)didSelectFormRow:(XLFormRowDescriptor *)formRow;
 - (void)deselectFormRow:(XLFormRowDescriptor *)formRow;
 - (void)reloadFormRow:(XLFormRowDescriptor *)formRow;
+- (void)reload;
 - (id<XLFormDescriptorCell>)updateFormRow:(XLFormRowDescriptor *)formRow;
 
 - (UIView *)inputAccessoryViewForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor;
