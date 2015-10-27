@@ -402,7 +402,7 @@
     NSError *error = nil;
     NSMutableArray *conditions = [NSMutableArray arrayWithArray:self.conditions];
     if(self.isRequired) {
-        [conditions addObject:[VGConditionPresent condition]];
+        [conditions insertObject:[VGConditionPresent condition] atIndex:0];
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
         return conditions;
