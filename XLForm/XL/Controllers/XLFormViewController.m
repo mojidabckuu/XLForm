@@ -128,6 +128,7 @@
     }
     
     self.formContent = [XLFormContentFactory formContentWithView:self.formView];
+    self.formContent.formController = self;
     
     if (!self.formView.delegate) {
         self.formView.delegate = self.formContent;

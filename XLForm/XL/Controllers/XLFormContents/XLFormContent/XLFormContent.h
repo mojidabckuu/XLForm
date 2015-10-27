@@ -28,6 +28,8 @@
 @property (nonatomic, weak) UIScrollView<XLCollectionViewProtocol> *formView;
 @property (nonatomic) UIView<XLFormRowNavigationAccessoryViewProtocol> *navigationAccessoryView;
 
+@property (nonatomic, weak) UIViewController *formController;
+
 - (instancetype)initWithView:(UIView *)view;
 
 - (void)navigateToDirection:(XLFormRowNavigationDirection)direction;
