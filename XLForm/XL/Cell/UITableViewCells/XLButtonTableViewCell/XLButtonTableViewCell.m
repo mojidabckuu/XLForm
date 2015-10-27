@@ -10,6 +10,19 @@
 
 @implementation XLButtonTableViewCell
 
+#pragma mark - Setup
+
+- (void)setup {
+    [self.button addTarget:self action:@selector(touchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)configure {
+    [super configure];
+    [self setup];
+}
+
+#pragma mark - Update
+
 - (void)update {
     [super update];
     [self.button setTitle:self.rowDescriptor.title forState:UIControlStateNormal];
@@ -33,10 +46,8 @@
 
 #pragma mark - User interaction
 
-- (IBAction)touchUpInside:(id)sender {
-    if(self.rowDescriptor.action.formBlock) {
-        self.rowDescriptor.action.formBlock(self.rowDescriptor);
-    }
+- (void)touchUpInside:(id)sender {
+    [self formDescriptorCellDidSelectedWithFormController:self.formViewController];
 }
 
 -(void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
