@@ -38,6 +38,16 @@
     [self endUpdates];
 }
 
+#pragma mark - Select
+
+- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(NSInteger)scrollPosition {
+    [self selectRowAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
+}
+
+- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
+    [self deselectRowAtIndexPath:indexPath animated:animated];
+}
+
 #pragma mark - Reload
 
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation {
