@@ -25,36 +25,42 @@
 
 #import "XLFormRowDescriptor.h"
 
-#import "XLFormSwitchCell.h"
+#import "XLSwitchTableViewCell.h"
 
-@implementation XLFormSwitchCell
+@implementation XLSwitchTableViewCell
 
-#pragma mark - XLFormDescriptorCell
+#pragma mark - Setup
 
-- (void)configure
-{
+- (void)configure {
     [super configure];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.accessoryView = [[UISwitch alloc] init];
-    self.editingAccessoryView = self.accessoryView;
     [self.switchControl addTarget:self action:@selector(valueChanged) forControlEvents:UIControlEventValueChanged];
 }
 
-- (void)update
-{
+#pragma mark - Update
+
+- (void)update {
     [super update];
-    self.textLabel.text = self.rowDescriptor.title;
+    UILabel *titleLabel = self.titleLabel ?: self.textLabel;
+    titleLabel.text = self.rowDescriptor.title;
     self.switchControl.on = [self.rowDescriptor.value boolValue];
     self.switchControl.enabled = !self.rowDescriptor.isDisabled;
 }
 
-- (UISwitch *)switchControl
-{
-    return (UISwitch *)self.accessoryView;
+#pragma mark - Accessors
+
+- (UISwitch *)switchControl {
+    if (!_switchControl) {
+        self.accessoryView = [[UISwitch alloc] init];
+        self.editingAccessoryView = self.accessoryView;
+        _switchControl = (UISwitch *)self.accessoryView;
+    }
+    return _switchControl;
 }
 
-- (void)valueChanged
-{
+#pragma mark - User interaction
+
+- (void)valueChanged {
     self.rowDescriptor.value = @(self.switchControl.on);
 }
 

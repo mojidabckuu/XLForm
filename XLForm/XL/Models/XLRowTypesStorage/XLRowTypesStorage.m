@@ -45,7 +45,7 @@
                                                //                                               XLFormRowDescriptorTypeTextView: [XLFormTextViewCell class],
                                                //                                               XLFormRowDescriptorTypeButton: [XLFormButtonCell class],
                                                //                                               XLFormRowDescriptorTypeInfo: [XLFormSelectorCell class],
-                                               XLFormRowDescriptorTypeBooleanSwitch : [XLFormSwitchCell class],
+                                               XLFormRowDescriptorTypeBooleanSwitch : [XLSwitchTableViewCell class],
                                                XLFormRowDescriptorTypeBooleanCheck : [XLFormCheckCell class],
                                                XLFormRowDescriptorTypeDate: [XLFormDateCell class],
                                                XLFormRowDescriptorTypeTime: [XLFormDateCell class],

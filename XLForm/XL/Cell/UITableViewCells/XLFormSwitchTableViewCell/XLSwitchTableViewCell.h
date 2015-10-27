@@ -25,6 +25,9 @@
 
 #import "XLFormBaseCell.h"
 
-@interface XLFormSwitchCell : XLFormBaseCell
+@interface XLSwitchTableViewCell : XLFormBaseCell
+
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UISwitch *switchControl;
 
 @end

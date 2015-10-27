@@ -54,6 +54,7 @@
 #import "XLTextViewTableViewCell.h"
 #import "XLButtonTableViewCell.h"
 #import "XLLabelTableViewCell.h"
+#import "XLSwitchTableViewCell.h"
 
 
 #import "XLFormBaseCell.h"
@@ -63,7 +64,7 @@
 //#import "XLFormSelectorCell.h"
 #import "XLFormDatePickerCell.h"
 
-#import "XLFormSwitchCell.h"
+
 #import "XLFormCheckCell.h"
 #import "XLFormDatePickerCell.h"
 #import "XLFormPickerCell.h"
