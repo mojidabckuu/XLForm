@@ -464,7 +464,7 @@
     }
 }
 
-#pragma mark - properties
+#pragma mark - Modifiers
 
 -(void)setForm:(XLFormDescriptor *)form {
     _form.delegate = nil;
@@ -476,6 +476,13 @@
     if ([self isViewLoaded]) {
         [self.formContent reload];
     }
+}
+
+- (void)setMapper:(XLFormMapper *)mapper {
+    _mapper = mapper;
+    _mapper.formViewController = self;
+    [_mapper updateValues];
+    self.form = _mapper.form;
 }
 
 @end

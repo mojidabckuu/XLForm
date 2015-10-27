@@ -36,6 +36,8 @@
 
 #import "XLFormContent.h"
 
+#import "XLFormMapper.h"
+
 @class XLFormViewController;
 @class XLFormRowDescriptor;
 @class XLFormSectionDescriptor;
@@ -67,11 +69,16 @@
 
 @interface XLFormViewController : UIViewController <XLFormDescriptorDelegate, UIActionSheetDelegate, XLFormViewControllerDelegate>
 
+@property (nonatomic, strong) id model;
+@property (nonatomic, strong) XLFormMapper *mapper;
+
 @property XLFormDescriptor * form;
 @property IBOutlet UIScrollView<XLCollectionViewProtocol> *formView;
 @property (nonatomic, strong) XLFormContent *formContent;
 
 -(id)initWithForm:(XLFormDescriptor *)form;
 -(id)initWithForm:(XLFormDescriptor *)form style:(UITableViewStyle)style;
+
+- (void)submit;
 
 @end
