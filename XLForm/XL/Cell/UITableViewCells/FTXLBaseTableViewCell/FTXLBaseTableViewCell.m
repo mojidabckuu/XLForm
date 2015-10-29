@@ -60,7 +60,7 @@
 }
 
 -(BOOL)formDescriptorCellCanBecomeFirstResponder {
-    if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleInline) {
+    if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleInline || self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker) {
         return !self.rowDescriptor.isDisabled;
     }
     return NO;
@@ -74,7 +74,7 @@
         }
         return [self becomeFirstResponder];
     }
-    return [super formDescriptorCellBecomeFirstResponder];
+    return [self becomeFirstResponder];
 }
 
 - (BOOL)canBecomeFirstResponder {
@@ -84,6 +84,8 @@
         } else if(self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker) {
             return !self.rowDescriptor.isDisabled;
         }
+    } else if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker) {
+        return !self.rowDescriptor.isDisabled;
     }
     return [super canBecomeFirstResponder];
 }
@@ -192,16 +194,6 @@
     [self setNeedsLayout];
 }
 
-- (NSInteger)selectedIndex {
-    if (self.rowDescriptor.value){
-        NSInteger index = [self.rowDescriptor.selectorOptions indexOfObject:self.rowDescriptor.value];
-        if(index != NSNotFound) {
-            return index;
-        }
-    }
-    return -1;
-}
-
 #pragma mark - Utils
 
 - (void)updateError {
@@ -282,4 +274,37 @@
     return [self.rowDescriptor formattedValue];
 }
 
+#pragma mark - UIPickerViewDelegate
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    id value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
+    return [self.rowDescriptor formatValue:value];
+
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    id value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
+    if([value respondsToSelector:@selector(formValue)]) {
+        value = [value formValue];
+    }
+    self.rowDescriptor.value = value;
+}
+
+#pragma mark - UIPickerViewDataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return self.rowDescriptor.selectorOptions.count;
+}
+
+#pragma mark - helpers
+
+- (NSInteger)selectedIndex {
+    XLFormRowDescriptor * formRow = self.rowDescriptor;
+    NSInteger index = [formRow.selectorOptions indexOfObject:formRow.value];
+    return index != NSNotFound ? index : -1;
+}
 @end

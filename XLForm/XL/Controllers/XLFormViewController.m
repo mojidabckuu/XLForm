@@ -128,6 +128,7 @@
     }
     
     self.formContent = [XLFormContentFactory formContentWithView:self.formView];
+    self.formContent.navigationAccessoryView = [self navigationAccessoryView];
     self.formContent.formController = self;
     
     if (!self.formView.delegate) {
@@ -483,6 +484,18 @@
     _mapper.formViewController = self;
     [_mapper updateValues];
     self.form = _mapper.form;
+}
+
+-(XLFormRowNavigationAccessoryView *)navigationAccessoryView {
+    XLFormRowNavigationAccessoryView * _navigationAccessoryView = [XLFormRowNavigationAccessoryView new];
+    _navigationAccessoryView.previousButton.target = self;
+    _navigationAccessoryView.previousButton.action = @selector(rowNavigationAction:);
+    _navigationAccessoryView.nextButton.target = self;
+    _navigationAccessoryView.nextButton.action = @selector(rowNavigationAction:);
+    _navigationAccessoryView.doneButton.target = self;
+    _navigationAccessoryView.doneButton.action = @selector(rowNavigationDone:);
+    _navigationAccessoryView.tintColor = self.view.tintColor;
+    return _navigationAccessoryView;
 }
 
 @end

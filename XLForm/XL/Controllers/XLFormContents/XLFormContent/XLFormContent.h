@@ -26,7 +26,7 @@
 
 @property (nonatomic, weak) XLFormDescriptor *formDescriptor;
 @property (nonatomic, weak) UIScrollView<XLCollectionViewProtocol> *formView;
-@property (nonatomic) UIView<XLFormRowNavigationAccessoryViewProtocol> *navigationAccessoryView;
+@property (nonatomic, strong) UIView<XLFormRowNavigationAccessoryViewProtocol> *navigationAccessoryView;
 
 @property (nonatomic, weak) UIViewController *formController;
 
