@@ -175,6 +175,9 @@
     _pickerView = [[UIPickerView alloc] init];
     _pickerView.delegate = self;
     _pickerView.dataSource = self;
+    if(self.rowDescriptor.value) {
+        self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
+    }
     [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
     return _pickerView;
 }
