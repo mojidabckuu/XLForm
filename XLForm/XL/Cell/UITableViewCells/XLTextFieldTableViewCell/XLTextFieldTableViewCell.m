@@ -23,6 +23,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.textField.delegate = self;
+    [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void)update {
