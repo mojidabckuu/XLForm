@@ -79,7 +79,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor * rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
-    return [rowDescriptor cell];
+    UITableViewCell *cell = [rowDescriptor cell];
+    [self updateFormRow:rowDescriptor];
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
