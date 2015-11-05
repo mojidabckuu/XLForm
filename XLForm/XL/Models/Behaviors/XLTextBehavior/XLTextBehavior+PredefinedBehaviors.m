@@ -29,6 +29,7 @@
     emailBehavior.autocorrectionType = UITextAutocorrectionTypeNo;
     emailBehavior.spellCheckingType = UITextSpellCheckingTypeNo;
     emailBehavior.returnKeyType = UIReturnKeyDefault;
+    emailBehavior.keyboardType = UIKeyboardTypeEmailAddress;
     emailBehavior.secureTextEntry = NO;
     emailBehavior.length = 30;
     return emailBehavior;
