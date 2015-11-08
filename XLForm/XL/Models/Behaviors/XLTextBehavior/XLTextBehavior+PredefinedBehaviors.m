@@ -35,6 +35,19 @@
     return emailBehavior;
 }
 
++ (instancetype)phoneBehavior {
+    XLTextBehavior *phoneBehavior = [[XLTextBehavior alloc] init];
+    phoneBehavior.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    phoneBehavior.autocorrectionType = UITextAutocorrectionTypeNo;
+    phoneBehavior.spellCheckingType = UITextSpellCheckingTypeNo;
+    phoneBehavior.returnKeyType = UIReturnKeyDefault;
+    phoneBehavior.keyboardType = UIKeyboardTypePhonePad;
+    phoneBehavior.secureTextEntry = NO;
+    phoneBehavior.length = 30;
+    return phoneBehavior;
+}
+
+
 + (instancetype)passwordBehavior {
     XLTextBehavior *passwordBehavior = [[XLTextBehavior alloc] init];
     passwordBehavior.length = 20;

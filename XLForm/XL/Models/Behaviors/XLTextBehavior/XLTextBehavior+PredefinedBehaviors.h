@@ -14,5 +14,6 @@
 
 + (instancetype)emailBehavior;
 + (instancetype)passwordBehavior;
++ (instancetype)phoneBehavior;
 
 @end
