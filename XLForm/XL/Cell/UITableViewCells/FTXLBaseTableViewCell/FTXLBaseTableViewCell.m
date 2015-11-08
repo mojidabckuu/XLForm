@@ -104,8 +104,12 @@
             if (result) {
                 NSString *type = nil;
                 switch (self.rowDescriptor.selectionType) {
-                    case XLFormRowSelectionTypeDatePicker:
+                    case XLFormRowSelectionTypeDatePicker: {
                         type = XLFormRowDescriptorTypeDatePicker;
+                        if(!self.rowDescriptor.value) {
+                            self.rowDescriptor.value = [NSDate date];
+                        }
+                    }
                         break;
                     case XLFormRowSelectionTypePickerView:
                         type = XLFormRowDescriptorTypePicker;

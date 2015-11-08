@@ -77,6 +77,8 @@
             [self setModeToDatePicker:datePickerCell.datePicker];
             if (self.rowDescriptor.value){                
                 [datePickerCell.datePicker setDate:self.rowDescriptor.value animated:[self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeCountDownTimerInline]];
+            } else {
+                [datePickerCell.datePicker setDate:[NSDate date] animated:[self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeCountDownTimerInline]];
             }
             NSAssert([datePickerCell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
             id<XLFormInlineRowDescriptorCell> inlineCell = datePickerCell;
