@@ -51,6 +51,20 @@
     self.textView.editable = !self.rowDescriptor.isDisabled;
     // TODO: make colors configurable
     self.textView.textColor  = self.rowDescriptor.isDisabled ? [UIColor grayColor] : [UIColor blackColor];
+    [self updateBehavior];
+}
+
+#pragma mark - Setup
+
+- (void)updateBehavior {
+    XLTextBehavior *behavior = [self behavior] ?: [[XLTextBehavior alloc] init];
+    self.textView.autocorrectionType = behavior.autocorrectionType;
+    self.textView.autocapitalizationType = behavior.autocapitalizationType;
+    self.textView.secureTextEntry = behavior.isSecureTextEntry;
+    self.textView.spellCheckingType = behavior.spellCheckingType;
+    self.textView.returnKeyType = behavior.returnKeyType;
+    self.textView.keyboardType = behavior.keyboardType;
+    self.textView.keyboardAppearance = behavior.keyboardAppearance;
 }
 
 #pragma mark -
@@ -64,6 +78,12 @@
 }
 
 #pragma mark - Accessors
+
+
+- (XLTextBehavior *)behavior {
+    return (XLTextBehavior *)self.rowDescriptor.behavior;
+}
+
 
 //- (UITextView *)textView {
 //    if(!_textView) {

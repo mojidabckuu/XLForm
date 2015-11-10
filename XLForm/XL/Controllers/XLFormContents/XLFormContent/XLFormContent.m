@@ -142,7 +142,6 @@
 - (BOOL)textInputShouldBeginEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
     inputView.returnKeyType = nextRow ? UIReturnKeyNext : inputView.returnKeyType == UIReturnKeyDefault ? UIReturnKeyDone : inputView.returnKeyType;
-    NSLog(@"%@", @(inputView.returnKeyType));
     return YES;
 }
 
