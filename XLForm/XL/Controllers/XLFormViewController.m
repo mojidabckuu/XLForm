@@ -263,7 +263,9 @@
         XLFormRowDescriptor *rowDescriptor = dictionary[key];
         id<XLFormDescriptorCell> cell = [rowDescriptor cell];
         [cell update];
-        rowDescriptor.size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        if(rowDescriptor.size.height > 0.0001) {
+            rowDescriptor.size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+        }
         NSIndexPath *rowIndexPath = [self.form indexPathOfFormRow:rowDescriptor];
         if([visibleIndexPaths containsObject:rowIndexPath]) {
             [indexPaths addObject:rowIndexPath];
