@@ -46,7 +46,7 @@
     id value = self.rowDescriptor.value;
     NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : value;
     self.textView.text = text;
-    self.textView.placeholder = self.rowDescriptor.placeholder;
+//    self.textView.placeholder = self.rowDescriptor.placeholder; // need to fix NSTextAlignment for localization
     self.titleLabel.text = self.rowDescriptor.title;
     self.textView.editable = !self.rowDescriptor.isDisabled;
     // TODO: make colors configurable
@@ -58,6 +58,7 @@
 
 - (void)updateBehavior {
     XLTextBehavior *behavior = [self behavior] ?: [[XLTextBehavior alloc] init];
+    behavior.length = 150;
     self.textView.autocorrectionType = behavior.autocorrectionType;
     self.textView.autocapitalizationType = behavior.autocapitalizationType;
     self.textView.secureTextEntry = behavior.isSecureTextEntry;
@@ -65,6 +66,7 @@
     self.textView.returnKeyType = behavior.returnKeyType;
     self.textView.keyboardType = behavior.keyboardType;
     self.textView.keyboardAppearance = behavior.keyboardAppearance;
+    self.textView.textAlignment = self.textView.textAlignment;
 }
 
 #pragma mark -
