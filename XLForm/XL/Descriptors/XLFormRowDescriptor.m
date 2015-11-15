@@ -402,7 +402,9 @@
     NSError *error = nil;
     NSMutableArray *conditions = [NSMutableArray arrayWithArray:self.conditions];
     if(self.isRequired) {
-        [conditions insertObject:[VGConditionPresent condition] atIndex:0];
+        if(![conditions  filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self isKindOfClass: %@", [VGConditionPresent class]]].count) {
+            [conditions insertObject:[VGConditionPresent condition] atIndex:0];
+        }
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
         return conditions;
