@@ -126,6 +126,7 @@
                 NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
                 id<XLFormInlineRowDescriptorCell> inlineCell = cell;
                 inlineCell.inlineRowDescriptor = self.rowDescriptor;
+                [(UIView*)inlineCell setBackgroundColor:[UIColor clearColor]];
                 [self.rowDescriptor.sectionDescriptor addFormRow:inlineRowDescriptor afterRow:self.rowDescriptor];
                 [self.formViewController.formContent ensureRowIsVisible:inlineRowDescriptor];
             }
