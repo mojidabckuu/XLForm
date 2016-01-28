@@ -81,4 +81,6 @@
 
 - (void)submit;
 
+- (void)updateCellsWithDictionary:(NSDictionary *)dictionary;
+
 @end
