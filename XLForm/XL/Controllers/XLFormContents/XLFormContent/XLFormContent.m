@@ -158,7 +158,7 @@
 
 - (BOOL)textInputViewShouldReturn:(id<XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
-    if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyDone) {
+    if(behavior.instantReturn && (inputView.returnKeyType == UIReturnKeyDone || inputView.returnKeyType == nil)) {
         return YES;
     }
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
