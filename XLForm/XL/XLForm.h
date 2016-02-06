@@ -79,8 +79,6 @@
 
 #import <VGCondition/VGValidation.h>
 
-#import <UITextView+Placeholder/UITextView+Placeholder.h>
-
 extern NSString *const XLFormRowDescriptorTypeText;
 extern NSString *const XLFormRowDescriptorTypeName;
 extern NSString *const XLFormRowDescriptorTypeURL;
