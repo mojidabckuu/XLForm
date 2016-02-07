@@ -135,13 +135,17 @@
 
 #pragma mark - XLTextInput delegate
 
+- (void)initializeReturnKeyType:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
+    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
+    inputView.returnKeyType = nextRow ? UIReturnKeyNext : inputView.returnKeyType == UIReturnKeyDefault ? UIReturnKeyDone : inputView.returnKeyType;
+}
+
 - (BOOL)textInputShouldClear:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     return YES;
 }
 
 - (BOOL)textInputShouldBeginEditing:(id<UITextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
-    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
-    inputView.returnKeyType = nextRow ? UIReturnKeyNext : inputView.returnKeyType == UIReturnKeyDefault ? UIReturnKeyDone : inputView.returnKeyType;
+    [self initializeReturnKeyType:inputView formRow:formRow];
     return YES;
 }
 
@@ -158,7 +162,10 @@
 
 - (BOOL)textInputViewShouldReturn:(id<XLTextInput>)inputView formRow:(XLFormRowDescriptor *)formRow {
     XLTextBehavior *behavior = (XLTextBehavior *)formRow.behavior;
-    if(behavior.instantReturn && (inputView.returnKeyType == UIReturnKeyDone || inputView.returnKeyType == nil)) {
+    if (inputView.returnKeyType == nil) {
+        [self initializeReturnKeyType:inputView formRow:formRow];
+    }
+    if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyDone) {
         return YES;
     }
     XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
