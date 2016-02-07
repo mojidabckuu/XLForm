@@ -6,9 +6,9 @@
 //
 //
 
-#import "FTXLBaseTableViewCell.h"
+#import "XLBaseCollectionViewCell.h"
 
-@interface XLTextFieldCollectionViewCell : FTXLBaseTableViewCell
+@interface XLTextFieldCollectionViewCell : XLBaseCollectionViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
