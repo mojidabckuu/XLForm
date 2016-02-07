@@ -49,13 +49,15 @@
 #import "XLFormInlineRowDescriptorCell.h"
 #import "XLFormRowDescriptorViewController.h"
 
-//Cells
+//TableViewCells
 #import "XLTextFieldTableViewCell.h"
 #import "XLTextViewTableViewCell.h"
 #import "XLButtonTableViewCell.h"
 #import "XLLabelTableViewCell.h"
 #import "XLSwitchTableViewCell.h"
 
+//CollectionViewCells
+#import "XLTextFieldCollectionViewCell.h"
 
 #import "XLFormBaseCell.h"
 #import "XLFormInlineSelectorCell.h"

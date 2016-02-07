@@ -1,12 +1,12 @@
 //
-//  XLTextField.m
-//  ALJ
+//  XLTextFieldCollectionViewCell.m
+//  Pods
 //
-//  Created by vlad gorbenko on 9/2/15.
-//  Copyright (c) 2015 s4m. All rights reserved.
+//  Created by Alex Zdorovets on 2/7/16.
+//
 //
 
-#import "XLTextFieldTableViewCell.h"
+#import "XLTextFieldCollectionViewCell.h"
 
 #import "XLForm.h"
 
@@ -14,11 +14,11 @@
 
 #import "XLFormContent.h"
 
-@interface XLTextFieldTableViewCell () <UITextFieldDelegate>
+@interface XLTextFieldCollectionViewCell () <UITextFieldDelegate>
 
 @end
 
-@implementation XLTextFieldTableViewCell
+@implementation XLTextFieldCollectionViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -67,7 +67,7 @@
     return [super resignFirstResponder];
 }
 
-#pragma mark - 
+#pragma mark -
 
 - (BOOL)formDescriptorCellCanBecomeFirstResponder {
     if(self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined) {
@@ -130,5 +130,6 @@
 - (void)textFieldDidChange:(UITextField *)textField{
     [self.formViewController.formContent textInputDidChange:textField formRow:self.rowDescriptor];
 }
+
 
 @end
