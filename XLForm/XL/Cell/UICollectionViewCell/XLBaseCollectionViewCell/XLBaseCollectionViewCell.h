@@ -6,11 +6,11 @@
 //
 //
 
-#import "XLFormBaseCell.h"
+#import "XLFormBaseCollectionCell.h"
 
 #import "XLFormBaseCell+Error.h"
 
-@interface XLBaseCollectionViewCell : XLFormBaseCell <XLErrorViewProtocol>
+@interface XLBaseCollectionViewCell : XLFormBaseCollectionCell <XLErrorViewProtocol>
 
 @property (weak, nonatomic) IBOutlet UILabel *labelError;
 

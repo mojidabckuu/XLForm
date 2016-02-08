@@ -121,16 +121,28 @@
 }
 
 - (UIView<XLFormDescriptorCell> *)cell {
+    XLFormViewController *controller = self.sectionDescriptor.formDescriptor.delegate;
     if (!_rowCell){
-        id cellClass = self.cellClass ?: [XLRowTypesStorage cellClassesForRowDescriptorTypes][self.rowType];
+        id cellClass = self.cellClass ?: [XLRowTypesStorage cellClassesForRowDescriptorTypes:controller.formView][self.rowType];
         NSAssert(cellClass, @"Not defined XLFormRowDescriptorType: %@", self.rowType ?: @"");
+        NSInteger section = [self.sectionDescriptor.formDescriptor.formSections indexOfObject:self.sectionDescriptor];
+        NSInteger item = [self.sectionDescriptor.formRows indexOfObject:self];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
         if ([cellClass isKindOfClass:[NSString class]]) {
             NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
             if ([bundle pathForResource:cellClass ofType:@"nib"]){
-                _rowCell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
+                if ([controller.formView isKindOfClass:[UITableView class]]) {
+                    _rowCell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
+                } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
+                    _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:cellClass forIndexPath:indexPath];
+                }
             }
         } else {
-            _rowCell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
+            if ([controller.formView isKindOfClass:[UITableView class]]) {
+                _rowCell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
+            } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
+                _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:cellClass forIndexPath:indexPath];
+            }
         }
 //        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
         [self configureCellAtCreationTime];

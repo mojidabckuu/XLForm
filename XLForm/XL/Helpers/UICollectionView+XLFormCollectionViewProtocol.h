@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UICollectionView (XLFormCollectionViewProtocol)
+#import "XLCollectionViewProtocol.h"
+
+@interface UICollectionView (XLFormCollectionViewProtocol) <XLCollectionViewProtocol>
 
 @end

@@ -42,7 +42,7 @@
 }
 
 + (void)load {
-    [XLRowTypesStorage.cellClassesForRowDescriptorTypes setObject:[[self class] identifier] forKey:[[self class] identifier]];
+    [[XLRowTypesStorage cellClassesForRowDescriptorTypes:[UICollectionView class]] setObject:[[self class] identifier] forKey:[[self class] identifier]];
 }
 
 #pragma mark - XLFormDescriptorCell protocol

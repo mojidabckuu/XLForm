@@ -14,12 +14,13 @@
 
 #pragma mark - CellClasses
 
-+(NSMutableDictionary *)cellClassesForRowDescriptorTypes
++(NSMutableDictionary *)cellClassesForRowDescriptorTypes:(Class)viewClass
 {
     static NSMutableDictionary * _cellClassesForRowDescriptorTypes;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        if (viewClass == [UITableView class]) {
         _cellClassesForRowDescriptorTypes = [@{
                                                //                                               XLFormRowDescriptorTypeText:[XLFormTextFieldCell class],
                                                //                                               XLFormRowDescriptorTypeName: [XLFormTextFieldCell class],
@@ -60,6 +61,24 @@
                                                XLFormRowDescriptorTypeSlider : [XLFormSliderCell class],
                                                XLFormRowDescriptorTypeStepCounter: [XLFormStepCounterCell class]
                                                } mutableCopy];
+        } else if (viewClass == [UICollectionView class]) {
+            _cellClassesForRowDescriptorTypes = [@{
+                                                   XLFormRowDescriptorTypeBooleanSwitch : [XLSwitchTableViewCell class],
+                                                   XLFormRowDescriptorTypeBooleanCheck : [XLFormCheckCell class],
+                                                   XLFormRowDescriptorTypeDate: [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeTime: [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeDateTime : [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeCountDownTimer : [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeDateInline: [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeTimeInline: [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeDateTimeInline: [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeCountDownTimerInline : [XLFormDateCell class],
+                                                   XLFormRowDescriptorTypeDatePicker : [XLFormDatePickerCell class],
+                                                   XLFormRowDescriptorTypePicker : [XLFormPickerCell class],
+                                                   XLFormRowDescriptorTypeSlider : [XLFormSliderCell class],
+                                                   XLFormRowDescriptorTypeStepCounter: [XLFormStepCounterCell class]
+                                                   } mutableCopy];
+        }
     });
     return _cellClassesForRowDescriptorTypes;
 }

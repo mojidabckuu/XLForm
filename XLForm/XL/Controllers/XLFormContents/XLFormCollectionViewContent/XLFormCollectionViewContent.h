@@ -8,6 +8,6 @@
 
 #import "XLFormContent.h"
 
-@interface XLFormCollectionViewContent : NSObject
+@interface XLFormCollectionViewContent : XLFormContent <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @end
