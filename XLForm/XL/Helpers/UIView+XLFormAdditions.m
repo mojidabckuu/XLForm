@@ -53,18 +53,17 @@
     return nil;
 }
 
-- (UITableViewCell<XLFormDescriptorCell> *)formDescriptorCell
-{
-    if ([self isKindOfClass:[UITableViewCell class]]) {
+- (id<XLFormDescriptorCell>)formDescriptorCell {
+    if ([self isKindOfClass:[UITableViewCell class]] || [self isKindOfClass:[UICollectionViewCell class]]) {
         if ([self conformsToProtocol:@protocol(XLFormDescriptorCell)]){
-            return (UITableViewCell<XLFormDescriptorCell> *)self;
+            return self;
         }
         return nil;
     }
     if (self.superview) {
-        UITableViewCell<XLFormDescriptorCell> * tableViewCell = [self.superview formDescriptorCell];
-        if (tableViewCell != nil) {
-            return tableViewCell;
+        id<XLFormDescriptorCell> cell = [self.superview formDescriptorCell];
+        if (cell != nil) {
+            return cell;
         }
     }
     return nil;
