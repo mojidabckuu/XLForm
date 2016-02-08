@@ -179,5 +179,11 @@
     return proposedIndexPath;
 }
 
+#pragma mark - Utils
+
+- (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
+    return [[self collectionView] dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+}
+
 
 @end

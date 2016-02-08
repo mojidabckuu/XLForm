@@ -128,21 +128,9 @@
         NSInteger section = [self.sectionDescriptor.formDescriptor.formSections indexOfObject:self.sectionDescriptor];
         NSInteger item = [self.sectionDescriptor.formRows indexOfObject:self];
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
-        if ([cellClass isKindOfClass:[NSString class]]) {
-            NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
-            if ([bundle pathForResource:cellClass ofType:@"nib"]){
-                if ([controller.formView isKindOfClass:[UITableView class]]) {
-                    _rowCell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
-                } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
-                    _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:self.tag forIndexPath:indexPath];
-                }
-            }
-        } else {
-            if ([controller.formView isKindOfClass:[UITableView class]]) {
-                _rowCell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
-            } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
-                _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:self.tag forIndexPath:indexPath];
-            }
+        id delegate = self.sectionDescriptor.formDescriptor.delegate;
+        if([delegate respondsToSelector:@selector(cellWithCellClass:identifier:indexPath:style:)]) {
+            _rowCell = [delegate cellWithCellClass:self.cellClass identifier:self.tag indexPath:indexPath style:self.cellStyle];
         }
 //        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
         [self configureCellAtCreationTime];

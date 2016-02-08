@@ -303,6 +303,10 @@
     }
 }
 
+- (UIView *)cellWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
+    return [self.formContent dequeueItemWithCellClass:cellClass identifier:identifier indexPath:indexPath style:0];
+}
+
 #pragma mark - XLFormViewControllerDelegate
 
 -(NSDictionary *)formValues

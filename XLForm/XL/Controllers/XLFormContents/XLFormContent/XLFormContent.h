@@ -44,4 +44,6 @@
 
 - (void)ensureRowIsVisible:(XLFormRowDescriptor *)inlineRowDescriptor;
 
+- (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style;
+
 @end
