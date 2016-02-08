@@ -42,15 +42,13 @@
     NSMutableArray *listOfClasses = [NSMutableArray array];
     for (XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
         for (XLFormRowDescriptor *row in section.formRows) {
-            if ([row.cellClass length]) {
-                [listOfClasses addObject:row.cellClass];
-            }
+            [listOfClasses addObject:@{@"cellClass" : row.cellClass, @"identifier" : row.tag}];
         }
     }
     listOfClasses = [NSSet setWithArray:listOfClasses].allObjects;
-    for (NSString *cellClass in listOfClasses) {
-        NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
-        [self.collectionView registerNib:[UINib nibWithNibName:cellClass bundle: bundle] forCellWithReuseIdentifier:cellClass];
+    for (NSDictionary *info in listOfClasses) {
+        NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(info[@"cellClass"])];
+        [self.collectionView registerNib:[UINib nibWithNibName:info[@"cellClass"] bundle: bundle] forCellWithReuseIdentifier:info[@"identifier"]];
     }
 }
 

@@ -46,9 +46,9 @@
     XLFormRowDescriptor *nextRow = [self.formDescriptor nextRowDescriptorForRow:currentRow withDirection:direction];
     if (nextRow) {
         id<XLFormDescriptorCell> cell = [nextRow cell];
-        if ([cell formDescriptorCellCanBecomeFirstResponder]){
+        if ([cell formDescriptorCellCanBecomeFirstResponder]) {
             NSIndexPath * indexPath = [self.formDescriptor indexPathOfFormRow:nextRow];
-            [self.formView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
+            [self.formView scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
             [cell formDescriptorCellBecomeFirstResponder];
         }
     }

@@ -134,14 +134,14 @@
                 if ([controller.formView isKindOfClass:[UITableView class]]) {
                     _rowCell = [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
                 } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
-                    _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:cellClass forIndexPath:indexPath];
+                    _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:self.tag forIndexPath:indexPath];
                 }
             }
         } else {
             if ([controller.formView isKindOfClass:[UITableView class]]) {
                 _rowCell = [[cellClass alloc] initWithStyle:self.cellStyle reuseIdentifier:nil];
             } else if ([controller.formView isKindOfClass:[UICollectionView class]]) {
-                _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:cellClass forIndexPath:indexPath];
+                _rowCell = [((UICollectionView*)controller.formView) dequeueReusableCellWithReuseIdentifier:self.tag forIndexPath:indexPath];
             }
         }
 //        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
