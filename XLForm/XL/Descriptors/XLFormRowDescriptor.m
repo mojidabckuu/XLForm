@@ -207,6 +207,9 @@
         return [value formDisplayText];
     }
     id formattedValue = self.formatter ? [self.formatter stringForObjectValue:value] : value;
+    if ([formattedValue isKindOfClass:[NSAttributedString class]]) {
+        return formattedValue;
+    }
     return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
 }
 
