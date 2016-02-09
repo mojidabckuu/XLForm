@@ -38,16 +38,6 @@
     } completion:nil];
 }
 
-#pragma mark - Select
-
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(NSInteger)scrollPosition {
-    [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition];
-}
-
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
-    [self deselectItemAtIndexPath:indexPath animated:animated];
-}
-
 #pragma mark - Reload
 
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation {
