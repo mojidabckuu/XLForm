@@ -80,6 +80,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor * rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
     UITableViewCell *cell = [rowDescriptor cell];
+    cell.preservesSuperviewLayoutMargins = NO;
+    cell.layoutMargins = UIEdgeInsetsZero;
     [self updateFormRow:rowDescriptor];
     return cell;
 }
