@@ -14,6 +14,10 @@
 
 #pragma mark - CellClasses
 
++(NSMutableDictionary *)cellClassesForRowDescriptorTypes {
+    return [XLRowTypesStorage cellClassesForRowDescriptorTypes:[UITableView class]];
+}
+
 +(NSMutableDictionary *)cellClassesForRowDescriptorTypes:(Class)viewClass
 {
     static NSMutableDictionary * _cellClassesForRowDescriptorTypes;
