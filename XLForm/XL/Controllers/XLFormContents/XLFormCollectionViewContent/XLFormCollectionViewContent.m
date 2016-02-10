@@ -22,7 +22,25 @@
 
 #import "XLRowTypesStorage.h"
 
+NSString *const XLFormCollectionViewCachedHeight = @"height";
+
+@interface XLFormCollectionViewContent ()
+
+@property (nonatomic, strong) NSMutableDictionary *cache;
+
+@end
+
 @implementation XLFormCollectionViewContent
+
+#pragma mark - Lifecycle
+
+- (instancetype)initWithView:(UIView *)view {
+    self = [super initWithView:view];
+    if(self) {
+        _cache = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 #pragma mark - Accessors
 
@@ -52,6 +70,23 @@
     }
 }
 
+#pragma mark - Proxy
+
+- (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath {
+    NSInteger index = 0;
+    NSInteger section = 0;
+    NSInteger counter = 0;
+    for(XLFormSectionDescriptor *sectionDescriptor in self.formDescriptor.formSections) {
+        counter += sectionDescriptor.formRows.count;
+        if(indexPath.row < counter) {
+            index = sectionDescriptor.formRows.count - (counter - indexPath.row);
+            section = [self.formDescriptor.formSections indexOfObject:sectionDescriptor];
+            break;
+        }
+    }
+    return [NSIndexPath indexPathForItem:index inSection:section];
+}
+
 #pragma mark - User interaction
 
 -(void)multivaluedInsertButtonTapped:(XLFormRowDescriptor *)formRow {
@@ -77,10 +112,16 @@
 #pragma maek - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        return 1;
+    }
     return self.formDescriptor.formSections.count;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        return [[self.formDescriptor.formSections valueForKeyPath:@"@sum.formRows.@count"] integerValue];
+    }
     if (section >= self.formDescriptor.formSections.count){
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"" userInfo:nil];
     }
@@ -89,7 +130,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor * rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
-    UICollectionViewCell *cell = [rowDescriptor cell];
+    UICollectionViewCell *cell = [rowDescriptor cellWithIndexPath:indexPath];
     [self updateFormRow:rowDescriptor];
     return cell;
 }
@@ -129,12 +170,18 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     XLFormRowDescriptor *rowDescriptor = [self.formDescriptor formRowAtIndex:indexPath];
-//    Class cellClass = [[rowDescriptor cell] class];
+    Class cellClass = NSClassFromString(rowDescriptor.cellClass);
     CGSize size = rowDescriptor.size;
-//    if ([cellClass respondsToSelector:@selector(formDescriptorCellSizeForRowDescriptor:)]){
-//        size = [cellClass formDescriptorCellSizeForRowDescriptor:rowDescriptor];
-//    }
-    return CGSizeEqualToSize(size, CGSizeZero) ? self.formView.itemSize : size;
+    if ([cellClass respondsToSelector:@selector(formDescriptorCellSizeForRowDescriptor:)]){
+        size = [cellClass formDescriptorCellSizeForRowDescriptor:rowDescriptor];
+    }
+    CGSize itemSize = CGSizeEqualToSize(size, CGSizeZero) ? self.formView.itemSize : size;
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)collectionViewLayout;
+        NSInteger itemsCount = self.formDescriptor.formSections.count;
+        itemSize.width = collectionView.frame.size.width / itemsCount - (itemsCount - 1) * flowLayout.minimumInteritemSpacing;
+    }
+    return itemSize;
 }
 
 #pragma mark - UICollectionViewDelegate

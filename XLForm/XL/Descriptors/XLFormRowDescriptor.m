@@ -138,6 +138,20 @@
     return _rowCell;
 }
 
+- (UIView<XLFormDescriptorCell> *)cellWithIndexPath:(NSIndexPath *)indexPath {
+    XLFormViewController *controller = self.sectionDescriptor.formDescriptor.delegate;
+    if (!_rowCell){
+        id cellClass = self.cellClass ?: [XLRowTypesStorage cellClassesForRowDescriptorTypes:controller.formView][self.rowType];
+        NSAssert(cellClass, @"Not defined XLFormRowDescriptorType: %@", self.rowType ?: @"");
+        id delegate = self.sectionDescriptor.formDescriptor.delegate;
+        if([delegate respondsToSelector:@selector(cellWithCellClass:identifier:indexPath:style:)]) {
+            _rowCell = [delegate cellWithCellClass:self.cellClass identifier:self.tag indexPath:indexPath style:self.cellStyle];
+        }
+        [self configureCellAtCreationTime];
+    }
+    return _rowCell;
+}
+
 - (void)configureCellAtCreationTime
 {
     [self.cellConfigAtConfigure enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, __unused BOOL *stop) {

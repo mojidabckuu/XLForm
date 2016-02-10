@@ -8,6 +8,8 @@
 
 #import "UICollectionView+XLFormCollectionViewProtocol.h"
 
+#import <objc/runtime.h>
+
 @implementation UICollectionView (XLFormCollectionViewProtocol)
 
 #pragma mark - Insert
@@ -69,7 +71,8 @@
 #pragma mark - Modifiers
 
 - (void)setItemSize:(CGSize)itemSize {
-
+    id value = [NSValue valueWithCGSize:itemSize];
+    objc_setAssociatedObject(self, @selector(itemSize), value, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (void)setEstimatedItemSize:(CGSize)estimatedItemSize {
@@ -82,7 +85,8 @@
 }
 
 - (CGSize)itemSize {
-    return CGSizeZero;
+    NSValue *value = objc_getAssociatedObject(self, @selector(itemSize));
+    return [value CGSizeValue];
 }
 
 - (CGSize)estimatedItemSize {

@@ -23,7 +23,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 #import "XLFormDescriptor.h"
 
 
@@ -37,6 +36,9 @@
 NSString * const XLFormErrorDomain = @"XLFormErrorDomain";
 NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
 
+NSString *const XLFormTranslateSectionsIntoColumns = @"XLFormTranslateSectionsIntoColumns";
+//Reserved
+NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
 
 @interface XLFormSectionDescriptor (_XLFormDescriptor)
 
@@ -83,6 +85,7 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         _addAsteriskToRequiredRowsTitle = NO;
         _disabled = NO;
         _rowNavigationOptions = XLFormRowNavigationOptionEnabled;
+        _userInfo = [NSMutableDictionary dictionary];
         [self addObserver:self forKeyPath:@"formSections" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:0];
     }
     return self;
@@ -242,10 +245,12 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     [self removeFormRow:formRow];
 }
 
--(XLFormRowDescriptor *)formRowAtIndex:(NSIndexPath *)indexPath
-{
-    if ((self.formSections.count > indexPath.section) && [[self.formSections objectAtIndex:indexPath.section] formRows].count > indexPath.row){
-        return [[[self.formSections objectAtIndex:indexPath.section] formRows] objectAtIndex:indexPath.row];
+-(XLFormRowDescriptor *)formRowAtIndex:(NSIndexPath *)indexPath {
+    NSLog(@"a) indexPath: %ld, %ld", indexPath.section, indexPath.row);
+    NSIndexPath *proxyIndexPath = [self.delegate indexPathWithProxy:indexPath];
+    NSLog(@"b) indexPath: %ld, %ld", indexPath.section, indexPath.row);
+    if ((self.formSections.count > proxyIndexPath.section) && [[self.formSections objectAtIndex:proxyIndexPath.section] formRows].count > proxyIndexPath.row){
+        return [[[self.formSections objectAtIndex:proxyIndexPath.section] formRows] objectAtIndex:proxyIndexPath.row];
     }
     return nil;
 }

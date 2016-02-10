@@ -357,6 +357,10 @@
     [[rowDescriptor cell] unhighlight];
 }
 
+- (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath {
+    return [self.formContent indexPathWithProxy:indexPath];
+}
+
 #pragma mark - User interaction
 
 -(void)rowNavigationAction:(UIBarButtonItem *)sender {

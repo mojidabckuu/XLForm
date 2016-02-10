@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol XLCollectionViewProtocol <NSObject>
 
-@optional
-
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, weak) id dataSource;
 
@@ -25,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleRows;
 
 @property (nonatomic, readonly, nullable) NSIndexPath *indexPathForSelectedRow;
+
+@optional
 
 - (NSIndexPath *)indexPathForCell:(id<XLFormDescriptorCell>)cell;
 

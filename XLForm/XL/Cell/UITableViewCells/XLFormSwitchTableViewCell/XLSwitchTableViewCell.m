@@ -47,6 +47,10 @@
     self.switchControl.enabled = !self.rowDescriptor.isDisabled;
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+}
+
 #pragma mark - Accessors
 
 - (UISwitch *)switchControl {

@@ -64,6 +64,12 @@
     return formRowDescriptor;
 }
 
+#pragma mark - Proxy
+
+- (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath {
+    return indexPath;
+}
+
 #pragma mark - UITableViewDataSource
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

@@ -33,6 +33,9 @@
 extern NSString * __nonnull const XLFormErrorDomain;
 extern NSString * __nonnull const XLValidationStatusErrorKey;
 
+extern NSString *const XLFormTranslateSectionsIntoColumns;
+extern NSString *const XLFormSectionsRowsBindings;
+
 typedef NS_ENUM(NSInteger, XLFormErrorCode)
 {
     XLFormErrorCodeGen = -999,
@@ -50,6 +53,8 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 @class XLFormSectionDescriptor;
 
 @interface XLFormDescriptor : NSObject
+
+@property (nonatomic, strong, readonly) NSMutableDictionary *userInfo;
 
 @property (readonly, nullable) NSString * title;
 @property (readonly, nonatomic, nonnull) NSMutableArray * formSections;
