@@ -43,9 +43,10 @@
 
 -(UIDatePicker *)datePicker
 {
-    if (_datePicker) return _datePicker;
-    _datePicker = [UIDatePicker autolayoutView];
-    [_datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    if (!_datePicker) {
+        _datePicker = [UIDatePicker autolayoutView];
+        [_datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
     return _datePicker;
 }
 
@@ -76,6 +77,9 @@
 -(void)update
 {
     [super update];
+    if ([self.inlineRowDescriptor.value isKindOfClass:[NSDate class]]) {
+        self.datePicker.date = self.inlineRowDescriptor.value;
+    }
     [self.datePicker setUserInteractionEnabled:![self.rowDescriptor isDisabled]];
 }
 
