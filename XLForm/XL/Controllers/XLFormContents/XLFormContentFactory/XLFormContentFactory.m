@@ -34,8 +34,7 @@
 #pragma mark - Factory methods
 
 + (XLFormContent *)formContentWithView:(UIView *)view {
-    XLFormContent * content = [[[[self viewClasses] objectForKey:NSStringFromClass([view class])] alloc] init];
-    content.formView = view;
+    XLFormContent * content = [[[[self viewClasses] objectForKey:NSStringFromClass([view class])] alloc] initWithView:view];
     return content;
 }
 

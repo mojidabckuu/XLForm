@@ -22,6 +22,8 @@
 
 #import "XLRowTypesStorage.h"
 
+NSString *const XLFormCollectionViewContentLinkedRows = @"linkedRows";
+
 @implementation XLFormCollectionViewContent
 
 #pragma mark - Accessors
@@ -50,23 +52,61 @@
         NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(info[@"cellClass"])];
         [self.collectionView registerNib:[UINib nibWithNibName:info[@"cellClass"] bundle: bundle] forCellWithReuseIdentifier:info[@"identifier"]];
     }
+    
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        NSInteger maxRows = 0;
+        for(XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
+            if(maxRows < section.formRows.count) {
+                maxRows = section.formRows.count;
+            }
+        }
+        NSInteger counter = 0;
+        NSMutableDictionary *linkedRows = [NSMutableDictionary dictionary];
+        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)[[self collectionView] collectionViewLayout];
+        if(layout.scrollDirection == UICollectionViewScrollDirectionVertical) {
+            for(NSInteger i = 0; i < maxRows; i++) {
+                for(NSInteger j = 0; j < self.formDescriptor.formSections.count; j++) {
+                    XLFormSectionDescriptor *section = self.formDescriptor.formSections[j];
+                    if(section.formRows.count > i) {
+                        linkedRows[@(counter)] = [NSIndexPath indexPathForItem:i inSection:j];
+                        NSLog(@"i: %ld, j: %ld count: %ld %@", i, j, counter, linkedRows[@(counter)]);
+                        counter++;
+                    }
+                }
+            }
+        } else {
+            for(NSInteger i = 0; i < self.formDescriptor.formSections.count; i++) {
+                XLFormSectionDescriptor *section = self.formDescriptor.formSections[i];
+                for (NSInteger j = 0; j < section.formRows.count; j++) {
+                    linkedRows[@(counter)] = [NSIndexPath indexPathForItem:j inSection:i];
+                    counter++;
+                }
+            }
+        }
+        self.cache[XLFormCollectionViewContentLinkedRows] = linkedRows;
+    }
 }
 
 #pragma mark - Proxy
 
 - (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath {
-    NSInteger index = 0;
-    NSInteger section = 0;
-    NSInteger counter = 0;
-    for(XLFormSectionDescriptor *sectionDescriptor in self.formDescriptor.formSections) {
-        counter += sectionDescriptor.formRows.count;
-        if(indexPath.row < counter) {
-            index = sectionDescriptor.formRows.count - (counter - indexPath.row);
-            section = [self.formDescriptor.formSections indexOfObject:sectionDescriptor];
-            break;
-        }
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        NSNumber *index = @(indexPath.row);
+        return self.cache[XLFormCollectionViewContentLinkedRows][index];
     }
-    return [NSIndexPath indexPathForItem:index inSection:section];
+    return indexPath;
+//    NSInteger index = 0;
+//    NSInteger section = 0;
+//    NSInteger counter = 0;
+//    for(XLFormSectionDescriptor *sectionDescriptor in self.formDescriptor.formSections) {
+//        counter += sectionDescriptor.formRows.count;
+//        if(indexPath.row < counter) {
+//            index = sectionDescriptor.formRows.count - (counter - indexPath.row);
+//            section = [self.formDescriptor.formSections indexOfObject:sectionDescriptor];
+//            break;
+//        }
+//    }
+//    return [NSIndexPath indexPathForItem:index inSection:section];
 }
 
 #pragma mark - User interaction
@@ -161,7 +201,8 @@
     if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
         UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)collectionViewLayout;
         NSInteger itemsCount = self.formDescriptor.formSections.count;
-        itemSize.width = collectionView.frame.size.width / itemsCount - (itemsCount - 1) * flowLayout.minimumInteritemSpacing;
+        // collectionView.frame.size.width
+        itemSize.width = 1024 / itemsCount - (itemsCount - 1) * flowLayout.minimumInteritemSpacing;
     }
     return itemSize;
 }
@@ -215,6 +256,7 @@
 }
 
 - (CGFloat)estimatedHeight {
+    UICollectionViewFlowLayout *layout = [[self collectionView] collectionViewLayout];
     float height = 0;
     if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
         float maxHeight = 0;
@@ -224,7 +266,7 @@
                 CGSize size = CGSizeEqualToSize(row.size, CGSizeZero) ? self.formView.itemSize : row.size;
                 height += size.height;
             }
-            maxHeight = MAX(height, maxHeight);
+            maxHeight = MAX(height + (section.formRows.count - 1 * layout.minimumLineSpacing), maxHeight);
         }
         height = maxHeight;
     } else {

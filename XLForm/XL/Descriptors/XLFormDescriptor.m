@@ -246,11 +246,17 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
 }
 
 -(XLFormRowDescriptor *)formRowAtIndex:(NSIndexPath *)indexPath {
-    NSLog(@"a) indexPath: %ld, %ld", indexPath.section, indexPath.row);
     NSIndexPath *proxyIndexPath = [self.delegate indexPathWithProxy:indexPath];
-    NSLog(@"b) indexPath: %ld, %ld", indexPath.section, indexPath.row);
-    if ((self.formSections.count > proxyIndexPath.section) && [[self.formSections objectAtIndex:proxyIndexPath.section] formRows].count > proxyIndexPath.row){
-        return [[[self.formSections objectAtIndex:proxyIndexPath.section] formRows] objectAtIndex:proxyIndexPath.row];
+    XLFormRowDescriptor *rowDescriptor = [self itemAtIndexPath:proxyIndexPath];
+    NSString *info = [NSString stringWithFormat:@"%@ %@ %@", indexPath, proxyIndexPath, rowDescriptor];
+    return rowDescriptor;
+}
+
+- (XLFormRowDescriptor *)itemAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    if ((self.formSections.count > section) && [[self.formSections objectAtIndex:section] formRows].count > row) {
+        return [[[self.formSections objectAtIndex:section] formRows] objectAtIndex:row];
     }
     return nil;
 }

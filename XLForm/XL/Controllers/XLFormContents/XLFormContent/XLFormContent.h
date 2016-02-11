@@ -24,6 +24,8 @@
 
 @interface XLFormContent : NSObject <XLFormTextInputDelegate>
 
+@property (nonatomic, strong, readonly) NSMutableDictionary *cache;
+
 @property (nonatomic, weak) XLFormDescriptor *formDescriptor;
 @property (nonatomic, weak) UIScrollView<XLCollectionViewProtocol> *formView;
 @property (nonatomic, strong) UIView<XLFormRowNavigationAccessoryViewProtocol> *navigationAccessoryView;

@@ -32,6 +32,7 @@
         NSAssert([view conformsToProtocol:@protocol(XLCollectionViewProtocol)], @"View should conform to XLFormCollectionViewProtocol");
         NSAssert([view isKindOfClass:[UIScrollView class]], @"View should be kind of UIScrollView class");
         self.formView = (UIScrollView<XLCollectionViewProtocol> *)view;
+        _cache = [NSMutableDictionary dictionary];
     }
     return self;
 }
