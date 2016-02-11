@@ -47,4 +47,6 @@
 - (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style;
 - (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath;
 
+- (CGFloat)estimatedHeight;
+
 @end

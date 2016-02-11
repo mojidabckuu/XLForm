@@ -317,4 +317,15 @@
     return nil;
 }
 
+- (CGFloat)estimatedHeight {
+    float height = 0;
+    for (XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
+        for (XLFormRowDescriptor *row in section.formRows) {
+            CGSize size = CGSizeEqualToSize(row.size, CGSizeZero) ? self.formView.itemSize : row.size;
+            height += size.height;
+        }
+    }
+    return height;
+}
+
 @end

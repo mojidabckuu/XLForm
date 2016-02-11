@@ -22,25 +22,7 @@
 
 #import "XLRowTypesStorage.h"
 
-NSString *const XLFormCollectionViewCachedHeight = @"height";
-
-@interface XLFormCollectionViewContent ()
-
-@property (nonatomic, strong) NSMutableDictionary *cache;
-
-@end
-
 @implementation XLFormCollectionViewContent
-
-#pragma mark - Lifecycle
-
-- (instancetype)initWithView:(UIView *)view {
-    self = [super initWithView:view];
-    if(self) {
-        _cache = [NSMutableDictionary dictionary];
-    }
-    return self;
-}
 
 #pragma mark - Accessors
 
@@ -230,6 +212,30 @@ NSString *const XLFormCollectionViewCachedHeight = @"height";
 
 - (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
     return [[self collectionView] dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+}
+
+- (CGFloat)estimatedHeight {
+    float height = 0;
+    if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
+        float maxHeight = 0;
+        for (XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
+            height = 0;
+            for (XLFormRowDescriptor *row in section.formRows) {
+                CGSize size = CGSizeEqualToSize(row.size, CGSizeZero) ? self.formView.itemSize : row.size;
+                height += size.height;
+            }
+            maxHeight = MAX(height, maxHeight);
+        }
+        height = maxHeight;
+    } else {
+        for (XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
+            for (XLFormRowDescriptor *row in section.formRows) {
+                CGSize size = CGSizeEqualToSize(row.size, CGSizeZero) ? self.formView.itemSize : row.size;
+                height += size.height;
+            }
+        }
+    }
+    return height;
 }
 
 
