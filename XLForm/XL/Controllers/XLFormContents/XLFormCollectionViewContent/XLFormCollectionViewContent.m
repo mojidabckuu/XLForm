@@ -50,7 +50,9 @@ NSString *const XLFormCollectionViewContentLinkedRows = @"linkedRows";
     listOfClasses = [NSSet setWithArray:listOfClasses].allObjects;
     for (NSDictionary *info in listOfClasses) {
         NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(info[@"cellClass"])];
-        [self.collectionView registerNib:[UINib nibWithNibName:info[@"cellClass"] bundle: bundle] forCellWithReuseIdentifier:info[@"identifier"]];
+        NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", info[@"identifier"], @"CollectionViewCell"];
+        NSString *nibName = [NSString stringWithFormat:@"%@%@", info[@"cellClass"], @"CollectionViewCell"];
+        [self.collectionView registerNib:[UINib nibWithNibName:nibName bundle: bundle] forCellWithReuseIdentifier:fullIdentifier];
     }
     
     if([self.formDescriptor.userInfo[XLFormTranslateSectionsIntoColumns] boolValue]) {
@@ -252,7 +254,8 @@ NSString *const XLFormCollectionViewContentLinkedRows = @"linkedRows";
 #pragma mark - Utils
 
 - (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
-    return [[self collectionView] dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", identifier, @"CollectionViewCell"];
+    return [[self collectionView] dequeueReusableCellWithReuseIdentifier:fullIdentifier forIndexPath:indexPath];
 }
 
 - (CGFloat)estimatedHeight {

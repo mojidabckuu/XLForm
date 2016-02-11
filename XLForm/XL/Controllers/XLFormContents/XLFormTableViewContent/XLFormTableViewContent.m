@@ -306,14 +306,16 @@
 
 - (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
     if ([cellClass isKindOfClass:[NSString class]]) {
-        NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
-        if ([bundle pathForResource:cellClass ofType:@"nib"]){
-            return [[bundle loadNibNamed:cellClass owner:nil options:nil] firstObject];
+        NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", cellClass, @"TableViewCell"];
+        NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(fullIdentifier)];
+        if ([bundle pathForResource:fullIdentifier ofType:@"nib"]){
+            return [[bundle loadNibNamed:fullIdentifier owner:nil options:nil] firstObject];
         }
     } else {
-        return [[UITableViewCell alloc] initWithStyle:style reuseIdentifier:identifier];
-        
+        NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", cellClass, @"TableViewCell"];
+        return [[UITableViewCell alloc] initWithStyle:style reuseIdentifier:fullIdentifier];
     }
+    
     return nil;
 }
 
