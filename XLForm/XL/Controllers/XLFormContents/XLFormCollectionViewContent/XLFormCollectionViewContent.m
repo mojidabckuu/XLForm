@@ -204,7 +204,7 @@ NSString *const XLFormCollectionViewContentLinkedRows = @"linkedRows";
         UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)collectionViewLayout;
         NSInteger itemsCount = self.formDescriptor.formSections.count;
         // collectionView.frame.size.width
-        itemSize.width = 1024 / itemsCount - (itemsCount - 1) * flowLayout.minimumInteritemSpacing;
+        itemSize.width = collectionView.frame.size.width / itemsCount - (itemsCount - 1) * flowLayout.minimumInteritemSpacing;
     }
     return itemSize;
 }
