@@ -10,6 +10,6 @@
 
 @protocol XLErrorProtocol <NSObject>
 
-@property (nonatomic, strong) NSError *error;
+@property (nonatomic, strong, nullable) NSError *error;
 
 @end
