@@ -122,6 +122,7 @@
                 }
                 XLFormRowDescriptor * inlineRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:type];
                 [inlineRowDescriptor.cellConfig setValuesForKeysWithDictionary:self.rowDescriptor.cellConfigIfInlined];
+                inlineRowDescriptor.sectionDescriptor = self.rowDescriptor.sectionDescriptor;
                 id<XLFormDescriptorCell> cell = [inlineRowDescriptor cell];
                 NSAssert([cell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)], @"inline cell must conform to XLFormInlineRowDescriptorCell");
                 id<XLFormInlineRowDescriptorCell> inlineCell = cell;

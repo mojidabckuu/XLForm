@@ -17,7 +17,12 @@
     UILabel *subtitleLabel = self.subtitleLabel ?: self.detailTextLabel;
     subtitleLabel.text = self.rowDescriptor.subtitle;
     UILabel *valueLabel = self.valueLabel ?: self.detailTextLabel;
-    valueLabel.text = [self.rowDescriptor formattedValue];
+    id value = [self.rowDescriptor formattedValue];
+    if ([value isKindOfClass:[NSAttributedString class]]) {
+        valueLabel.attributedText = value;
+    } else {
+        valueLabel.text = value;
+    }
 }
 
 @end
