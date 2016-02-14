@@ -73,10 +73,10 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 
 @property (readwrite, nullable) NSString * tag;
 @property (nullable) NSString * title;
-@property (nonatomic, strong) NSString *subtitle;
+@property (nonatomic, strong, nullable) NSString *subtitle;
 
-@property (nonatomic, strong) NSString *placeholder;
-@property (nonatomic, strong) NSFormatter *formatter;
+@property (nonatomic, strong, nullable) NSString *placeholder;
+@property (nonatomic, strong, nullable) NSFormatter *formatter;
 
 @property (nonatomic, assign) CGSize size;
 

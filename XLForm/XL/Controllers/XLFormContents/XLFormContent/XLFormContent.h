@@ -34,7 +34,7 @@
 
 - (instancetype)initWithView:(UIView *)view;
 
-- (void)navigateToDirection:(XLFormRowNavigationDirection)direction;
+- (BOOL)navigateToDirection:(XLFormRowNavigationDirection)direction;
 
 - (void)didSelectFormRow:(XLFormRowDescriptor *)formRow;
 - (void)deselectFormRow:(XLFormRowDescriptor *)formRow;

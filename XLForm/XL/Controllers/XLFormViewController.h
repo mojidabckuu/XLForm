@@ -83,4 +83,6 @@
 
 - (void)updateCellsWithDictionary:(NSDictionary *)dictionary;
 
+- (void)rowNavigationAction:(UIBarButtonItem *)sender;
+
 @end

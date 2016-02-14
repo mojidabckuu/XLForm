@@ -39,7 +39,7 @@
 
 #pragma mark - Navigation
 
-- (void)navigateToDirection:(XLFormRowNavigationDirection)direction {
+- (BOOL)navigateToDirection:(XLFormRowNavigationDirection)direction {
     UIView * firstResponder = [self.formView findFirstResponder];
     id<XLFormDescriptorCell> currentCell = [firstResponder formDescriptorCell];
     NSIndexPath *currentIndexPath = [self.formView indexPathForCell:currentCell];
@@ -50,9 +50,10 @@
         if ([cell formDescriptorCellCanBecomeFirstResponder]) {
             NSIndexPath * indexPath = [self.formDescriptor indexPathOfFormRow:nextRow];
             [self.formView scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
-            [cell formDescriptorCellBecomeFirstResponder];
+            return [cell formDescriptorCellBecomeFirstResponder];
         }
     }
+    return NO;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -169,15 +170,16 @@
     if(behavior.instantReturn && inputView.returnKeyType == UIReturnKeyDone) {
         return YES;
     }
-    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
-    if (nextRow) {
-        id<XLFormDescriptorCell> nextCell = [nextRow cell];
-        if ([nextCell formDescriptorCellCanBecomeFirstResponder]) {
-            [nextCell formDescriptorCellBecomeFirstResponder];
-            return YES;
-        }
-    }
-    return NO;
+    return [self navigateToDirection:XLFormRowNavigationDirectionNext];
+//    XLFormRowDescriptor * nextRow = [self.formDescriptor nextRowDescriptorForRow:formRow withDirection:XLFormRowNavigationDirectionNext];
+//    if (nextRow) {
+//        id<XLFormDescriptorCell> nextCell = [nextRow cell];
+//        if ([nextCell formDescriptorCellCanBecomeFirstResponder]) {
+//            [nextCell formDescriptorCellBecomeFirstResponder];
+//            return YES;
+//        }
+//    }
+//    return NO;
 }
 
 - (BOOL)textInputView:(id<XLTextInput>)inputView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string formRow:(XLFormRowDescriptor *)formRow {
