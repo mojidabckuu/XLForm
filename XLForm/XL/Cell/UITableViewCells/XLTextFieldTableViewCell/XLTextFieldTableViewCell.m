@@ -41,7 +41,7 @@
 #pragma mark - Setup
 
 - (void)updateBehavior {
-    XLTextBehavior *behavior = [self behavior] ?: [[XLTextBehavior alloc] init];
+    XLTextBehavior *behavior = [self behavior];
     self.textField.autocorrectionType = behavior.autocorrectionType;
     self.textField.autocapitalizationType = behavior.autocapitalizationType;
     self.textField.secureTextEntry = behavior.isSecureTextEntry;
@@ -86,6 +86,9 @@
 #pragma mark - Accessors
 
 - (XLTextBehavior *)behavior {
+    if(!self.rowDescriptor.behavior) {
+        self.rowDescriptor.behavior = [[XLTextBehavior alloc] init];
+    }
     return (XLTextBehavior *)self.rowDescriptor.behavior;
 }
 
