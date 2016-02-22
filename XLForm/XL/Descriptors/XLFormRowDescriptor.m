@@ -430,4 +430,13 @@
     return valid;
 }
 
+- (BOOL)isFirst {
+    return [self.sectionDescriptor.formRows indexOfObject:self] == 0 && [self.sectionDescriptor.formDescriptor.formSections indexOfObject:self.sectionDescriptor] == 0;
+}
+
+- (BOOL)isLast {
+    return [self.sectionDescriptor.formRows indexOfObject:self] == self.sectionDescriptor.formRows.count - 1 && [self.sectionDescriptor.formDescriptor.formSections indexOfObject:self.sectionDescriptor] == self.sectionDescriptor.formDescriptor.formSections.count - 1;
+}
+
+
 @end

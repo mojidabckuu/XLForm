@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @protocol XLFormDescriptorCell;
 
 @protocol XLCollectionViewProtocol <NSObject>
 
-@property (nonatomic, weak) id delegate;
-@property (nonatomic, weak) id dataSource;
+@property (nonatomic, weak, nullable) id delegate;
+@property (nonatomic, weak, nullable) id dataSource;
 
 @property (nonatomic, assign) CGSize itemSize;
 @property (nonatomic, assign) CGSize estimatedItemSize;
@@ -26,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-- (NSIndexPath *)indexPathForCell:(id<XLFormDescriptorCell>)cell;
+- (nullable NSIndexPath *)indexPathForCell:(id<XLFormDescriptorCell>)cell;
 
 - (void)scrollToRowAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(NSInteger)scrollPosition animated:(BOOL)animated;
 
@@ -49,5 +47,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateRows;
 
 @end
-
-NS_ASSUME_NONNULL_END

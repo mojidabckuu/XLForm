@@ -139,4 +139,7 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 // =====
 - (UIView<XLFormDescriptorCell> *)cellWithIndexPath:(NSIndexPath *)indexPath;
 
+@property (nonatomic, assign) BOOL isLast;
+@property (nonatomic, assign) BOOL isFirst;
+
 @end
