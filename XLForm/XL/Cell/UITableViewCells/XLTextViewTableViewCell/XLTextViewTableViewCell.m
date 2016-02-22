@@ -116,11 +116,11 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     BOOL shouldChange = [self.formViewController.formContent textInputView:textView shouldChangeCharactersInRange:range replacementString:text formRow:self.rowDescriptor];
-    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textView formRow:self.rowDescriptor];
-    if(shouldReturn) {
-        [textView resignFirstResponder];
-        return NO;
-    }
+//    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textView formRow:self.rowDescriptor];
+//    if(shouldReturn) {
+//        [textView resignFirstResponder];
+//        return NO;
+//    }
     return shouldChange;
 }
 
