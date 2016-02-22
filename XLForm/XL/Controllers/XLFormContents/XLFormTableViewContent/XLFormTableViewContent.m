@@ -22,6 +22,8 @@
 
 #import "XLRowTypesStorage.h"
 
+@import ObjectiveC.runtime;
+
 @implementation XLFormTableViewContent
 
 #pragma mark - Accessors
@@ -306,18 +308,19 @@
 
 #pragma mark - Utils
 
-- (UIView *)dequeueItemWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
+- (UIView *)dequeueItemWithCellClass:(id)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style {
     if ([cellClass isKindOfClass:[NSString class]]) {
-        NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", cellClass, @"TableViewCell"];
+        NSString *fullIdentifier = cellClass;
+        if ([fullIdentifier rangeOfString:@"Cell"].location == NSNotFound) {
+            fullIdentifier = [NSString stringWithFormat:@"%@%@", fullIdentifier, @"TableViewCell"];
+        }
         NSBundle *bundle = [NSBundle bundleForClass:NSClassFromString(fullIdentifier)];
         if ([bundle pathForResource:fullIdentifier ofType:@"nib"]){
             return [[bundle loadNibNamed:fullIdentifier owner:nil options:nil] firstObject];
         }
-    } else {
-        NSString *fullIdentifier = [NSString stringWithFormat:@"%@%@", cellClass, @"TableViewCell"];
-        return [[UITableViewCell alloc] initWithStyle:style reuseIdentifier:fullIdentifier];
+    } else if (class_isMetaClass(object_getClass(cellClass))) {
+        return [[cellClass alloc] initWithStyle:style reuseIdentifier:identifier ?: [NSString stringWithFormat:@"%@%d", [cellClass identifier], indexPath.row]];
     }
-    
     return nil;
 }
 

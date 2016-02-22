@@ -130,7 +130,7 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
         id delegate = self.sectionDescriptor.formDescriptor.delegate;
         if([delegate respondsToSelector:@selector(cellWithCellClass:identifier:indexPath:style:)]) {
-            _rowCell = [delegate cellWithCellClass:self.cellClass identifier:self.tag indexPath:indexPath style:self.cellStyle];
+            _rowCell = [delegate cellWithCellClass:cellClass identifier:self.tag indexPath:indexPath style:self.cellStyle];
         }
 //        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
         [self configureCellAtCreationTime];
