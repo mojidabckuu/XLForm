@@ -37,6 +37,7 @@ NSString * const XLFormErrorDomain = @"XLFormErrorDomain";
 NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
 
 NSString *const XLFormTranslateSectionsIntoColumns = @"XLFormTranslateSectionsIntoColumns";
+NSString *const XLFormForceHeight = @"XLFormForceHeight";
 //Reserved
 NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
 

@@ -272,6 +272,8 @@ NSString *const XLFormCollectionViewContentLinkedRows = @"linkedRows";
             maxHeight = MAX(height + (section.formRows.count - 1 * layout.minimumLineSpacing), maxHeight);
         }
         height = maxHeight;
+    } else if ([self.formDescriptor.userInfo[XLFormForceHeight] boolValue]) {
+        return [self.formDescriptor.userInfo[XLFormForceHeight] floatValue];
     } else {
         for (XLFormSectionDescriptor *section in self.formDescriptor.formSections) {
             for (XLFormRowDescriptor *row in section.formRows) {

@@ -34,6 +34,7 @@ extern NSString * __nonnull const XLFormErrorDomain;
 extern NSString * __nonnull const XLValidationStatusErrorKey;
 
 extern NSString *const XLFormTranslateSectionsIntoColumns;
+extern NSString *const XLFormForceHeight;
 extern NSString *const XLFormSectionsRowsBindings;
 
 typedef NS_ENUM(NSInteger, XLFormErrorCode)
