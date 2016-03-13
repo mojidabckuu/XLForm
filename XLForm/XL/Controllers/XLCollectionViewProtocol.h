@@ -19,6 +19,7 @@
 @property (nonatomic, assign) CGSize estimatedItemSize;
 
 @property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleRows;
+@property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleItems;
 
 @property (nonatomic, readonly, nullable) NSIndexPath *indexPathForSelectedRow;
 

@@ -258,7 +258,12 @@
 
 - (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
     NSMutableArray *indexPaths = [NSMutableArray array];
-    NSArray *visibleIndexPaths = self.formView.indexPathsForVisibleRows;
+    NSArray *visibleIndexPaths;
+    if ([self.formView respondsToSelector:@selector(indexPathsForVisibleRows)]) {
+        visibleIndexPaths = self.formView.indexPathsForVisibleRows;
+    } else if ([self.formView respondsToSelector:@selector(indexPathsForVisibleItems)]) {
+        visibleIndexPaths = self.formView.indexPathsForVisibleItems;
+    }
     for(NSString *key in dictionary) {
         XLFormRowDescriptor *rowDescriptor = dictionary[key];
         id<XLFormDescriptorCell> cell = [rowDescriptor cell];
