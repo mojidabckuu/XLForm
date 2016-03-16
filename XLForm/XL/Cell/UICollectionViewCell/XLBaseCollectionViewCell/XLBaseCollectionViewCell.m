@@ -131,6 +131,9 @@
             }
         }
     } else {
+        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker && self.rowDescriptor.value == nil) {
+            self.rowDescriptor.value = [[self datePicker] date];
+        }
         result = [super becomeFirstResponder];
     }
     return result;
