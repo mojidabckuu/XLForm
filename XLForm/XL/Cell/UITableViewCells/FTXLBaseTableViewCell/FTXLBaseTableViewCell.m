@@ -133,8 +133,12 @@
             }
         }
     } else {
-        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker && self.rowDescriptor.value == nil) {
-            self.rowDescriptor.value = [[self datePicker] date];
+        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker) {
+            if (self.rowDescriptor.value == nil) {
+                self.rowDescriptor.value = [[self datePicker] date];
+            } else {
+                [[self datePicker] setDate:self.rowDescriptor.value];
+            }
         }
         result = [super becomeFirstResponder];
     }
