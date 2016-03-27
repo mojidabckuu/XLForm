@@ -192,7 +192,9 @@
     _pickerView = [[UIPickerView alloc] init];
     _pickerView.delegate = self;
     _pickerView.dataSource = self;
-    [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    if (self.rowDescriptor.selectorOptions.count > 0 && [self selectedIndex] != NSNotFound) {
+        [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    }
     return _pickerView;
 }
 
