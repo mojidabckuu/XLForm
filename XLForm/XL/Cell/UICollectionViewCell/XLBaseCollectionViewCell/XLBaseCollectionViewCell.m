@@ -187,11 +187,11 @@
     }
     if (_pickerView) {
         [_pickerView reloadAllComponents];
-        return _pickerView;
+    } else {
+        _pickerView = [[UIPickerView alloc] init];
+        _pickerView.delegate = self;
+        _pickerView.dataSource = self;
     }
-    _pickerView = [[UIPickerView alloc] init];
-    _pickerView.delegate = self;
-    _pickerView.dataSource = self;
     if (self.rowDescriptor.selectorOptions.count > 0 && [self selectedIndex] != NSNotFound) {
         [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
     }
