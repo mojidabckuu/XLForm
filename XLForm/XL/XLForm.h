@@ -57,6 +57,7 @@
 #import "XLSwitchTableViewCell.h"
 
 //CollectionViewCells
+#import "XLButtonCollectionViewCell.h"
 #import "XLTextFieldCollectionViewCell.h"
 
 #import "XLFormBaseCell.h"
