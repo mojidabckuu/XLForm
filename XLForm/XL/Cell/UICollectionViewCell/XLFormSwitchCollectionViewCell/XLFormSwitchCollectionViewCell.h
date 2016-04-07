@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "XLFormBaseCollectionCell.h"
+#import "XLBaseCollectionViewCell.h"
 
-@interface XLFormSwitchCollectionViewCell : XLFormBaseCollectionCell
+@interface XLFormSwitchCollectionViewCell : XLBaseCollectionViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UISwitch *switchControl;
