@@ -59,6 +59,7 @@
 //CollectionViewCells
 #import "XLButtonCollectionViewCell.h"
 #import "XLTextFieldCollectionViewCell.h"
+#import "XLTextViewCollectionViewCell.h"
 
 #import "XLFormBaseCell.h"
 #import "XLFormInlineSelectorCell.h"
