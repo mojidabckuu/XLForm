@@ -30,12 +30,11 @@
 #import "XLFormSectionDescriptor.h"
 #import "XLFormRowDescriptor.h"
 
-//helpers
+//Helpers
 #import "XLFormOptionsObject.h"
-
 #import "XLForm+Helpers.h"
-
 #import "XLRowTypesStorage.h"
+#import "NSFormatter+KeyPath.h"
 
 //Input
 #import "XLTextBehavior.h"

@@ -11,6 +11,7 @@
 #import "XLFormRowDescriptor.h"
 
 #import "XLFormOptionsViewController.h"
+#import "XLClassFromString.h"
 
 @implementation XLFormPresenter
 
@@ -45,7 +46,7 @@
         return [storyboard instantiateViewControllerWithIdentifier:self.rowDescriptor.action.viewControllerStoryboardId];
     }
     else if ([self.rowDescriptor.action.viewControllerNibName length] != 0) {
-        Class viewControllerClass = NSClassFromString(self.rowDescriptor.action.viewControllerNibName);
+        Class viewControllerClass = XLClassFromString(self.rowDescriptor.action.viewControllerNibName);
         NSAssert(viewControllerClass, @"class owner of self.rowDescriptor.action.viewControllerNibName must be equal to %@", self.rowDescriptor.action.viewControllerNibName);
         return [[viewControllerClass alloc] initWithNibName:self.rowDescriptor.action.viewControllerNibName bundle:nil];
     } else if(self.rowDescriptor.selectorOptions) {
