@@ -31,6 +31,7 @@
 #import "VGValidation.h"
 
 #import "NSObject+Empty.h"
+#import "VGCondition+Form.h"
 
 @interface XLFormDescriptor (_XLFormRowDescriptor)
 
@@ -428,6 +429,9 @@
         return TRUE;
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
+        for(VGCondition *condition in conditions) {
+            condition.form = self.sectionDescriptor.formDescriptor;
+        }
         return conditions;
     } error:&error];
     self.error = error;

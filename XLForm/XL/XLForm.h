@@ -24,6 +24,8 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <VGCondition/VGValidator.h>
+#import "VGConditionConfirm.h"
 
 //Descriptors
 #import "XLFormDescriptor.h"
