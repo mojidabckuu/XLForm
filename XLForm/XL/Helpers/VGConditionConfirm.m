@@ -43,12 +43,23 @@
 #pragma mark - Validation
 
 - (BOOL)checkValue:(id)value {
-    id otherValue = [self.form formRowWithTag:self.tag];
+    id otherValue = [[self.form formRowWithTag:self.tag] value];
     BOOL result = value == otherValue;
     if([value isKindOfClass:[NSObject class]] && [otherValue isKindOfClass:[NSObject class]]) {
          result = result || [value isEqual:otherValue];
     }
     return result;
+}
+
+#pragma mark - Accessors
+
+- (NSError *)error {
+    if(!self.localizedDescription) {
+        NSString *format = NSLocalizedString(@"%@ doesn't match %@ confirmation", nil);
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey : [NSString stringWithFormat:format, self.tag, self.tag]};
+        return [NSError errorWithDomain:@"com.vladgorbenko.VGContent" code:0 userInfo:userInfo];
+    }
+    return [super error];
 }
 
 @end
