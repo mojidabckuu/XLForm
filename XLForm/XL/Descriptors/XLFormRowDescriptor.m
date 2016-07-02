@@ -30,6 +30,8 @@
 
 #import "VGValidation.h"
 
+#import "NSObject+Empty.h"
+
 @interface XLFormDescriptor (_XLFormRowDescriptor)
 
 @property (readonly) NSDictionary* allRowsByTag;
@@ -422,6 +424,8 @@
         if(![conditions  filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self isKindOfClass: %@", [VGConditionPresent class]]].count) {
             [conditions insertObject:[VGConditionPresent condition] atIndex:0];
         }
+    } else if(!self.value || [self.value XLisEmpty]) {
+        return TRUE;
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
         return conditions;
@@ -440,3 +444,5 @@
 
 
 @end
+
+
