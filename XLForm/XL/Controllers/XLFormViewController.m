@@ -247,6 +247,8 @@
                 if(![errorsDictionary objectForKey:row.tag]) {
                     [errorsDictionary setObject:row forKey:row.tag];
                 }
+            } else {
+                [errorsDictionary removeObjectForKey:row];
             }
         }
     }
