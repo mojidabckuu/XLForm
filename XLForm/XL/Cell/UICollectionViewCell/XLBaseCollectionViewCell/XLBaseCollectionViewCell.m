@@ -237,7 +237,9 @@
         XLFormPresenter *presenter = [[presenterClass alloc] init];
         presenter.sourceViewController = viewController;
         presenter.rowDescriptor = self.rowDescriptor;
-        [presenter presentWithCompletionBlock:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [presenter presentWithCompletionBlock:nil];
+        });
         self.presenter = presenter;
     }
 }
