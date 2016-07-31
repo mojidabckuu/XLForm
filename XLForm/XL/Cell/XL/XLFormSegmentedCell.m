@@ -52,7 +52,6 @@
 
 -(void)update
 {
-    [super update];
     self.textLabel.text = [NSString stringWithFormat:@"%@%@", self.rowDescriptor.title, self.rowDescriptor.required && self.rowDescriptor.sectionDescriptor.formDescriptor.addAsteriskToRequiredRowsTitle ? @"*" : @""];
     [self updateSegmentedControl];
     self.segmentedControl.selectedSegmentIndex = [self selectedIndex];
