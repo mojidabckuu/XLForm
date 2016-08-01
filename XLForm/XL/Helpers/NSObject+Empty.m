@@ -11,7 +11,7 @@
 @implementation NSObject(Empty)
 
 - (BOOL)XLisEmpty {
-    return true;
+    return false;
 }
 
 @end
