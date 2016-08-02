@@ -16,7 +16,7 @@
 
 #import "XLFormContent.h"
 
-@interface XLTextViewTableViewCell () <UITextViewDelegate>
+@interface XLTextViewTableViewCell ()
 
 @end
 

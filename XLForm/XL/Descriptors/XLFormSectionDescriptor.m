@@ -199,6 +199,10 @@
     @catch (NSException * __unused exception) {}
 }
 
+- (NSArray<XLFormRowDescriptor *> *)rows {
+    return self.allRows;
+}
+
 #pragma mark - Show/hide rows
 
 -(void)showFormRow:(XLFormRowDescriptor*)formRow{

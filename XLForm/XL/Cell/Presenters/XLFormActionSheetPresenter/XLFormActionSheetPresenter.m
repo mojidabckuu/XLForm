@@ -68,10 +68,10 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if ([actionSheet cancelButtonIndex] != buttonIndex){
         NSString * title = [actionSheet buttonTitleAtIndex:buttonIndex];
-        for (id option in self.rowDescriptor.selectorOptions){
+        for (id option in self.rowDescriptor.selectorOptions) {
             if ([[option displayText] isEqualToString:title]){
                 [self.rowDescriptor setValue:option];
-                [self.sourceViewController.tableView reloadData];
+                [self.sourceViewController.formView reloadData];
                 break;
             }
         }

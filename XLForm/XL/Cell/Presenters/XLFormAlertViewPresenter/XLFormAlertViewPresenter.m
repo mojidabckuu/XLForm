@@ -61,9 +61,9 @@
     if(alertView.cancelButtonIndex != buttonIndex) {
         NSString * title = [alertView buttonTitleAtIndex:buttonIndex];
         for (id option in self.rowDescriptor.selectorOptions){
-            if ([self.rowDescriptor formatValue:option] isEqualToString:title]){
+            if ([[self.rowDescriptor formatValue:option] isEqualToString:title]){
                 [self.rowDescriptor setValue:option];
-                [self.sourceViewController.tableView reloadData];
+                [self.sourceViewController.formView reloadData];
                 break;
             }
         }

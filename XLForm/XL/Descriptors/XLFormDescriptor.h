@@ -59,6 +59,7 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 
 @property (readonly, nullable) NSString * title;
 @property (readonly, nonatomic, nonnull) NSMutableArray * formSections;
+@property (readonly, nonatomic, nonnull) NSArray <XLFormSectionDescriptor *> *sections;
 
 @property (nonatomic) BOOL assignFirstResponderOnShow;
 @property (nonatomic) BOOL addAsteriskToRequiredRowsTitle;

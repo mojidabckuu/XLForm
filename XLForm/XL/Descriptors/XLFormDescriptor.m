@@ -633,6 +633,10 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
 
 #pragma mark - Utils
 
+- (NSArray<XLFormSectionDescriptor *> *)sections {
+    return self.allSections;
+}
+
 -(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction
 {
     if (!currentRow || (self.rowNavigationOptions & XLFormRowNavigationOptionEnabled) != XLFormRowNavigationOptionEnabled) {
