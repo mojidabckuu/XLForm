@@ -27,6 +27,7 @@
 #import "XLFormViewController.h"
 #import "XLFormRowDescriptor.h"
 #import "NSString+XLFormAdditions.h"
+#import "NSExpression+XLFormAdditions.h"
 
 #import "VGValidation.h"
 
@@ -379,13 +380,11 @@
 -(BOOL)evaluateIsHidden
 {
     if ([_hidden isKindOfClass:[NSPredicate class]]) {
-        @try {
-            self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
-        }
-        @catch (NSException *exception) {
-            // predicate syntax error.
-            self.isDirtyHidePredicateCache = YES;
-        };
+        NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
+        XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
+        NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
+        self.hidePredicateCache = @([[NSPredicate predicateWithFormat:format, relatedRow] evaluateWithObject:self]);
+//            self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
     }
     else{
         self.hidePredicateCache = _hidden;

@@ -33,7 +33,9 @@
     switch (self.expressionType) {
         case NSFunctionExpressionType:{
             NSString* str = [NSString stringWithFormat:@"%@", self];
-            if ([str rangeOfString:@"."].location != NSNotFound)
+            if ([str rangeOfString:@".value"].location != NSNotFound)
+                str = [str substringWithRange:NSMakeRange(1, [str rangeOfString:@".value"].location - 1)];
+            else if ([str rangeOfString:@"."].location != NSNotFound)
                 str = [str substringWithRange:NSMakeRange(1, [str rangeOfString:@"."].location - 1)];
             else
                 str = [str substringFromIndex:1];
