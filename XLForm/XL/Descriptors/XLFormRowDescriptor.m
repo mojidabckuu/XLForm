@@ -380,10 +380,7 @@
 -(BOOL)evaluateIsHidden
 {
     if ([_hidden isKindOfClass:[NSPredicate class]]) {
-        NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
-        XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
-        NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
-        self.hidePredicateCache = @([[NSPredicate predicateWithFormat:format, relatedRow] evaluateWithObject:self]);
+        self.hidePredicateCache = @([_hidden evaluateWithObject:self]);
 //            self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
     }
     else{
@@ -407,6 +404,11 @@
     _hidden = [hidden isKindOfClass:[NSString class]] ? [hidden formPredicate] : hidden;
     if ([_hidden isKindOfClass:[NSPredicate class]]){
         [self.sectionDescriptor.formDescriptor addObserversOfObject:self predicateType:XLPredicateTypeHidden];
+        
+        NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
+        XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
+        NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
+        _hidden = [NSPredicate predicateWithFormat:format, relatedRow];
     }
     [self evaluateIsHidden]; // check and update if this row should be hidden.
 }
