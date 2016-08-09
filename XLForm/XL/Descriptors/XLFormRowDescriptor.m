@@ -380,8 +380,17 @@
 -(BOOL)evaluateIsHidden
 {
     if ([_hidden isKindOfClass:[NSPredicate class]]) {
-        self.hidePredicateCache = @([_hidden evaluateWithObject:self]);
-//            self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
+        if ([_hidden isKindOfClass:[NSComparisonPredicate class]]) {
+            self.hidePredicateCache = @([_hidden evaluateWithObject:self]);
+        } else {
+            @try {
+                self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
+            }
+            @catch (NSException *exception) {
+                // predicate syntax error.
+                self.isDirtyHidePredicateCache = YES;
+            };
+        }
     }
     else{
         self.hidePredicateCache = _hidden;
@@ -405,10 +414,12 @@
     if ([_hidden isKindOfClass:[NSPredicate class]]){
         [self.sectionDescriptor.formDescriptor addObserversOfObject:self predicateType:XLPredicateTypeHidden];
         
-        NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
-        XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
-        NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
-        _hidden = [NSPredicate predicateWithFormat:format, relatedRow];
+        if ([_hidden isKindOfClass:[NSComparisonPredicate class]]) {
+            NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
+            XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
+            NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
+            _hidden = [NSPredicate predicateWithFormat:format, relatedRow];
+        }
     }
     [self evaluateIsHidden]; // check and update if this row should be hidden.
 }
