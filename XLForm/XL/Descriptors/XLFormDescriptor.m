@@ -669,5 +669,27 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
     return [self nextRowDescriptorForRow:nextRow withDirection:direction];
 }
 
+- (NSDictionary<NSString *,NSError *> *)errorsByRows {
+    NSMutableDictionary *errors = [[NSMutableDictionary alloc] init];
+    for(XLFormSectionDescriptor *section in self.formSections) {
+        for(XLFormRowDescriptor *row in section.formRows) {
+            [errors setObject:row.error forKey:row.tag];
+        }
+    }
+    return errors;
+}
+
+- (NSArray<NSError *> *)errors {
+    NSMutableArray *errors = [[NSMutableArray alloc] init];
+    for(XLFormSectionDescriptor *section in self.formSections) {
+        for(XLFormRowDescriptor *row in section.formRows) {
+            if(row.error) {
+                [errors addObject:row.error];
+            }
+        }
+    }
+    return errors;
+}
+
 
 @end
