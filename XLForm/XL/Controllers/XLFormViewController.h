@@ -44,6 +44,7 @@
 @class XLFormDescriptor;
 @class XLFormBaseCell;
 @class XLFormContent;
+@class XLFormViewControllerConfig;
 
 @protocol XLFormViewControllerDelegate <NSObject>
 
@@ -73,6 +74,7 @@
 @property (nonatomic, strong) XLFormMapper *mapper;
 
 @property XLFormDescriptor * form;
+@property (nonnull, nonatomic, strong) XLFormViewControllerConfig *config;
 @property IBOutlet UIScrollView<XLCollectionViewProtocol> *formView;
 @property (nonatomic, strong) XLFormContent *formContent;
 
@@ -84,5 +86,13 @@
 - (void)updateCellsWithDictionary:(NSDictionary *)dictionary;
 
 - (void)rowNavigationAction:(UIBarButtonItem *)sender;
+
+@end
+
+@interface XLFormViewControllerConfig : NSObject
+
+@property (nonatomic, assign) BOOL animateValidation;
+
++ (instancetype)sharedConfig;
 
 @end
