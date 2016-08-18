@@ -38,6 +38,9 @@
 
 - (void)update {
     [super update];
+    if(self.rowDescriptor.selectorOptions.count && self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePush) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     [self updateError];
 }
 
