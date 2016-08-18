@@ -122,7 +122,11 @@
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }
-    self.rowDescriptor.value = [self.selectedValues copy];
+    if(self.rowDescriptor.mutlipleSelection) {
+        self.rowDescriptor.value = [self.selectedValues copy];
+    } else {
+        self.rowDescriptor.value = [self.selectedValues lastObject];
+    }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
