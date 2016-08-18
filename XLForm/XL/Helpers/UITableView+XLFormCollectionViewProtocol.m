@@ -50,6 +50,10 @@
 
 #pragma mark - Reload
 
+- (void)syncReloadData {
+    [self reloadData];
+}
+
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation {
     [self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }

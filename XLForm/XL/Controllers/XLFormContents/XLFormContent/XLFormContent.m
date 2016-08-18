@@ -94,7 +94,7 @@
 }
 
 - (void)reload {
-    [self.formView reloadData];
+    [self.formView syncReloadData];
 }
 
 -(XLFormBaseCell *)updateFormRow:(XLFormRowDescriptor *)formRow {

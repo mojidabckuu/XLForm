@@ -41,6 +41,7 @@
 - (void)deleteSectionAtIndexSet:(NSIndexSet *)indexSet withItemAnimation:(NSInteger)animation;
 
 #pragma mark - Reload
+- (void)syncReloadData;
 - (void)reloadData;
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation;
 
