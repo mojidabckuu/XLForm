@@ -50,21 +50,21 @@
 
 @optional
 
--(NSDictionary *)formValues;
--(NSDictionary *)httpParameters;
+-(nonnull NSDictionary <NSString *, id>*)formValues;
+-(nonnull NSDictionary <NSString *, id>*)httpParameters;
 
 -(UIStoryboard *)storyboardForRow:(XLFormRowDescriptor *)formRow;
 
 -(void)showFormValidationError:(NSError *)error;
 
--(UITableViewRowAnimation)insertRowAnimationForRow:(XLFormRowDescriptor *)formRow;
--(UITableViewRowAnimation)deleteRowAnimationForRow:(XLFormRowDescriptor *)formRow;
--(UITableViewRowAnimation)insertRowAnimationForSection:(XLFormSectionDescriptor *)formSection;
--(UITableViewRowAnimation)deleteRowAnimationForSection:(XLFormSectionDescriptor *)formSection;
+-(UITableViewRowAnimation)insertRowAnimationForRow:(nonnull XLFormRowDescriptor *)formRow;
+-(UITableViewRowAnimation)deleteRowAnimationForRow:(nonnull XLFormRowDescriptor *)formRow;
+-(UITableViewRowAnimation)insertRowAnimationForSection:(nonnull XLFormSectionDescriptor *)formSection;
+-(UITableViewRowAnimation)deleteRowAnimationForSection:(nonnull XLFormSectionDescriptor *)formSection;
 
 // highlight/unhighlight
--(void)beginEditing:(XLFormRowDescriptor *)rowDescriptor;
--(void)endEditing:(XLFormRowDescriptor *)rowDescriptor;
+-(void)beginEditing:(nonnull XLFormRowDescriptor *)rowDescriptor;
+-(void)endEditing:(nonnull XLFormRowDescriptor *)rowDescriptor;
 
 @end
 
