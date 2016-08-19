@@ -131,13 +131,16 @@
 }
 
 -(NSString *)valueDisplayTextForOption:(id)option {
+    if(self.rowDescriptor.formatter) {
+        return [self.rowDescriptor.formatter stringForObjectValue:option];
+    }
     if (self.rowDescriptor.valueTransformer) {
         NSString * transformedValue = [self.rowDescriptor.valueTransformer transformedValue:option];
         if (transformedValue){
             return transformedValue;
         }
     }
-    return [self.rowDescriptor formatValue:option];
+    return option;
 }
 
 #pragma mark - Helpers

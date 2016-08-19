@@ -222,8 +222,9 @@
 - (id)transformedValue {
     if (self.valueTransformer) {
         id tranformedValue = [self.valueTransformer transformedValue:self.value];
-        return tranformedValue ?: self.formattedValue ?: self.value;
+        return tranformedValue ?: self.value;
     }
+    return self.value;
 }
 
 // In the implementation
