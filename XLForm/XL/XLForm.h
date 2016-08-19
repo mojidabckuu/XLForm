@@ -37,6 +37,7 @@
 #import "XLForm+Helpers.h"
 #import "XLRowTypesStorage.h"
 #import "NSFormatter+KeyPath.h"
+#import "NSValueTransformer+KeyPath.h"
 
 //Input
 #import "XLTextBehavior.h"

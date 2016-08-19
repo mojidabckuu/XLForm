@@ -131,10 +131,8 @@
 }
 
 -(NSString *)valueDisplayTextForOption:(id)option {
-    if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * transformedValue = [valueTransformer transformedValue:option];
+    if (self.rowDescriptor.valueTransformer) {
+        NSString * transformedValue = [self.rowDescriptor.valueTransformer transformedValue:option];
         if (transformedValue){
             return transformedValue;
         }

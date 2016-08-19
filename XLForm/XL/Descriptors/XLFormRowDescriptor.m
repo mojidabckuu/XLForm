@@ -219,6 +219,13 @@
     return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
 }
 
+- (id)transformedValue {
+    if (self.valueTransformer) {
+        id tranformedValue = [self.valueTransformer transformedValue:self.value];
+        return tranformedValue ?: self.formattedValue ?: self.value;
+    }
+}
+
 // In the implementation
 -(id)copyWithZone:(NSZone *)zone
 {

@@ -338,7 +338,7 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
             for (XLFormRowDescriptor * row in section.formRows) {
                 NSString * httpParameterKey = nil;
                 if ((httpParameterKey = [self httpParameterKeyForRow:row cell:[row cell]])){
-                    id parameterValue = row.value ?: [NSNull null];
+                    id parameterValue = row.transformedValue ?: [NSNull null];
                     [result setObject:parameterValue forKey:httpParameterKey];
                 }
             }
