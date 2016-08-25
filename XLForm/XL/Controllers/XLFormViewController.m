@@ -275,6 +275,21 @@
     return valid;
 }
 
+- (void)resetErrors {
+    for (XLFormSectionDescriptor *section in self.form.formSections) {
+        for (XLFormRowDescriptor *row in section.formRows) {
+            if([row conformsToProtocol:@protocol(XLErrorProtocol)]) {
+                XLFormRowDescriptor<XLErrorProtocol> *errorRow = (id)row;
+                errorRow.error = nil;
+            }
+        }
+    }
+    
+    if(self.config.animateValidation) {
+        [self updateCellsWithDictionary:@{}];
+    }
+}
+
 - (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
     NSMutableArray *indexPaths = [NSMutableArray array];
     NSArray *visibleIndexPaths;
