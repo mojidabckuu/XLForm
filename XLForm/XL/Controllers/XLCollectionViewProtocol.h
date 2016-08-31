@@ -19,6 +19,7 @@
 @property (nonatomic, assign) CGSize estimatedItemSize;
 
 @property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleRows;
+@property (nonatomic, readonly, nullable) NSArray<NSIndexPath *> *indexPathsForVisibleItems;
 
 @property (nonatomic, readonly, nullable) NSIndexPath *indexPathForSelectedRow;
 
@@ -40,6 +41,7 @@
 - (void)deleteSectionAtIndexSet:(NSIndexSet *)indexSet withItemAnimation:(NSInteger)animation;
 
 #pragma mark - Reload
+- (void)syncReloadData;
 - (void)reloadData;
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation;
 

@@ -338,7 +338,7 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
             for (XLFormRowDescriptor * row in section.formRows) {
                 NSString * httpParameterKey = nil;
                 if ((httpParameterKey = [self httpParameterKeyForRow:row cell:[row cell]])){
-                    id parameterValue = row.value ?: [NSNull null];
+                    id parameterValue = row.transformedValue ?: [NSNull null];
                     [result setObject:parameterValue forKey:httpParameterKey];
                 }
             }
@@ -633,6 +633,10 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
 
 #pragma mark - Utils
 
+- (NSArray<XLFormSectionDescriptor *> *)sections {
+    return self.allSections;
+}
+
 -(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction
 {
     if (!currentRow || (self.rowNavigationOptions & XLFormRowNavigationOptionEnabled) != XLFormRowNavigationOptionEnabled) {
@@ -663,6 +667,28 @@ NSString *const XLFormSectionsRowsBindings = @"XLFormSectionsRowsBindings";
         return nextRow;
     }
     return [self nextRowDescriptorForRow:nextRow withDirection:direction];
+}
+
+- (NSDictionary<NSString *,NSError *> *)errorsByRows {
+    NSMutableDictionary *errors = [[NSMutableDictionary alloc] init];
+    for(XLFormSectionDescriptor *section in self.formSections) {
+        for(XLFormRowDescriptor *row in section.formRows) {
+            [errors setObject:row.error forKey:row.tag];
+        }
+    }
+    return errors;
+}
+
+- (NSArray<NSError *> *)errors {
+    NSMutableArray *errors = [[NSMutableArray alloc] init];
+    for(XLFormSectionDescriptor *section in self.formSections) {
+        for(XLFormRowDescriptor *row in section.formRows) {
+            if(row.error) {
+                [errors addObject:row.error];
+            }
+        }
+    }
+    return errors;
 }
 
 

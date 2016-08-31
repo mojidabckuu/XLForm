@@ -1,12 +1,12 @@
 //
-//  XLTextViewTableViewCell.m
+//  XLTextViewCollectionViewCell.m
 //  Pods
 //
-//  Created by vlad gorbenko on 9/29/15.
+//  Created by Alex Zdorovets on 2/7/16.
 //
 //
 
-#import "XLTextViewTableViewCell.h"
+#import "XLTextViewCollectionViewCell.h"
 
 #import "XLForm.h"
 
@@ -16,11 +16,11 @@
 
 #import "XLFormContent.h"
 
-@interface XLTextViewTableViewCell ()
+@interface XLTextViewCollectionViewCell () <UITextViewDelegate>
 
 @end
 
-@implementation XLTextViewTableViewCell
+@implementation XLTextViewCollectionViewCell
 
 #pragma mark - Lifecycle
 
@@ -39,14 +39,14 @@
     return [self.textView resignFirstResponder];
 }
 
-#pragma mark - 
+#pragma mark -
 
 - (void)update {
     [super update];
     id value = self.rowDescriptor.value;
     NSString *text = self.rowDescriptor.formatter ? [self.rowDescriptor.formatter stringForObjectValue:value] : value;
     self.textView.text = text;
-//    self.textView.placeholder = self.rowDescriptor.placeholder; // need to fix NSTextAlignment for localization
+    self.textView.placeholder = self.rowDescriptor.placeholder; // need to fix NSTextAlignment for localization
     self.titleLabel.text = self.rowDescriptor.title;
     self.textView.editable = !self.rowDescriptor.isDisabled;
     // TODO: make colors configurable
@@ -89,21 +89,6 @@
     return (XLTextBehavior *)self.rowDescriptor.behavior;
 }
 
-//- (UITextView *)textView {
-//    if(!_textView) {
-//        _textView = [XLFormTextView autolayoutView];
-//    }
-//    return _textView;
-//}
-//
-//- (UILabel *)titleLabel {
-//    if(!_titleLabel) {
-//        _titleLabel = [UILabel autolayoutView];
-//        [_titleLabel setContentHuggingPriority:500 forAxis:UILayoutConstraintAxisHorizontal];
-//    }
-//    return _titleLabel;
-//}
-
 #pragma mark - UITextView delegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
@@ -114,13 +99,14 @@
     return [self.formViewController.formContent textInputShouldEndEditing:textView formRow:self.rowDescriptor];
 }
 
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     BOOL shouldChange = [self.formViewController.formContent textInputView:textView shouldChangeCharactersInRange:range replacementString:text formRow:self.rowDescriptor];
-//    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textView formRow:self.rowDescriptor];
-//    if(shouldReturn) {
-//        [textView resignFirstResponder];
-//        return NO;
-//    }
+    //    BOOL shouldReturn = [self.formViewController.formContent textInputViewShouldReturn:textView formRow:self.rowDescriptor];
+    //    if(shouldReturn) {
+    //        [textView resignFirstResponder];
+    //        return NO;
+    //    }
     return shouldChange;
 }
 

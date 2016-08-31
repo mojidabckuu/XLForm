@@ -42,6 +42,11 @@
 
 #pragma mark - Reload
 
+- (void)syncReloadData {
+    [self reloadData];
+    [self performBatchUpdates:nil completion:nil];
+}
+
 - (void)reloadItemAtIndexPaths:(NSArray *)indexPaths withItemAnimation:(NSInteger)animation {
     [self reloadItemAtIndexPaths:indexPaths withItemAnimation:animation];
 }

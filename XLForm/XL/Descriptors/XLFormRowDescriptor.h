@@ -87,7 +87,8 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 
 @property (nonatomic, nullable) id value;
 @property (nonatomic, readonly, nullable) NSString *formattedValue;
-@property (nullable) Class valueTransformer;
+@property (nullable, nonatomic, strong) NSValueTransformer *valueTransformer;
+@property (nonatomic, readonly, nullable) id transformedValue;
 
 @property (nonnull, nonatomic, readonly) UIView<XLFormDescriptorCell> *cell;
 @property (nullable) id cellClass;

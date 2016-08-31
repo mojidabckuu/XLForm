@@ -122,20 +122,25 @@
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }
-    self.rowDescriptor.value = [self.selectedValues copy];
+    if(self.rowDescriptor.mutlipleSelection) {
+        self.rowDescriptor.value = [self.selectedValues copy];
+    } else {
+        self.rowDescriptor.value = [self.selectedValues lastObject];
+    }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 -(NSString *)valueDisplayTextForOption:(id)option {
-    if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * transformedValue = [valueTransformer transformedValue:option];
+    if(self.rowDescriptor.formatter) {
+        return [self.rowDescriptor.formatter stringForObjectValue:option];
+    }
+    if (self.rowDescriptor.valueTransformer) {
+        NSString * transformedValue = [self.rowDescriptor.valueTransformer transformedValue:option];
         if (transformedValue){
             return transformedValue;
         }
     }
-    return [self.rowDescriptor formatValue:option];
+    return option;
 }
 
 #pragma mark - Helpers

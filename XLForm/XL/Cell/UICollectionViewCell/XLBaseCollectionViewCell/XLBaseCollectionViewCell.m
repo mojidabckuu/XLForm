@@ -131,6 +131,13 @@
             }
         }
     } else {
+        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker) {
+            if (self.rowDescriptor.value == nil) {
+                self.rowDescriptor.value = [[self datePicker] date];
+            } else {
+                [[self datePicker] setDate:self.rowDescriptor.value];
+            }
+        }
         result = [super becomeFirstResponder];
     }
     return result;
@@ -175,14 +182,19 @@
 #pragma mark - Accessors
 
 -(UIPickerView *)pickerView {
-    if (_pickerView) return _pickerView;
-    _pickerView = [[UIPickerView alloc] init];
-    _pickerView.delegate = self;
-    _pickerView.dataSource = self;
     if(!self.rowDescriptor.value) {
         self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
     }
-    [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    if (_pickerView) {
+        [_pickerView reloadAllComponents];
+    } else {
+        _pickerView = [[UIPickerView alloc] init];
+        _pickerView.delegate = self;
+        _pickerView.dataSource = self;
+    }
+    if (self.rowDescriptor.selectorOptions.count > 0 && [self selectedIndex] != NSNotFound) {
+        [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    }
     return _pickerView;
 }
 
@@ -225,7 +237,9 @@
         XLFormPresenter *presenter = [[presenterClass alloc] init];
         presenter.sourceViewController = viewController;
         presenter.rowDescriptor = self.rowDescriptor;
-        [presenter presentWithCompletionBlock:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [presenter presentWithCompletionBlock:nil];
+        });
         self.presenter = presenter;
     }
 }
@@ -237,10 +251,8 @@
             return self.rowDescriptor.noValueDisplayText;
         }
         
-        if (self.rowDescriptor.valueTransformer){
-            NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-            NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-            NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        if (self.rowDescriptor.valueTransformer) {
+            NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
             if (tranformedValue){
                 return tranformedValue;
             }
@@ -251,9 +263,7 @@
         return self.rowDescriptor.noValueDisplayText;
     }
     if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
         if (tranformedValue){
             return tranformedValue;
         }

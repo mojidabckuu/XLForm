@@ -24,18 +24,20 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <VGCondition/VGValidator.h>
+#import "VGConditionConfirm.h"
 
 //Descriptors
 #import "XLFormDescriptor.h"
 #import "XLFormSectionDescriptor.h"
 #import "XLFormRowDescriptor.h"
 
-//helpers
+//Helpers
 #import "XLFormOptionsObject.h"
-
 #import "XLForm+Helpers.h"
-
 #import "XLRowTypesStorage.h"
+#import "NSFormatter+KeyPath.h"
+#import "NSValueTransformer+KeyPath.h"
 
 //Input
 #import "XLTextBehavior.h"
@@ -57,7 +59,9 @@
 #import "XLSwitchTableViewCell.h"
 
 //CollectionViewCells
+#import "XLButtonCollectionViewCell.h"
 #import "XLTextFieldCollectionViewCell.h"
+#import "XLTextViewCollectionViewCell.h"
 
 #import "XLFormBaseCell.h"
 #import "XLFormInlineSelectorCell.h"

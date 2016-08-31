@@ -36,6 +36,20 @@
 
 #import "UIDevice+System.h"
 
+@implementation XLFormViewControllerConfig
+
++ (instancetype)sharedConfig {
+    static dispatch_once_t onceToken;
+    static XLFormViewControllerConfig *sharedInstance = nil;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[XLFormViewControllerConfig alloc] init];
+        sharedInstance.animateValidation = true;
+    });
+    return sharedInstance;
+}
+
+@end
+
 @interface XLFormRowDescriptor(_XLFormViewController)
 
 @property (readonly) NSArray * observers;
@@ -104,6 +118,7 @@
 
 -(void)defaultInitialize
 {
+    _config = [XLFormViewControllerConfig sharedConfig];
     _form = nil;
     _tableViewStyle = UITableViewStyleGrouped;
 }
@@ -117,7 +132,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     if (!self.formView){
         UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:self.tableViewStyle];
         self.formView = (UIScrollView<XLCollectionViewProtocol> *)tableView;
@@ -138,14 +153,14 @@
         self.formView.dataSource = self.formContent;
     }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
-//        self.formView.rowHeight = UITableViewAutomaticDimension;
-//        self.formView.estimatedRowHeight = 44.0;
+        //        self.formView.rowHeight = UITableViewAutomaticDimension;
+        //        self.formView.estimatedRowHeight = 44.0;
     }
     if (self.form.title){
         self.title = self.form.title;
     }
-//    [self.formView setEditing:YES animated:NO];
-//    self.formView.allowsSelectionDuringEditing = YES;
+    //    [self.formView setEditing:YES animated:NO];
+    //    self.formView.allowsSelectionDuringEditing = YES;
     self.form.delegate = self;
     _oldBottomTableContentInset = nil;
 }
@@ -163,7 +178,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentSizeCategoryChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
@@ -247,23 +262,47 @@
                 if(![errorsDictionary objectForKey:row.tag]) {
                     [errorsDictionary setObject:row forKey:row.tag];
                 }
+            } else {
+                [errorsDictionary removeObjectForKey:row];
             }
         }
     }
     
-    [self updateCellsWithDictionary:errorsDictionary];
+    if(self.config.animateValidation) {
+        [self updateCellsWithDictionary:errorsDictionary];
+    }
     
     return valid;
 }
 
+- (void)resetErrors {
+    for (XLFormSectionDescriptor *section in self.form.formSections) {
+        for (XLFormRowDescriptor *row in section.formRows) {
+            if([row conformsToProtocol:@protocol(XLErrorProtocol)]) {
+                XLFormRowDescriptor<XLErrorProtocol> *errorRow = (id)row;
+                errorRow.error = nil;
+            }
+        }
+    }
+    
+    if(self.config.animateValidation) {
+        [self updateCellsWithDictionary:@{}];
+    }
+}
+
 - (void)updateCellsWithDictionary:(NSDictionary *)dictionary {
     NSMutableArray *indexPaths = [NSMutableArray array];
-    NSArray *visibleIndexPaths = self.formView.indexPathsForVisibleRows;
+    NSArray *visibleIndexPaths;
+    if ([self.formView respondsToSelector:@selector(indexPathsForVisibleRows)]) {
+        visibleIndexPaths = self.formView.indexPathsForVisibleRows;
+    } else if ([self.formView respondsToSelector:@selector(indexPathsForVisibleItems)]) {
+        visibleIndexPaths = self.formView.indexPathsForVisibleItems;
+    }
     for(NSString *key in dictionary) {
         XLFormRowDescriptor *rowDescriptor = dictionary[key];
         id<XLFormDescriptorCell> cell = [rowDescriptor cell];
         [cell update];
-        if(rowDescriptor.size.height > 0.0001) {
+        if([self.formView isKindOfClass:[UITableView class]] && rowDescriptor.size.height > 0.0001) {
             rowDescriptor.size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
         }
         NSIndexPath *rowIndexPath = [self.form indexPathOfFormRow:rowDescriptor];

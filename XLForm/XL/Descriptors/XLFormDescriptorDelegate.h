@@ -54,6 +54,7 @@ typedef NS_ENUM(NSUInteger, XLPredicateType) {
                               predicateType:(XLPredicateType)predicateType;
 
 - (BOOL)validateForm;
+- (void)resetErrors;
 
 - (UIView *)cellWithCellClass:(NSString *)cellClass identifier:(NSString *)identifier indexPath:(NSIndexPath *)indexPath style:(NSInteger)style;
 - (NSIndexPath *)indexPathWithProxy:(NSIndexPath *)indexPath;

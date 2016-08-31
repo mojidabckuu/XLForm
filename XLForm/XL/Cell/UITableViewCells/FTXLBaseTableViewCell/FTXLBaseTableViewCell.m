@@ -38,6 +38,9 @@
 
 - (void)update {
     [super update];
+    if(self.rowDescriptor.selectorOptions.count && self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePush) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     [self updateError];
 }
 
@@ -133,8 +136,12 @@
             }
         }
     } else {
-        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker && self.rowDescriptor.value == nil) {
-            self.rowDescriptor.value = [[self datePicker] date];
+        if (self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePicker && self.rowDescriptor.selectionType == XLFormRowSelectionTypeDatePicker) {
+            if (self.rowDescriptor.value == nil) {
+                self.rowDescriptor.value = [[self datePicker] date];
+            } else {
+                [[self datePicker] setDate:self.rowDescriptor.value];
+            }
         }
         result = [super becomeFirstResponder];
     }
@@ -180,14 +187,19 @@
 #pragma mark - Accessors
 
 -(UIPickerView *)pickerView {
-    if (_pickerView) return _pickerView;
-    _pickerView = [[UIPickerView alloc] init];
-    _pickerView.delegate = self;
-    _pickerView.dataSource = self;
     if(!self.rowDescriptor.value) {
         self.rowDescriptor.value = [self.rowDescriptor.selectorOptions firstObject];
     }
-    [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    if (_pickerView) {
+        [_pickerView reloadAllComponents];
+    } else {
+        _pickerView = [[UIPickerView alloc] init];
+        _pickerView.delegate = self;
+        _pickerView.dataSource = self;
+    }
+    if (self.rowDescriptor.selectorOptions.count > 0 && [self selectedIndex] != NSNotFound) {
+        [_pickerView selectRow:[self selectedIndex] inComponent:0 animated:NO];
+    }
     return _pickerView;
 }
 
@@ -230,7 +242,9 @@
         XLFormPresenter *presenter = [[presenterClass alloc] init];
         presenter.sourceViewController = viewController;
         presenter.rowDescriptor = self.rowDescriptor;
-        [presenter presentWithCompletionBlock:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [presenter presentWithCompletionBlock:nil];
+        });
         self.presenter = presenter;
     }
 }
@@ -243,42 +257,17 @@
         }
         
         if (self.rowDescriptor.valueTransformer){
-            NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-            NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-            NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+            NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
             if (tranformedValue){
                 return tranformedValue;
             }
         }
     }
-    
-//    if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelector] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]){
-//        NSMutableArray * descriptionArray = [NSMutableArray arrayWithCapacity:[self.rowDescriptor.value count]];
-//        for (id option in self.rowDescriptor.selectorOptions) {
-//            NSArray * selectedValues = self.rowDescriptor.value;
-//            if ([selectedValues formIndexForItem:option] != NSNotFound){
-//                if (self.rowDescriptor.valueTransformer){
-//                    NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-//                    NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-//                    NSString * tranformedValue = [valueTransformer transformedValue:option];
-//                    if (tranformedValue){
-//                        [descriptionArray addObject:tranformedValue];
-//                    }
-//                }
-//                else{
-//                    [descriptionArray addObject:[option displayText]];
-//                }
-//            }
-//        }
-//        return [descriptionArray componentsJoinedByString:@", "];
-//    }
     if (!self.rowDescriptor.value){
         return self.rowDescriptor.noValueDisplayText;
     }
     if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
         if (tranformedValue){
             return tranformedValue;
         }
@@ -296,9 +285,6 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     id value = [self.rowDescriptor.selectorOptions objectAtIndex:row];
-    if([value respondsToSelector:@selector(formValue)]) {
-        value = [value formValue];
-    }
     self.rowDescriptor.value = value;
 }
 
