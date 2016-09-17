@@ -223,6 +223,9 @@
     if (self.valueTransformer) {
         id tranformedValue = [self.valueTransformer transformedValue:self.value];
         return tranformedValue ?: self.value;
+    } else if([self.value conformsToProtocol:@protocol(XLFormOptionObjectProtocol)]) {
+        id<XLFormOptionObjectProtocol> option = self.value;
+        return [option formValue];
     }
     return self.value;
 }
