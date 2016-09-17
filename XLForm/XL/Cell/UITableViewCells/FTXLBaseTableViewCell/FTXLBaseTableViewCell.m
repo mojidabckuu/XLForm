@@ -140,7 +140,9 @@
             if (self.rowDescriptor.value == nil) {
                 self.rowDescriptor.value = [[self datePicker] date];
             } else {
-                [[self datePicker] setDate:self.rowDescriptor.value];
+                if([self.rowDescriptor.value isKindOfClass:[NSDate class]]) {
+                    [[self datePicker] setDate:self.rowDescriptor.value];
+                }
             }
         }
         result = [super becomeFirstResponder];
