@@ -111,6 +111,10 @@
     return NO;
 }
 
+-(BOOL)formDescriptorCellLastResponder {
+    return YES;
+}
+
 #pragma mark -
 
 -(BOOL)becomeFirstResponder
