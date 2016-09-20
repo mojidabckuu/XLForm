@@ -20,10 +20,6 @@
 
 @implementation XLFormPopoverPresenter
 
-- (void)dealloc {
-    NSLog(@"%s",__FILE__);
-}
-
 - (void)presentWithCompletionBlock:(void (^)(void))completionBlock {
     NSAssert([self.destinationViewController conformsToProtocol:@protocol(XLFormRowDescriptorViewController)], @"rowDescriptor.action.viewControllerClass must conform to XLFormRowDescriptorViewController protocol");
     UIViewController<XLFormRowDescriptorViewController> *selectorViewController = (UIViewController<XLFormRowDescriptorViewController> *)self.destinationViewController;
