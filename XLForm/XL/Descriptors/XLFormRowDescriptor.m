@@ -52,7 +52,7 @@
 
 @interface XLFormRowDescriptor() <NSCopying>
 
-@property (nonatomic) XLFormBaseCell *rowCell;
+@property (nonatomic, strong) XLFormBaseCell *rowCell;
 
 @property BOOL isDirtyDisablePredicateCache;
 @property (nonatomic) NSNumber* disablePredicateCache;
