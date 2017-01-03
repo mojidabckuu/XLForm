@@ -106,4 +106,7 @@ typedef NS_OPTIONS(NSUInteger, XLFormRowNavigationOptions) {
 
 -(void)forceEvaluate;
 
+@property (nonnull, nonatomic, readonly) NSDictionary <NSString *, NSError *> *errorsByRows;
+@property (nonnull, nonatomic, readonly) NSArray<NSError *> *errors;
+
 @end

@@ -31,7 +31,9 @@
     _rowDescriptor = rowDescriptor;
     [self update];
     [rowDescriptor.cellConfig enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, BOOL * __unused stop) {
-        [self setValue:(value == [NSNull null]) ? nil : value forKeyPath:keyPath];
+        if ([self respondsToSelector:@selector(keyPath)]) {
+            [self setValue:(value == [NSNull null]) ? nil : value forKeyPath:keyPath];
+        }
     }];
     if (rowDescriptor.isDisabled){
         [rowDescriptor.cellConfigIfDisabled enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, BOOL * __unused stop) {
@@ -84,6 +86,10 @@
 -(BOOL)formDescriptorCellCanBecomeFirstResponder
 {
     return NO;
+}
+
+-(BOOL)formDescriptorCellLastResponder {
+    return YES;
 }
 
 #pragma mark -

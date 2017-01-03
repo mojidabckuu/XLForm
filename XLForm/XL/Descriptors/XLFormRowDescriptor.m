@@ -27,6 +27,7 @@
 #import "XLFormViewController.h"
 #import "XLFormRowDescriptor.h"
 #import "NSString+XLFormAdditions.h"
+#import "NSExpression+XLFormAdditions.h"
 
 #import "VGValidation.h"
 
@@ -51,7 +52,7 @@
 
 @interface XLFormRowDescriptor() <NSCopying>
 
-@property (nonatomic) XLFormBaseCell *rowCell;
+@property (nonatomic, strong) XLFormBaseCell *rowCell;
 
 @property BOOL isDirtyDisablePredicateCache;
 @property (nonatomic) NSNumber* disablePredicateCache;
@@ -88,7 +89,7 @@
     if (self){
         NSAssert(((![rowType isEqualToString:XLFormRowDescriptorTypeSelectorPopover] && ![rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]) || (([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) && ([rowType isEqualToString:XLFormRowDescriptorTypeSelectorPopover] || [rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]))), @"You must be running under UIUserInterfaceIdiomPad to use either XLFormRowDescriptorTypeSelectorPopover or XLFormRowDescriptorTypeMultipleSelectorPopover rows.");
         _tag = tag;
-
+        
         _disabled = @NO;
         _hidden = @NO;
         _rowType = rowType;
@@ -135,7 +136,7 @@
         if([delegate respondsToSelector:@selector(cellWithCellClass:identifier:indexPath:style:)]) {
             _rowCell = [delegate cellWithCellClass:cellClass identifier:self.tag indexPath:indexPath style:self.cellStyle];
         }
-//        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
+        //        NSAssert([_rowCell isKindOfClass:[XLFormBaseCell class]], @"UITableViewCell must extend from XLFormBaseCell");
         [self configureCellAtCreationTime];
     }
     return _rowCell;
@@ -218,6 +219,17 @@
     return [formattedValue isKindOfClass:[NSString class]] ? formattedValue : nil;
 }
 
+- (id)transformedValue {
+    if (self.valueTransformer) {
+        id tranformedValue = [self.valueTransformer transformedValue:self.value];
+        return tranformedValue ?: self.value;
+    } else if([self.value conformsToProtocol:@protocol(XLFormOptionObjectProtocol)]) {
+        id<XLFormOptionObjectProtocol> option = self.value;
+        return [option formValue];
+    }
+    return self.value;
+}
+
 // In the implementation
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -230,20 +242,20 @@
     rowDescriptorCopy->_disabled = _disabled;
     rowDescriptorCopy.isDirtyDisablePredicateCache = YES;
     rowDescriptorCopy.isDirtyHidePredicateCache = YES;
-
+    
     // =====================
     // properties for Button
     // =====================
     rowDescriptorCopy.action = [self.action copy];
-
+    
     // ===========================
     // property used for Selectors
     // ===========================
-
+    
     rowDescriptorCopy.noValueDisplayText = [self.noValueDisplayText copy];
     rowDescriptorCopy.selectorTitle = [self.selectorTitle copy];
     rowDescriptorCopy.selectorOptions = [self.selectorOptions copy];
-
+    
     return rowDescriptorCopy;
 }
 
@@ -309,7 +321,7 @@
     if ([_disabled isKindOfClass:[NSPredicate class]]){
         [self.sectionDescriptor.formDescriptor addObserversOfObject:self predicateType:XLPredicateTypeDisabled];
     }
-
+    
     [self evaluateIsDisabled];
 }
 
@@ -379,13 +391,21 @@
 -(BOOL)evaluateIsHidden
 {
     if ([_hidden isKindOfClass:[NSPredicate class]]) {
-        @try {
-            self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
+        if ([_hidden isKindOfClass:[NSComparisonPredicate class]]) {
+            NSString *tag = [((NSComparisonPredicate*)_hidden).leftExpression getExpressionVars].firstObject;
+            XLFormRowDescriptor *relatedRow = self.sectionDescriptor.formDescriptor.allRowsByTag[tag];
+            NSString *format = [((NSComparisonPredicate*)_hidden).predicateFormat stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"$%@", tag] withString:@"%@"];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:format, relatedRow];
+            self.hidePredicateCache = @([predicate evaluateWithObject:self]);
+        } else {
+            @try {
+                self.hidePredicateCache = @([_hidden evaluateWithObject:self substitutionVariables:self.sectionDescriptor.formDescriptor.allRowsByTag ?: @{}]);
+            }
+            @catch (NSException *exception) {
+                // predicate syntax error.
+                self.isDirtyHidePredicateCache = YES;
+            };
         }
-        @catch (NSException *exception) {
-            // predicate syntax error.
-            self.isDirtyHidePredicateCache = YES;
-        };
     }
     else{
         self.hidePredicateCache = _hidden;
@@ -421,11 +441,12 @@
 - (BOOL)isValid {
     NSError *error = nil;
     NSMutableArray *conditions = [NSMutableArray arrayWithArray:self.conditions];
+    BOOL hasPresentCondition = [conditions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self isKindOfClass: %@", [VGConditionPresent class]]].count;
     if(self.isRequired) {
-        if(![conditions  filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self isKindOfClass: %@", [VGConditionPresent class]]].count) {
+        if(!hasPresentCondition) {
             [conditions insertObject:[VGConditionPresent condition] atIndex:0];
         }
-    } else if(!self.value || [self.value XLisEmpty]) {
+    } else if((!self.value || [self.value XLisEmpty]) && !hasPresentCondition) {
         return TRUE;
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{

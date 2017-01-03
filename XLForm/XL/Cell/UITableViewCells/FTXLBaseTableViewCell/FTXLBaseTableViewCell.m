@@ -38,6 +38,9 @@
 
 - (void)update {
     [super update];
+    if(self.rowDescriptor.selectorOptions.count && self.rowDescriptor.selectionStyle == XLFormRowSelectionStylePush) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     [self updateError];
 }
 
@@ -137,7 +140,9 @@
             if (self.rowDescriptor.value == nil) {
                 self.rowDescriptor.value = [[self datePicker] date];
             } else {
-                [[self datePicker] setDate:self.rowDescriptor.value];
+                if([self.rowDescriptor.value isKindOfClass:[NSDate class]]) {
+                    [[self datePicker] setDate:self.rowDescriptor.value];
+                }
             }
         }
         result = [super becomeFirstResponder];
@@ -239,10 +244,11 @@
         XLFormPresenter *presenter = [[presenterClass alloc] init];
         presenter.sourceViewController = viewController;
         presenter.rowDescriptor = self.rowDescriptor;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [presenter presentWithCompletionBlock:nil];
-        });
         self.presenter = presenter;
+        __weak id welf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[welf presenter] presentWithCompletionBlock:nil];
+        });
     }
 }
 
@@ -254,42 +260,17 @@
         }
         
         if (self.rowDescriptor.valueTransformer){
-            NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-            NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-            NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+            NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
             if (tranformedValue){
                 return tranformedValue;
             }
         }
     }
-    
-//    if ([self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelector] || [self.rowDescriptor.rowType isEqualToString:XLFormRowDescriptorTypeMultipleSelectorPopover]){
-//        NSMutableArray * descriptionArray = [NSMutableArray arrayWithCapacity:[self.rowDescriptor.value count]];
-//        for (id option in self.rowDescriptor.selectorOptions) {
-//            NSArray * selectedValues = self.rowDescriptor.value;
-//            if ([selectedValues formIndexForItem:option] != NSNotFound){
-//                if (self.rowDescriptor.valueTransformer){
-//                    NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-//                    NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-//                    NSString * tranformedValue = [valueTransformer transformedValue:option];
-//                    if (tranformedValue){
-//                        [descriptionArray addObject:tranformedValue];
-//                    }
-//                }
-//                else{
-//                    [descriptionArray addObject:[option displayText]];
-//                }
-//            }
-//        }
-//        return [descriptionArray componentsJoinedByString:@", "];
-//    }
     if (!self.rowDescriptor.value){
         return self.rowDescriptor.noValueDisplayText;
     }
     if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
         if (tranformedValue){
             return tranformedValue;
         }

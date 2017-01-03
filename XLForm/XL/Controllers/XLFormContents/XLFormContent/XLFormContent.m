@@ -44,6 +44,14 @@
     id<XLFormDescriptorCell> currentCell = [firstResponder formDescriptorCell];
     NSIndexPath *currentIndexPath = [self.formView indexPathForCell:currentCell];
     XLFormRowDescriptor *currentRow = [self.formDescriptor formRowAtIndex:currentIndexPath];
+    if (currentRow && direction == XLFormRowNavigationDirectionNext) {
+        id<XLFormDescriptorCell> cell = [currentRow cell];
+        if (![cell formDescriptorCellLastResponder] && [cell formDescriptorCellCanBecomeFirstResponder]) {
+            NSIndexPath * indexPath = [self.formDescriptor indexPathOfFormRow:currentRow];
+            [self.formView scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
+            return [cell formDescriptorCellBecomeFirstResponder];
+        }
+    }
     XLFormRowDescriptor *nextRow = [self.formDescriptor nextRowDescriptorForRow:currentRow withDirection:direction];
     if (nextRow) {
         id<XLFormDescriptorCell> cell = [nextRow cell];
@@ -94,7 +102,7 @@
 }
 
 - (void)reload {
-    [self.formView reloadData];
+    [self.formView syncReloadData];
 }
 
 -(XLFormBaseCell *)updateFormRow:(XLFormRowDescriptor *)formRow {

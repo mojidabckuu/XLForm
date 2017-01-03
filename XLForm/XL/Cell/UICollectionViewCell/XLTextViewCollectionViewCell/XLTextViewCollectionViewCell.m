@@ -12,7 +12,7 @@
 
 #import "UIView+XLFormAdditions.h"
 
-#import <UITextView+Placeholder/UITextView+Placeholder.h>
+#import <UITextView_Placeholder/UITextView+Placeholder.h>
 
 #import "XLFormContent.h"
 

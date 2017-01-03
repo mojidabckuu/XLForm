@@ -16,4 +16,8 @@
 
 @property (nonatomic, weak) IBOutlet UIView<XLErrorProtocol> *errorView;
 
+@property (nonnull, readonly) UIDatePicker *datePicker;
+
+- (void)datePickerValueChanged:(UIDatePicker *)sender;
+
 @end

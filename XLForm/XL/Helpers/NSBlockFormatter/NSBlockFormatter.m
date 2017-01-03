@@ -84,3 +84,49 @@
 }
 
 @end
+
+@interface NSBlockValueTransformer ()
+
+@property (nonatomic, copy, readonly) NSBlockValueTransformerBlock forwardBlock;
+@property (nonatomic, copy, readonly) NSBlockValueTransformerBlock reverseBlock;
+
+@end
+
+
+@implementation NSBlockValueTransformer
+
+- (instancetype)initUsingForwardBlock:(nonnull NSBlockValueTransformerBlock)forwardTransforming reverseBlock:(nonnull NSBlockValueTransformerBlock)reverseTransforming {
+    self = [super init];
+    if (self == nil) return nil;
+    
+    _forwardBlock = [forwardTransforming copy];
+    _reverseBlock = [reverseTransforming copy];
+    
+    return self;
+}
+
++ (nonnull instancetype)transformerUsingForwardBlock:(nonnull NSBlockValueTransformerBlock)transforming {
+    return [[self alloc] initUsingForwardBlock:transforming reverseBlock:nil];
+}
+
++ (nonnull instancetype)transformerUsingReversibleBlock:(nonnull NSBlockValueTransformerBlock)transforming {
+    return [[self alloc] initUsingForwardBlock:nil reverseBlock:transforming];
+}
+
++ (nonnull instancetype)transformerUsingForwardBlock:(nonnull NSBlockValueTransformerBlock)forwardTransforming reverseBlock:(nonnull NSBlockValueTransformerBlock)reverseTransforming {
+    return [[self alloc] initUsingForwardBlock:forwardTransforming reverseBlock:reverseTransforming];
+}
+
++ (BOOL)allowsReverseTransformation {
+    return true;
+}
+
+- (id)transformedValue:(id)value {
+    return self.forwardBlock(value);
+}
+
+- (id)reverseTransformedValue:(id)value {
+    return self.reverseBlock(value);
+}
+
+@end

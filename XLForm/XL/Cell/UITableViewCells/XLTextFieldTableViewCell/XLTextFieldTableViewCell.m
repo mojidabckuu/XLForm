@@ -34,7 +34,8 @@
     self.textField.placeholder = self.rowDescriptor.placeholder;
     self.titleLabel.text = self.rowDescriptor.title;
     self.subtitleLabel.text = self.rowDescriptor.subtitle;
-    self.textField.enabled = self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined;
+    self.textField.userInteractionEnabled = self.rowDescriptor.selectionStyle == XLFormRowSelectionStyleUndefined;
+    self.textField.enabled = !self.rowDescriptor.isDisabled;
     [self updateBehavior];
 }
 

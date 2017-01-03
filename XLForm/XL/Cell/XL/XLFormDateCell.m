@@ -169,9 +169,7 @@
 - (NSString *)formattedDate:(NSDate *)date
 {
     if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
-        NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
+        NSString * tranformedValue = [self.rowDescriptor.valueTransformer transformedValue:self.rowDescriptor.value];
         if (tranformedValue){
             return tranformedValue;
         }
