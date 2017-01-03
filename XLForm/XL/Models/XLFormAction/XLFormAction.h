@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, XLFormPresentationMode) {
 
 @property (nullable, nonatomic, strong) void (^formBlock)(XLFormRowDescriptor * __nonnull sender);
 @property (nullable, nonatomic) SEL formSelector;
+@property (nullable, nonatomic, strong) UIStoryboard *storybord; // default is source view controller
 @property (nullable, nonatomic, strong) NSString * formSegueIdenfifier;
 @property (nullable, nonatomic, strong) Class formSegueClass;
 
