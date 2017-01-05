@@ -16,8 +16,7 @@
 
 - (void)presentWithCompletionBlock:(void (^)(void))completionBlock {
     if (self.rowDescriptor.action.formSegueIdenfifier) {
-        UIStoryboard *storyboard = self.rowDescriptor.action.storybord ?: self.sourceViewController;
-        [storyboard performSegueWithIdentifier:self.rowDescriptor.action.formSegueIdenfifier sender:self.rowDescriptor];
+        [self.sourceViewController performSegueWithIdentifier:self.rowDescriptor.action.formSegueIdenfifier sender:self.rowDescriptor];
     }
     else if (self.rowDescriptor.action.formSegueClass){
         NSAssert(self.sourceViewController, @"either rowDescriptor.action.viewControllerClass or rowDescriptor.action.viewControllerStoryboardId or rowDescriptor.action.viewControllerNibName must be assigned");
