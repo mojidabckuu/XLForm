@@ -21,3 +21,9 @@
 - (void)datePickerValueChanged:(UIDatePicker *)sender;
 
 @end
+
+@interface UIView (Identifier)
+
++ (NSString*)identifier;
+
+@end
