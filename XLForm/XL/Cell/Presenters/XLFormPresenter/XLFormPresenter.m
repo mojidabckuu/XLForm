@@ -41,7 +41,7 @@
         return [[self.rowDescriptor.action.viewControllerClass alloc] init];
     }
     else if ([self.rowDescriptor.action.viewControllerStoryboardId length] != 0 ){
-        UIStoryboard * storyboard = self.sourceViewController.storyboard;
+        UIStoryboard * storyboard = self.rowDescriptor.action.storyboard ?: self.sourceViewController.storyboard;
         NSAssert(storyboard != nil, @"You must provide a storyboard when rowDescriptor.action.viewControllerStoryboardId is used");
         return [storyboard instantiateViewControllerWithIdentifier:self.rowDescriptor.action.viewControllerStoryboardId];
     }

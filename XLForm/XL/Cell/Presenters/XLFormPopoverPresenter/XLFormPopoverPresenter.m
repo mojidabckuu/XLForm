@@ -14,7 +14,7 @@
 
 @interface XLFormPopoverPresenter () <UIPopoverControllerDelegate>
 
-@property (nonatomic, strong) UIPopoverController *popoverController;
+@property (nonatomic, weak) UIPopoverController *popoverController;
 
 @end
 
@@ -29,10 +29,11 @@
     if (self.popoverController && self.popoverController.popoverVisible) {
         [self.popoverController dismissPopoverAnimated:NO];
     }
-    self.popoverController = [[UIPopoverController alloc] initWithContentViewController:selectorViewController];
-    self.popoverController.delegate = self;
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:selectorViewController];
+    popoverController = [[UIPopoverController alloc] initWithContentViewController:selectorViewController];
+    popoverController.delegate = self;
     if ([selectorViewController conformsToProtocol:@protocol(XLFormRowDescriptorPopoverViewController)]){
-        ((id<XLFormRowDescriptorPopoverViewController>)selectorViewController).popoverController = self.popoverController;
+        ((id<XLFormRowDescriptorPopoverViewController>)selectorViewController).popoverController = popoverController;
     }
     UITableViewCell *cell = [self.rowDescriptor cell];
     // TODO: add realistion to attached Rect.
@@ -41,8 +42,9 @@
 //        }
 //        else{
     // TODO: add arrow direction
-    [self.popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [popoverController presentPopoverFromRect:cell.bounds inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     //        }
+    self.popoverController = popoverController;
     [self.sourceViewController.formView deselectItemAtIndexPath:[self.sourceViewController.formView indexPathForCell:cell] animated:YES];
 }
 

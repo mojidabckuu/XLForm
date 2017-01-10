@@ -15,9 +15,9 @@
 
 @required
 
-@property (nonnull, nonatomic, strong) XLFormRowDescriptor *rowDescriptor;
+@property (nullable, nonatomic, weak) XLFormRowDescriptor *rowDescriptor;
 
-@property (nonnull, nonatomic, strong) XLFormViewController *sourceViewController;
+@property (nullable, nonatomic, weak) XLFormViewController *sourceViewController;
 @property (nonnull, nonatomic, strong) UIViewController *destinationViewController;
 
 - (void)presentWithCompletionBlock:(void (^ __nullable)(void))completionBlock;
