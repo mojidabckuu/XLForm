@@ -15,7 +15,7 @@
 @implementation XLFormSeguePresenter
 
 - (void)presentWithCompletionBlock:(void (^)(void))completionBlock {
-    if (self.rowDescriptor.action.formSegueIdenfifier){
+    if (self.rowDescriptor.action.formSegueIdenfifier) {
         [self.sourceViewController performSegueWithIdentifier:self.rowDescriptor.action.formSegueIdenfifier sender:self.rowDescriptor];
     }
     else if (self.rowDescriptor.action.formSegueClass){
