@@ -446,7 +446,7 @@
         if(!hasPresentCondition) {
             [conditions insertObject:[VGConditionPresent condition] atIndex:0];
         }
-    } else if((!self.value || [self.value XLisEmpty]) && !hasPresentCondition) {
+    } else if((!self.value || ([self.value respondsToSelector:@selector(XLisEmpty)] && [self.value XLisEmpty])) && !hasPresentCondition) {
         return TRUE;
     }
     BOOL valid = [VGValidator validateValue:self.value conditions:^NSArray *{
