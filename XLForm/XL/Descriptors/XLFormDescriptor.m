@@ -615,10 +615,6 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
     return YES;
 }
 
-- (nonnull NSArray *)validateFormRows {
-    
-}
-
 #pragma mark - Utils
 
 -(XLFormRowDescriptor *)nextRowDescriptorForRow:(XLFormRowDescriptor*)currentRow withDirection:(XLFormRowNavigationDirection)direction
